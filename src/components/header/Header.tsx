@@ -3,7 +3,6 @@ import catlogo from '../../assets/catlogo.webp'
 import SearchBar from './SearchBar'
 import Face5Icon from '@mui/icons-material/Face5';
 import Face6Icon from '@mui/icons-material/Face6';
-import SxProps from '../interfaces/SxProps';
 import { JSX } from 'react';
 import DropDownMenu from '../reusable/DropDownMenu';
 import { filmLabels } from './top100films';
@@ -11,8 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations';
 import { Link } from 'react-router-dom';
+import HeaderProps from '../interfaces/header/HeaderProps';
 
-const Header: React.FC<SxProps> = ({ sx }): JSX.Element => {
+const Header: React.FC<HeaderProps> = ({ sx, products }): JSX.Element => {
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw', ...sx}}>
         <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'space-between'}}>
@@ -23,7 +23,7 @@ const Header: React.FC<SxProps> = ({ sx }): JSX.Element => {
                 </Typography>
             </Box>
             <Box>
-              <SearchBar/>
+              <SearchBar products={products}/>
             </Box>
             <Box sx={{display: 'flex', gap: '1vw'}}>
               <Box sx={{display: 'flex', gap: '1vw', alignItems: 'center'}}>

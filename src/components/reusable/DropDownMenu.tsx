@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { Button, Popper, Paper, MenuItem, Box } from '@mui/material'
 import { Link } from 'react-router-dom'
-import IDropDownMenu from '../interfaces/reusable/IDropDownMenu'
+import DropDownMenuProps from '../interfaces/reusable/DropDownMenuProps'
 import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations'
 
-const DropDownMenu: React.FC<IDropDownMenu> = ({ menuName, menuList, linkTo }) => {
+const DropDownMenu: React.FC<DropDownMenuProps> = ({ menuName, menuList, linkTo }) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [open, setOpen] = useState(false)
 
