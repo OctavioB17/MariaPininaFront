@@ -26,7 +26,17 @@ export const themeOptions: ThemeOptions = {
       fontFamily: "'Satoshi-Regular'",
     },
     button: {
+      color: '#213547',
       fontFamily: "'Space Grotesk'",
+    },
+  },
+    components: {
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          color: '#213547',
+        },
+      },
     },
   },
 };

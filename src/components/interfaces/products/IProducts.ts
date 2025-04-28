@@ -1,11 +1,6 @@
 import ICategory from "../categories/ICategories";
 import IUser from "../users/IUser";
 
-export interface IDimensions {
-    length: number;
-    width: number;
-    height: number;
-  }
 
 export interface IProduct {
     id: string;
@@ -13,8 +8,9 @@ export interface IProduct {
     description: string;
     imageUrl: string;
     sku: string;
-    dimensions: IDimensions;
-    weight: number;
+    length: number;
+    width: number;
+    height: number;
     price: number;
     stock: number;
     categoryId: string;
