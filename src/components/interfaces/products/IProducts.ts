@@ -6,7 +6,8 @@ export interface IProduct {
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
+    thumbnailUrl: string;
+    imageGallery: string[];
     sku: string;
     length: number;
     width: number;

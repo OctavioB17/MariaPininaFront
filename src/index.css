@@ -25,7 +25,7 @@
     text-decoration: inherit;
   }
   a:hover {
-    color: #535bf2;
+    color: #4b6584;
   }
 
   body {
@@ -38,8 +38,8 @@
     height: 100vh;
     background-color: #f5e8da;
     background-image: 
-        linear-gradient(45deg, #c74836 25%, transparent 25%),
-        linear-gradient(-45deg, #c74836 25%, transparent 25%),
+        linear-gradient(45deg, #c74836 26%, transparent 25%),
+        linear-gradient(-45deg, #c74836 26%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #c74836 75%),
         linear-gradient(-45deg, transparent 75%, #c74836 75%);
     background-size: 60px 60px;
