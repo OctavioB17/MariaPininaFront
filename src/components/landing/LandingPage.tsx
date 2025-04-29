@@ -8,6 +8,7 @@ import ProductsCarrousel from '../products/Cards/ProductsCarrousel'
 import ProductCards from '../products/Cards/ProductCards'
 import ICategory from '../interfaces/categories/ICategories'
 import IPaginationResponse from '../interfaces/IPaginationResponse'
+import { variables } from '../../config/variables'
 const LandingPage: React.FC = (): JSX.Element => {
   
   const [products, setProducts] = useState<IProduct[]>([])
@@ -18,8 +19,8 @@ const LandingPage: React.FC = (): JSX.Element => {
       try {
 
         const [productsResponse, categoriesResponse] = await Promise.all([
-          axios.get<IProduct[]>('http://192.168.0.15:3000/api/v1/products/get-all/random'),
-          axios.get<IPaginationResponse<ICategory>>('http://192.168.0.15:3000/api/v1/categories/get/all')
+          axios.get<IProduct[]>(`${variables.backendIp}/products/get-all/random`),
+          axios.get<IPaginationResponse<ICategory>>(`${variables.backendIp}/categories/get/all`)
         ])
 
         setProducts(productsResponse.data)

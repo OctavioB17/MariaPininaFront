@@ -1,11 +1,11 @@
 import React, { JSX } from 'react'
 import NormalBox from '../../reusable/NormalBox'
-import ProductsCardsProps from '../../interfaces/products/ProductsCardsProps'
+import ProductsProps from '../../interfaces/products/ProductsProps'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import LoadingStatic from './LoadingStatic';
 import { Link } from 'react-router-dom';
 
-const productCards: React.FC<ProductsCardsProps> = ({ product }): JSX.Element => {
+const productCards: React.FC<ProductsProps> = ({ product }): JSX.Element => {
   return (
     <NormalBox sx={{ display: 'flex', flexDirection: 'column', padding: '0.5vw', borderRadius: '5px', alignItems: 'center'}}>
       {product.thumbnailUrl ? (

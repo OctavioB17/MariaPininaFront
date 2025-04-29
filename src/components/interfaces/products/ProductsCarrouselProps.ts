@@ -1,4 +1,4 @@
-import ProductCards from "../../products/ProductCards";
+import ProductCards from "../../products/Cards/ProductCards";
 
 export default interface ProductsCarrouselProps {
     children: React.ReactElement<typeof ProductCards>[];

@@ -1,5 +1,5 @@
 import React, { JSX } from 'react'
-import ProductsCarrouselProps from '../interfaces/products/ProductsCarrouselProps'
+import ProductsCarrouselProps from '../../interfaces/products/ProductsCarrouselProps'
 import { Box } from '@mui/material'
 
 const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children }): JSX.Element => {
