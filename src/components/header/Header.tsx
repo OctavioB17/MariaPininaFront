@@ -5,14 +5,16 @@ import Face5Icon from '@mui/icons-material/Face5';
 import Face6Icon from '@mui/icons-material/Face6';
 import { JSX } from 'react';
 import DropDownMenu from '../reusable/DropDownMenu';
-import { filmLabels } from './top100films';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations';
 import { Link } from 'react-router-dom';
 import HeaderProps from '../interfaces/header/HeaderProps';
 
-const Header: React.FC<HeaderProps> = ({ sx, products }): JSX.Element => {
+const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Element => {
+
+  const categoriesNames = categories.map(category => category.name)
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw', ...sx}}>
         <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'space-between'}}>
@@ -39,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products }): JSX.Element => {
         <Divider sx={{ border: '1px solid black' }}/>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <DropDownMenu linkTo='/categories' menuName={'Categories'} menuList={filmLabels}/>
+            <DropDownMenu linkTo='categories' menuName={'Categories'} menuList={categoriesNames} queryParamName='category'/>
             <Link to={'/products'}>
               <Button
                 sx={muiButtonNoAnimations}
