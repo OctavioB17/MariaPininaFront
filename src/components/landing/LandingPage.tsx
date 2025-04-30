@@ -1,7 +1,5 @@
 import { Box } from '@mui/material'
 import React, { JSX, useEffect, useMemo, useState } from 'react'
-import NormalBox from '../reusable/NormalBox'
-import Header from '../header/Header'
 import { IProduct } from '../interfaces/products/IProducts'
 import axios from 'axios'
 import ProductsCarrousel from '../products/Cards/ProductsCarrousel'
@@ -9,6 +7,7 @@ import ProductCards from '../products/Cards/ProductCards'
 import ICategory from '../interfaces/categories/ICategories'
 import IPaginationResponse from '../interfaces/IPaginationResponse'
 import { variables } from '../../config/variables'
+import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 const LandingPage: React.FC = (): JSX.Element => {
   
   const [products, setProducts] = useState<IProduct[]>([])
@@ -67,14 +66,11 @@ const LandingPage: React.FC = (): JSX.Element => {
 
   return (
     <Box>
-        <NormalBox sx={{width: '90vw', padding: '1vw'}}>
-          <Header categories={categories} products={products} sx={{borderBottom: '2px solid black'}}/>
-          <Box sx={{}}>
+        <NBoxWithHeaderAndFooter sx={{width: '90vw', padding: '1vw'}}>
             <ProductsCarrousel>
               {memoizedProductCards}
             </ProductsCarrousel>
-          </Box>
-        </NormalBox>
+        </NBoxWithHeaderAndFooter>
     </Box>  
   )
 }

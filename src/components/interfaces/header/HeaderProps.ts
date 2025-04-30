@@ -1,8 +1,8 @@
 import ICategory from "../categories/ICategories";
 import { IProduct } from "../products/IProducts";
-import SxProps from "../SxProps";
+import { ISxProps } from "../SxProps";
 
-export default interface HeaderProps extends SxProps {
+export default interface HeaderProps extends ISxProps {
     products: IProduct[]
     categories: ICategory[]
 }

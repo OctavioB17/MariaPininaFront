@@ -7,6 +7,7 @@ import { Box, Button, Divider, Skeleton, Typography } from '@mui/material'
 import NormalBox from '../../reusable/NormalBox'
 import ImageGalleryComponent from '../../reusable/ImageGalleryComponent'
 import ProductDimensions from './ProductDimensions'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 
 const ProductDetails: React.FC = () => {
     const { id } = useParams()
@@ -26,11 +27,11 @@ const ProductDetails: React.FC = () => {
         if (products) {
             if (products.stock > 10) {
                 return (
-                    <Typography>{products.stock} Left in Stock</Typography>
+                    <Typography sx={{fontSize: '1.1vw'}}>{products.stock} Left in Stock</Typography>
                 )
             } else {
                 return (
-                    <Typography>Hurry up! only {products.stock} left in stock</Typography>
+                    <Typography sx={{fontSize: '1.1vw'}}>Hurry up! only {products.stock} left in stock</Typography>
                 )
             }
         }
@@ -38,8 +39,8 @@ const ProductDetails: React.FC = () => {
 
       console.log(products)
   return (
-    <NormalBox>
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: '2vw'}}>
+    <NBoxWithHeaderAndFooter>
+        <Box sx={{display: 'flex', flexDirection: 'column', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
             {
                 products?.categoryId ? 
                     <Box sx={{display: 'flex', gap: '5px', padding: '0.5vw'}}>
@@ -97,8 +98,8 @@ const ProductDetails: React.FC = () => {
                 }
             </Box>
             <Divider sx={{border: '1px solid black'}}/>
-            <Box sx={{display: 'flex'}}>
-                <Typography sx={{width: '50vw', whiteSpace: 'pre-line', textAlign: 'left'}}>
+            <Box sx={{display: 'flex', gap: '1vw', position: 'relative', justifyContent: 'space-between'}}>
+                <Typography sx={{width: '55vw', whiteSpace: 'pre-line', textAlign: 'left'}}>
                     {products?.description}
                 </Typography>
                 {
@@ -109,7 +110,7 @@ const ProductDetails: React.FC = () => {
                 }
             </Box>
         </Box>
-    </NormalBox>
+    </NBoxWithHeaderAndFooter>
   )
 }
 

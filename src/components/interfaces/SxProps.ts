@@ -1,5 +1,8 @@
 import { SxProps } from "@mui/material";
+import ChildrenProp from "./ChildrenProp";
 
-export default interface ISxProps {
+export interface ISxProps {
     sx?: SxProps
 }
+
+export interface SxPropWithChildren extends ISxProps, ChildrenProp {}
