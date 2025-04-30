@@ -4,7 +4,7 @@ import NormalBox from '../../reusable/NormalBox';
 import { IProductCharacteristic } from '../../interfaces/products/IProducts';
 
 const ProductDimensions: React.FC<IProductCharacteristic> = ({ weight, width, length, height, material, category }) => {
-    
+
     const characteristics = [
         { label: "Length", value: length },
         { label: "Width", value: width },
