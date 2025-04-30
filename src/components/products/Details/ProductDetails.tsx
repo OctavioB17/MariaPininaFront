@@ -10,18 +10,18 @@ import ProductDimensions from './ProductDimensions'
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 
 const ProductDetails: React.FC = () => {
-    const { ids } = useParams()
+    const { id } = useParams()
     const [products, setProducts] = useState<IProductWithUserAndCategory | null>(null)
 
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const productsRequest = await axios.get<IProductWithUserAndCategory>(`${variables.backendIp}/products/get/id/${ids}`)
+            const productsRequest = await axios.get<IProductWithUserAndCategory>(`${variables.backendIp}/products/get/id/${id}`)
             setProducts(productsRequest.data)
         }
 
         fetchProducts()
-      }, [ids])
+      }, [id])
 
     const StockImportance = () => {
         if (products) {

@@ -56,7 +56,7 @@ const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children, carrous
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', padding: '1vw', gap: '1vw'}}>
-      <Typography variant="subtitle1" sx={{textAlign: 'left', paddingLeft: '1vw'}}>
+      <Typography variant="h3" sx={{textAlign: 'left', paddingLeft: '1vw'}}>
         {carrouselName}
       </Typography>
       <Box sx={{ alignItems: 'center' }}>

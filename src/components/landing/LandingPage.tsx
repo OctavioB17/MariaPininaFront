@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import React, { JSX, useEffect, useMemo, useState } from 'react'
 import { IProduct } from '../interfaces/products/IProducts'
 import axios from 'axios'
@@ -64,12 +64,41 @@ const LandingPage: React.FC = (): JSX.Element => {
     }
   }, [products]);
 
+  const randomCategories = useMemo(() => {
+    if (categories.length > 3) {
+      return [...categories]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3); 
+    }
+    return categories;
+  }, [categories]);
+
+
+  const productCarouselsByCategory = useMemo(() => {
+    return randomCategories.map(category => (
+      <Box>
+        <Divider sx={{ border: '1px solid black' }}/>
+        <ProductsCarrousel key={category.id} carrouselName={category.name}>
+          {products
+            .filter(product => product.categoryId === category.id)
+            .map(filteredProduct => (
+              <ProductCards key={filteredProduct.id} product={filteredProduct} />
+            ))}
+        </ProductsCarrousel>
+      </Box>
+    ));
+  }, [randomCategories, products]);
+  
+
   return (
     <Box>
         <NBoxWithHeaderAndFooter sx={{width: '90vw', padding: '1vw'}}>
             <ProductsCarrousel carrouselName='Products'>
               {memoizedProductCards}
             </ProductsCarrousel>
+            <Box>
+              {productCarouselsByCategory}
+            </Box>
         </NBoxWithHeaderAndFooter>
     </Box>  
   )
