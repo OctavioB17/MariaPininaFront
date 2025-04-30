@@ -67,7 +67,7 @@ const LandingPage: React.FC = (): JSX.Element => {
   return (
     <Box>
         <NBoxWithHeaderAndFooter sx={{width: '90vw', padding: '1vw'}}>
-            <ProductsCarrousel>
+            <ProductsCarrousel carrouselName='Products'>
               {memoizedProductCards}
             </ProductsCarrousel>
         </NBoxWithHeaderAndFooter>

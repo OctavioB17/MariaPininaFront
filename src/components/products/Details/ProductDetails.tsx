@@ -10,18 +10,18 @@ import ProductDimensions from './ProductDimensions'
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 
 const ProductDetails: React.FC = () => {
-    const { id } = useParams()
+    const { ids } = useParams()
     const [products, setProducts] = useState<IProductWithUserAndCategory | null>(null)
 
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const productsRequest = await axios.get<IProductWithUserAndCategory>(`${variables.backendIp}/products/get/id/${id}`)
+            const productsRequest = await axios.get<IProductWithUserAndCategory>(`${variables.backendIp}/products/get/id/${ids}`)
             setProducts(productsRequest.data)
         }
 
         fetchProducts()
-      }, [id])
+      }, [ids])
 
     const StockImportance = () => {
         if (products) {
@@ -55,20 +55,20 @@ const ProductDetails: React.FC = () => {
                         <Link to={`/categories/${products.categories.id}`}>{products.categories.name}</Link>
                     </Box>
                 :
-                    <Skeleton/>
+                    <Skeleton sx={{width: "35vw", height: '2vw', marginBottom: '-10vw' }}/>
             }
             <Box sx={{display: 'flex', gap: '2vw'}}>
                 {
                     products?.imageGallery ?
                         <ImageGalleryComponent imageLinks={products.imageGallery}/>
                     :
-                        <Skeleton sx={{width: "35vw", height: '3vw'}}/>
+                        <Skeleton sx={{width: "55vw", height: '50vw', marginBottom: '-8vw'}}/>
                 }
                 {
                     products ?
                         <NormalBox sx={{textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Box>
-                                <Typography sx={{ fontSize: '2.5vw'}}>
+                                <Typography sx={{ fontSize: '2.5vw', width: '35vw'}}>
                                     {products.name}
                                 </Typography>
                                 <Typography sx={{fontSize: '2.5vw', textDecoration: 'underline'}}>
@@ -94,19 +94,25 @@ const ProductDetails: React.FC = () => {
                             </Box>
                         </NormalBox>
                     :
-                        <Skeleton sx={{width: "35vw", height: '3vw'}}/>
+                        <Skeleton sx={{width: "25vw", height: '50vw', marginBottom: '-8vw'}}/>
                 }
             </Box>
             <Divider sx={{border: '1px solid black'}}/>
             <Box sx={{display: 'flex', gap: '1vw', position: 'relative', justifyContent: 'space-between'}}>
-                <Typography sx={{width: '55vw', whiteSpace: 'pre-line', textAlign: 'left'}}>
-                    {products?.description}
-                </Typography>
+                {
+                    products?.description ?
+                        <Typography sx={{width: '55vw', whiteSpace: 'pre-line', textAlign: 'left'}}>
+                        {products.description}
+                        </Typography>
+                    :
+                    <Skeleton sx={{width: "55vw", height: '30vw', marginBottom: '-5vw', marginTop: '-5vw'}}/>
+
+                }
                 {
                     products ?
                         <ProductDimensions length={products.length} width={products.width} height={products.height} weight={products.weight} material={products.material} category={products.categories.name}/>
                     :
-                        <Skeleton/>
+                        <Skeleton sx={{width: "20vw", height: '30vw', marginBottom: '-5vw', marginTop: '-5vw'}}/>
                 }
             </Box>
         </Box>

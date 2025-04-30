@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from '@mui/material'
-import React, { JSX } from 'react'
+import React, { JSX, SyntheticEvent } from 'react'
 import SearchBarProps from '../interfaces/header/SearchBarProps'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,7 +8,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
   const navigate = useNavigate()
   const productNameOnly = products.map(product => product.name)
 
-  const handleProductSelect = (event: any, selectedProduct: string | null) => {
+  const handleProductSelect = (_event: SyntheticEvent, selectedProduct: string | null) => {
     if (selectedProduct) {
       const product = products.find(p => p.name === selectedProduct)
       if (product) {

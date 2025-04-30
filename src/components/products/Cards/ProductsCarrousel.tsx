@@ -1,11 +1,11 @@
 import React from "react";
 import Slider, { CustomArrowProps } from "react-slick";
 import ProductsCarrouselProps from '../../interfaces/products/ProductsCarrouselProps'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
-const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children }) => {
+const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children, carrouselName }) => {
 
   function SampleNextArrow(props: CustomArrowProps ) {
     const { className, style, onClick } = props;
@@ -55,12 +55,17 @@ const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children }) => {
   };
 
   return (
-    <Box sx={{ alignItems: 'center', padding: '1vw' }}>
-      <Slider {...settings}>
-        {React.Children.map(children, (child, index) => (
-          <div key={index}>{child}</div>
-        ))}
-      </Slider>
+    <Box sx={{display: 'flex', flexDirection: 'column', padding: '1vw', gap: '1vw'}}>
+      <Typography variant="subtitle1" sx={{textAlign: 'left', paddingLeft: '1vw'}}>
+        {carrouselName}
+      </Typography>
+      <Box sx={{ alignItems: 'center' }}>
+        <Slider {...settings}>
+          {React.Children.map(children, (child, index) => (
+            <div key={index}>{child}</div>
+          ))}
+        </Slider>
+      </Box>
     </Box>
   );
 };

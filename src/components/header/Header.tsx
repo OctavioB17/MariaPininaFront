@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
         <Divider sx={{ border: '1px solid black' }}/>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <DropDownMenu linkTo='categories' menuName={'Categories'} menuList={categoriesNames} queryParamName='category'/>
+            <DropDownMenu linkTo='/categories' menuName={'Categories'} menuList={categoriesNames} queryParamName='category'/>
             <Link to={'/products'}>
               <Button
                 sx={muiButtonNoAnimations}
