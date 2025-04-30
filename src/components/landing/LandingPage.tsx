@@ -33,12 +33,66 @@ const LandingPage: React.FC = (): JSX.Element => {
   }, [])
 
   const memoizedProductCards = useMemo(() => {
-    if (products.length > 0) {
-      return products.map(product => (
-        <ProductCards key={product.id} product={product} />
-      ));
-    } else {
+    const emptyProduct: IProduct = {
+      id: '0',
+      name: '',
+      description: '',
+      price: 0,
+      thumbnailUrl: '',
+      imageGallery: [],
+      sku: '',
+      length: 0,
+      width: 0,
+      height: 0,
+      stock: 0,
+      categoryId: '',
+      material: [],
+      isPaused: false,
+      userId: '',
+      createdAt: '',
+      updatedAt: '',
+    };
+  
+    const filledProducts = [...products];
+    const missingProducts = 5 - products.length;
+  
+    if (missingProducts > 0) {
+      filledProducts.push(...Array.from({ length: missingProducts }, (_, index) => ({
+        ...emptyProduct,
+        id: `empty-${index}`,
+      })));
+    }
+  
+    return filledProducts.map(product => (
+      <ProductCards key={product.id} product={product} />
+    ));
+  }, [products]);
+  
 
+  const randomCategories = useMemo(() => {
+    if (categories.length === 0) {
+      return [
+        { id: "fake-1", name: "Claws and paws" },
+        { id: "fake-2", name: "Fangs" },
+        { id: "fake-3", name: "Pure tenderness" },
+      ];
+    }
+  
+    if (categories.length > 3) {
+      return [...categories]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+    }
+  
+    return categories;
+  }, [categories]);
+  
+
+
+  const productCarouselsByCategory = useMemo(() => {
+    return randomCategories.map(category => {
+      const categoryProducts = products.filter(product => product.categoryId === category.id);
+  
       const emptyProduct: IProduct = {
         id: '0',
         name: '',
@@ -51,43 +105,38 @@ const LandingPage: React.FC = (): JSX.Element => {
         width: 0,
         height: 0,
         stock: 0,
-        categoryId: '',
+        categoryId: category.id,
         material: [],
         isPaused: false,
         userId: '',
         createdAt: '',
         updatedAt: '',
       };
-      return Array.from({ length: 5 }).map((_, index) => (
-        <ProductCards key={index} product={emptyProduct} />
-      ));
-    }
-  }, [products]);
-
-  const randomCategories = useMemo(() => {
-    if (categories.length > 3) {
-      return [...categories]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3); 
-    }
-    return categories;
-  }, [categories]);
-
-
-  const productCarouselsByCategory = useMemo(() => {
-    return randomCategories.map(category => (
-      <Box>
-        <Divider sx={{ border: '1px solid black' }}/>
-        <ProductsCarrousel key={category.id} carrouselName={category.name}>
-          {products
-            .filter(product => product.categoryId === category.id)
-            .map(filteredProduct => (
-              <ProductCards key={filteredProduct.id} product={filteredProduct} />
+  
+      const missingProducts = 5 - categoryProducts.length;
+  
+      if (missingProducts > 0) {
+        categoryProducts.push(
+          ...Array.from({ length: missingProducts }, (_, index) => ({
+            ...emptyProduct,
+            id: `empty-${category.id}-${index}`,
+          }))
+        );
+      }
+  
+      return (
+        <Box key={category.id}>
+          <Divider sx={{ border: '1px solid black' }} />
+          <ProductsCarrousel carrouselName={category.name}>
+            {categoryProducts.map(product => (
+              <ProductCards key={product.id} product={product} />
             ))}
-        </ProductsCarrousel>
-      </Box>
-    ));
+          </ProductsCarrousel>
+        </Box>
+      );
+    });
   }, [randomCategories, products]);
+  
   
 
   return (
