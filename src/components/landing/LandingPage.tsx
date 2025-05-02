@@ -8,6 +8,8 @@ import ICategory from '../interfaces/categories/ICategories'
 import IPaginationResponse from '../interfaces/IPaginationResponse'
 import { variables } from '../../config/variables'
 import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
+import CategoryCardCarrousel from '../Categories/CategoryCardCarrousel'
+import CategoryCard from '../Categories/CategoryCard'
 const LandingPage: React.FC = (): JSX.Element => {
   
   const [products, setProducts] = useState<IProduct[]>([])
@@ -70,11 +72,20 @@ const LandingPage: React.FC = (): JSX.Element => {
   
 
   const randomCategories = useMemo(() => {
+    const emptyCategory: ICategory = {
+      id: '',
+      name: '',
+      description: '',
+      imageUrl: '',
+      createdAt: '',
+      updatedAt: '',
+    };
+  
     if (categories.length === 0) {
       return [
-        { id: "fake-1", name: "Claws and paws" },
-        { id: "fake-2", name: "Fangs" },
-        { id: "fake-3", name: "Pure tenderness" },
+        { ...emptyCategory, id: "fake-1", name: "Claws and paws", description: 'A collection dedicated to all creatures that roam the world on four legs, showcasing their agility, strength, and unique adaptations. From fierce felines to loyal canines, this category celebrates the beauty and power of paws and claws.' },
+        { ...emptyCategory, id: "fake-2", name: "Fangs", description: 'A category that highlights nature’s most fearsome and fascinating predators. Whether sharp, venomous, or built for crushing, fangs are a defining trait of creatures that command respect. Explore the evolutionary marvels behind the bite.' },
+        { ...emptyCategory, id: "fake-3", name: "Pure tenderness", description: 'A heartwarming selection filled with the most adorable, gentle, and loving beings. From fluffy companions to affectionate wildlife, this category radiates warmth, softness, and a sense of comfort that melts hearts.' },
       ];
     }
   
@@ -84,10 +95,42 @@ const LandingPage: React.FC = (): JSX.Element => {
         .slice(0, 3);
     }
   
-    return categories;
+    return categories.map((cat) => ({
+      ...emptyCategory,
+      ...cat,
+    }));
   }, [categories]);
   
-
+  const MemoizedCategoryCards = useMemo(() => {
+    const emptyCategory: ICategory = {
+      id: 'empty',
+      name: '',
+      imageUrl: '',
+      description: '',
+      createdAt: '',
+      updatedAt: '',
+    };
+  
+    const filledCategories = [...randomCategories];
+    const missingCount = 3 - filledCategories.length;
+  
+    if (missingCount > 0) {
+      filledCategories.push(
+        ...Array.from({ length: missingCount }, (_, i) => ({
+          ...emptyCategory,
+          id: `empty-${i}`,
+        }))
+      );
+    }
+  
+    return (
+      <CategoryCardCarrousel carrouselName={'Categories'}>
+        {filledCategories.map((category) => (
+          <CategoryCard key={category.id} category={category} />
+        ))}
+      </CategoryCardCarrousel>
+    );
+  }, [randomCategories]);
 
   const productCarouselsByCategory = useMemo(() => {
     return randomCategories.map(category => {
@@ -145,6 +188,8 @@ const LandingPage: React.FC = (): JSX.Element => {
             <ProductsCarrousel carrouselName='Products'>
               {memoizedProductCards}
             </ProductsCarrousel>
+            <Divider sx={{border: '1px solid black'}}/>
+            {MemoizedCategoryCards}
             <Box>
               {productCarouselsByCategory}
             </Box>

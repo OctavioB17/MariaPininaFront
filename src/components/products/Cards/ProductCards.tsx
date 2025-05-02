@@ -2,7 +2,7 @@ import React, { JSX } from 'react'
 import NormalBox from '../../reusable/NormalBox'
 import ProductsProps from '../../interfaces/products/ProductsProps'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
-import LoadingStatic from './LoadingStatic';
+import LoadingStatic from '../../reusable/LoadingStatic';
 import { Link } from 'react-router-dom';
 
 const productCards: React.FC<ProductsProps> = ({ product }): JSX.Element => {
@@ -12,7 +12,8 @@ const productCards: React.FC<ProductsProps> = ({ product }): JSX.Element => {
         <Box component='img' src={product.thumbnailUrl} alt={product.name} sx={{ width: '15vw', height: '15vw', border: '2px solid black' }} />
       ) : (
         <LoadingStatic />
-      )}      <Box sx={{width: '100%'}}>
+      )}      
+      <Box sx={{width: '100%'}}>
         <Box>
           <Typography variant='subtitle1' sx={{textAlign: 'left', fontSize: '1.1vw', width: '15vw', height: '1vw', fontStyle: 'italic', paddingTop: '0.5vw', paddingBottom: '0.5vw', overflow: 'hidden'}}>
             {product.name ? product.name : <Skeleton variant="rectangular"/>}
