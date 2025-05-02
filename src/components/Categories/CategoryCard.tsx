@@ -3,35 +3,38 @@ import CategoryCardProps from '../interfaces/categories/CategoryCardProps'
 import NormalBox from '../reusable/NormalBox'
 import { Box, Typography } from '@mui/material'
 import LoadingStatic from '../reusable/LoadingStatic'
+import { Link } from 'react-router-dom'
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element => {
   return (
-    <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw'}}>
-        <Box>
-            {
-                category.imageUrl ?
-                    <Box component='img' src={category.imageUrl} sx={{width: '25vw'}}/>
-                :
-                    <LoadingStatic sx={{width: '26vw', height: '40vh'}}/>
-            }
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', padding: '0.5vw' }}>
+    <Link to={`/category/${category.id}`} style={{ textDecoration: 'none' }}>
+        <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw', color: 'primary.contrastText'}}>
             <Box>
-                <Typography variant='subtitle1' sx={{ textAlign: 'left', fontSize: '1.5vw' }}>
-                    {
-                        category.name
-                    }
-                </Typography>
+                {
+                    category.imageUrl ?
+                        <Box component='img' src={category.imageUrl} sx={{width: '25vw', height: '50vh', border: '2px solid black'}}/>
+                    :
+                        <LoadingStatic sx={{width: '26vw', height: '50vh'}}/>
+                }
             </Box>
-            <Box sx={{ width: '25vw', textAlign: 'left'}}>
-                <Typography>
-                    {
-                        category.description
-                    }
-                </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', padding: '0.5vw' }}>
+                <Box>
+                    <Typography variant='subtitle1' sx={{ textAlign: 'left', fontSize: '1.5vw' }}>
+                        {
+                            category.name
+                        }
+                    </Typography>
+                </Box>
+                <Box sx={{ width: '25vw', textAlign: 'left', height: '10vh'}}>
+                    <Typography>
+                        {
+                            category.description
+                        }
+                    </Typography>
+                </Box>
             </Box>
-        </Box>
-    </NormalBox>
+        </NormalBox>
+    </Link>
   )
 }
 

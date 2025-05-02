@@ -23,16 +23,17 @@ const LandingPage: React.FC = (): JSX.Element => {
           axios.get<IProduct[]>(`${variables.backendIp}/products/get-all/random`),
           axios.get<IPaginationResponse<ICategory>>(`${variables.backendIp}/categories/get/all`)
         ])
-
+        
         setProducts(productsResponse.data)
         setCategories(categoriesResponse.data.data)
       } catch (error) {
         console.error('Error al traer los productos', error)
       }
     }
-
     fetchProducts()
   }, [])
+
+  console.log(categories)
 
   const memoizedProductCards = useMemo(() => {
     const emptyProduct: IProduct = {
@@ -69,8 +70,34 @@ const LandingPage: React.FC = (): JSX.Element => {
       <ProductCards key={product.id} product={product} />
     ));
   }, [products]);
-  
 
+  const fakeCategories: ICategory[] = [
+    {
+      id: "fake-1",
+      name: "Claws and paws",
+      description: 'A collection dedicated to all creatures that roam the world on four legs...',
+      imageUrl: '',
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: "fake-2",
+      name: "Fangs",
+      description: 'A category that highlights nature’s most fearsome and fascinating predators...',
+      imageUrl: '',
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: "fake-3",
+      name: "Pure tenderness",
+      description: 'A heartwarming selection filled with the most adorable, gentle, and loving beings...',
+      imageUrl: '',
+      createdAt: '',
+      updatedAt: '',
+    }
+  ];
+  
   const randomCategories = useMemo(() => {
     const emptyCategory: ICategory = {
       id: '',
@@ -81,24 +108,21 @@ const LandingPage: React.FC = (): JSX.Element => {
       updatedAt: '',
     };
   
-    if (categories.length === 0) {
-      return [
-        { ...emptyCategory, id: "fake-1", name: "Claws and paws", description: 'A collection dedicated to all creatures that roam the world on four legs, showcasing their agility, strength, and unique adaptations. From fierce felines to loyal canines, this category celebrates the beauty and power of paws and claws.' },
-        { ...emptyCategory, id: "fake-2", name: "Fangs", description: 'A category that highlights nature’s most fearsome and fascinating predators. Whether sharp, venomous, or built for crushing, fangs are a defining trait of creatures that command respect. Explore the evolutionary marvels behind the bite.' },
-        { ...emptyCategory, id: "fake-3", name: "Pure tenderness", description: 'A heartwarming selection filled with the most adorable, gentle, and loving beings. From fluffy companions to affectionate wildlife, this category radiates warmth, softness, and a sense of comfort that melts hearts.' },
-      ];
+    if (categories.length >= 3) {
+      return [...categories].sort(() => Math.random() - 0.5).slice(0, 3);
     }
   
-    if (categories.length > 3) {
-      return [...categories]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
-    }
+    const needed = 3 - categories.length;
+    const shuffledFakes = [...fakeCategories].sort(() => Math.random() - 0.5);
+    const selectedFakes = shuffledFakes.slice(0, needed);
   
-    return categories.map((cat) => ({
-      ...emptyCategory,
-      ...cat,
-    }));
+    return [
+      ...categories.map((cat) => ({
+        ...emptyCategory,
+        ...cat,
+      })),
+      ...selectedFakes
+    ];
   }, [categories]);
   
   const MemoizedCategoryCards = useMemo(() => {
