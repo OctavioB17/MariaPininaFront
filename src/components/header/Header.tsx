@@ -10,6 +10,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations';
 import { Link } from 'react-router-dom';
 import HeaderProps from '../interfaces/header/HeaderProps';
+import AuthWidget from './AuthWidget';
 
 const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Element => {
 
@@ -27,16 +28,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
             <Box>
               <SearchBar products={products}/>
             </Box>
-            <Box sx={{display: 'flex', gap: '1vw'}}>
-              <Box sx={{display: 'flex', gap: '1vw', alignItems: 'center'}}>
-                <Typography variant='h4'>Log-in</Typography>
-                <Face5Icon/>
-              </Box>
-              <Box sx={{display: 'flex', gap: '1vw', alignItems: 'center'}}>
-                <Typography variant='h4'>Sign-in</Typography>
-                <Face6Icon/>
-              </Box>
-            </Box>
+            <AuthWidget/>
         </Box>
         <Divider sx={{ border: '1px solid black' }}/>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
