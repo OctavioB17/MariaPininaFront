@@ -39,7 +39,7 @@ const ProductDetails: React.FC = () => {
 
       console.log(products)
   return (
-    <NBoxWithHeaderAndFooter>
+    <NBoxWithHeaderAndFooter sx={{ width: '80vw' }}>
         <Box sx={{display: 'flex', flexDirection: 'column', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
             {
                 products?.categoryId ? 
@@ -57,7 +57,7 @@ const ProductDetails: React.FC = () => {
                 :
                     <Skeleton sx={{width: "35vw", height: '2vw', marginBottom: '-10vw' }}/>
             }
-            <Box sx={{display: 'flex', gap: '2vw'}}>
+            <Box sx={{display: 'flex', gap: '2vw', justifyContent: 'space-between'}}>
                 {
                     products?.imageGallery ?
                         <ImageGalleryComponent imageLinks={products.imageGallery}/>

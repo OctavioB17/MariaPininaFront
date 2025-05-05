@@ -1,8 +1,6 @@
 import { Box, Button, Divider, Typography } from '@mui/material'
 import catlogo from '../../assets/catlogo.webp'
 import SearchBar from './SearchBar'
-import Face5Icon from '@mui/icons-material/Face5';
-import Face6Icon from '@mui/icons-material/Face6';
 import { JSX } from 'react';
 import DropDownMenu from '../reusable/DropDownMenu';
 import IconButton from '@mui/material/IconButton';
@@ -19,12 +17,12 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw', ...sx}}>
         <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'space-between'}}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Link to={'/'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none' }}>
                 <Box component='img' src={catlogo} sx={{width: '6vw'}}/>
                 <Typography variant='h1' sx={{ fontSize: '0.8vw', fontWeight: 900 }}>
                     MARÍA PININA
                 </Typography>
-            </Box>
+            </Link>
             <Box>
               <SearchBar products={products}/>
             </Box>

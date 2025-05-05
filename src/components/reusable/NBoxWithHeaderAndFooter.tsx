@@ -38,7 +38,7 @@ const NBoxWithHeaderAndFooter: React.FC<SxPropWithChildren> = ({ children, sx })
 
   return (
     <Box>
-        <NormalBox sx={{...sx}}>
+        <NormalBox sx={{width: '90vw', ...sx}}>
           <Header categories={categories} products={products} sx={{borderBottom: '2px solid black'}}/>
           <Box>
             {children}
