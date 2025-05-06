@@ -2,7 +2,7 @@ import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
 import NormalBox from '../reusable/NormalBox'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { IUserLogin } from '../interfaces/users/IUser'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../config/variables'
@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import apiError from '../interfaces/ApiError'
 
 
-const UserLogin = () => {
+const UserLogin: React.FC = (): JSX.Element => {
 
   const navigate = useNavigate()
 

@@ -7,6 +7,8 @@ import 'slick-carousel/slick/slick-theme.css'
 import UserLogin from './components/users/UserLogin'
 import UserRegister from './components/users/UserRegister'
 import UserAccountAuthorization from './components/users/UserAccountAuthorization'
+import UserPasswordResetRequest from './components/users/UserPasswordResetRequest'
+import UserPasswordChange from './components/users/UserPasswordChange'
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path='/login' element={<UserLogin/>}/>
         <Route path='/register' element={<UserRegister/>}/>
         <Route path='/authorize-user/:id' element={<UserAccountAuthorization/>}/>
+        <Route path='/reset-password' element={<UserPasswordResetRequest/>}/>
+        <Route path='/reset-password/reset' element={<UserPasswordChange/>}/>
       </Routes>
     </>
   )

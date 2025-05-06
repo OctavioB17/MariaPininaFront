@@ -2,14 +2,14 @@ import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
 import NormalBox from '../reusable/NormalBox'
 import { Link } from 'react-router-dom'
-import { useMemo, useState } from 'react'
+import { JSX, useMemo, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../config/variables'
 import apiError from '../interfaces/ApiError'
 import { IUserRegister } from '../interfaces/users/IUser'
 
 
-const UserRegister = () => {
+const UserRegister: React.FC = (): JSX.Element => {
 
   const [registerData, setRegisterData] = useState<IUserRegister>({
     name: "",
@@ -32,7 +32,7 @@ const UserRegister = () => {
 
   const confirmPasswordError = confirmPassword !== registerData.password ? "Passwords do not match" : null
 
-  const validateField = (name: string, value: string, fullData: typeof registerData) => {
+  const validateField = (name: string, value: string, fullData: typeof registerData): string => {
     switch (name) {
       case 'name':
         if (!value || value.length < 2 || /\d/.test(value)) {
@@ -83,7 +83,6 @@ const UserRegister = () => {
   
       if (apiResponse.data) {
         setRegisterSuccessMessage('Successfully registered. An email was sent to confirm your account')
-
         return
       }
   
@@ -91,7 +90,6 @@ const UserRegister = () => {
   
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
-
             setRegisterError( error.response.data.message || 'Check the errors in each field')
           }
     } finally {

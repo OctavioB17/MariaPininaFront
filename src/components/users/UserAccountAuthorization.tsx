@@ -2,12 +2,12 @@ import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 import { Box, CircularProgress, Typography } from '@mui/material'
 import NormalBox from '../reusable/NormalBox'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import axios from 'axios'
 import { variables } from '../../config/variables'
 
 
-const UserAccountAuthorization = () => {
+const UserAccountAuthorization: React.FC = (): JSX.Element => {
 
   const navigate = useNavigate()
 
@@ -22,7 +22,7 @@ const UserAccountAuthorization = () => {
   const [count, setCount] = useState<number>(7)
 
   useEffect(() => {
-    const auth = async (userId: string) => {
+    const auth = async (userId: string): Promise<void> => {
         try {
             const apiResponse = await axios.get(`${variables.backendIp}/users/authorize-user/${userId}`)
             if (!apiResponse.data) {
