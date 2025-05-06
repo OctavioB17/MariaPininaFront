@@ -33,8 +33,6 @@ const LandingPage: React.FC = (): JSX.Element => {
     fetchProducts()
   }, [])
 
-  console.log(categories)
-
   const memoizedProductCards = useMemo(() => {
     const emptyProduct: IProduct = {
       id: '0',

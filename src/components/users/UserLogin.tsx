@@ -62,7 +62,7 @@ const UserLogin = () => {
               {
                 imageLoad ?
                   <>
-                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '5vw', width: '20vw', gap: '2vw'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '5vw', width: '17vw', gap: '2vw'}}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
                         <Typography sx={{ paddingBottom: '1vw', fontSize: '3vw', textAlign: 'left' }}>
                           Log in
@@ -71,13 +71,13 @@ const UserLogin = () => {
                           <Typography sx={{ textAlign: 'left' }}>
                             E-mail
                           </Typography>
-                          <TextField onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} sx={{width: '100%'}}/>
+                          <TextField type='email' onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} sx={{width: '100%'}}/>
                         </Box>
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
                           <Typography sx={{ textAlign: 'left' }}>
                             Password
                           </Typography>
-                          <TextField onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} sx={{width: '100%'}}/>
+                          <TextField type='password' onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} sx={{width: '100%'}}/>
                         </Box>
                       </Box>
                       <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
@@ -93,12 +93,12 @@ const UserLogin = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                           <Link to={'/register'} style={{ color: 'inherit'}}>
                             <Typography>
-                              No account? Register
+                              Register
                             </Typography>
                           </Link>
                           <Link to={'/reset-password'} style={{ color: 'inherit'}}>
                             <Typography>
-                              Forgot passoword? Reset
+                              Forgot passoword
                             </Typography>
                           </Link>
                         </Box>
