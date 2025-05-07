@@ -19,13 +19,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', padding: '0.5vw' }}>
                 <Box>
-                    <Typography variant='subtitle1' sx={{ textAlign: 'left', fontSize: '1.5vw' }}>
+                    <Typography variant='subtitle1' sx={{ textAlign: 'left', fontSize: '1.5vw', overflow: 'hidden' }}>
                         {
                             category.name
                         }
                     </Typography>
                 </Box>
-                <Box sx={{ width: '25vw', textAlign: 'left', height: '10vh'}}>
+                <Box sx={{ width: '25vw', textAlign: 'left', height: '12vh', overflow: 'hidden'}}>
                     <Typography>
                         {
                             category.description
