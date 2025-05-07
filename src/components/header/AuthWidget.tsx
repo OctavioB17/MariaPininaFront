@@ -1,41 +1,119 @@
-import { Box, Typography } from '@mui/material'
+import { Avatar, Box, MenuItem, Paper, Popper, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import Face5Icon from '@mui/icons-material/Face5';
-import Face6Icon from '@mui/icons-material/Face6';
-import { JSX } from '@emotion/react/jsx-runtime';
-import { Link } from 'react-router-dom';
+import Face5Icon from '@mui/icons-material/Face5'
+import Face6Icon from '@mui/icons-material/Face6'
+import { Link } from 'react-router-dom'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { selectUser } from '../../store/userSlice'
+import Cookies from 'js-cookie'
 
-const AuthWidget: React.FC = (): JSX.Element => {
+const AuthWidget: React.FC = () => {
 
-    const [logged, setLogged] = useState<boolean>(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popper' : undefined;
 
-    const NotLogged = () => { 
-        return (
-            <Box sx={{display: 'flex', gap: '1vw', color: 'primary.contrastText'}}>
-                <Link to={`/login`} style={{display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547'}}>
-                    <Typography variant='h4'>Log-in</Typography>
-                    <Face5Icon/>
-                </Link>
-                <Link to={`/register`} style={{display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547'}}>
-                    <Typography variant='h4'>Sign-in</Typography>
-                    <Face6Icon/>
-                </Link>
-            </Box>    
-        )
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const user = useAppSelector(selectUser)
+  const token = Cookies.get('token')
+  const name = sessionStorage.getItem('name')
+  const surname = sessionStorage.getItem('surname')
+
+  const isLogged = user && token && name && surname
+
+  const stringToColor = (string: string) => {
+    let hash = 0
+    for (let i = 0; i < string.length; i++) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash)
     }
 
+    let color = '#'
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff
+      color += `00${value.toString(16)}`.slice(-2)
+    }
 
+    return color
+  }
+
+  const stringAvatar = (name: string, surname: string) => {
+    return {
+      sx: {
+        bgcolor: stringToColor(name + surname),
+        color: '#fff'
+      },
+      children: `${name[0]}${surname[0]}`.toUpperCase()
+    }
+  }
+
+  const CatAvatar = () => {
+    const color = stringToColor(name! + surname!)
+  
+    return (
+      <Box sx={{ position: 'relative', width: 56, height: 56, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Avatar {...stringAvatar(name!, surname!)} />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 9,
+            width: 14,
+            height: 14,
+            backgroundColor: color,
+            transform: 'rotate(-20deg)',
+            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+            zIndex: 1,
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 9,
+            width: 14,
+            height: 14,
+            backgroundColor: color,
+            transform: 'rotate( 20deg)',
+            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+            zIndex: 1,
+          }}
+        />
+      </Box>
+    )
+  }
 
   return (
     <Box>
-        {
-            logged ?
-            <div></div>
-            :
-            <NotLogged/>
-        }
+      {isLogged ? (
+        <Box sx={{ display: 'flex', color: 'primary.contrastText', alignItems: 'center' }} onClick={handleClick}>
+          <CatAvatar />
+          <Typography>{`${name} ${surname}`}</Typography>
+        </Box>
+      ) : (
+        <Box sx={{ display: 'flex', gap: '1vw', color: 'primary.contrastText' }}>
+          <Link to="/login" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547' }}>
+            <Typography variant="h4">Log-in</Typography>
+            <Face5Icon />
+          </Link>
+          <Link to="/register" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547' }}>
+            <Typography variant="h4">Sign-in</Typography>
+            <Face6Icon />
+          </Link>
+        </Box>
+      )}
+      <Popper id={id} open={open} anchorEl={anchorEl} placement='bottom-end' disablePortal sx={{zIndex: 99}}>
+        <Paper elevation={4} sx={{ mt: 1, p: 1, backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}>
+          <MenuItem component={Link} to="/me">Me</MenuItem>
+          <MenuItem component={Link} to="/orders">Orders</MenuItem>
+          <MenuItem component={Link} to="/publications">Publications</MenuItem>
+          <MenuItem component={Link} to="/logout">Logout</MenuItem>
+        </Paper>
+      </Popper>
     </Box>
-  )
+  );
 }
 
 export default AuthWidget

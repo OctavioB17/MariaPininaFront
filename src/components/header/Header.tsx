@@ -9,8 +9,6 @@ import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations';
 import { Link } from 'react-router-dom';
 import HeaderProps from '../interfaces/header/HeaderProps';
 import AuthWidget from './AuthWidget';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../store/userSlice';
 
 const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Element => {
 
