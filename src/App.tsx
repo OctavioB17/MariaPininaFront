@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import LandingPage from './components/landing/LandingPage'
 import ProductDetails from './components/products/Details/ProductDetails'
@@ -10,19 +10,28 @@ import UserAccountAuthorization from './components/users/UserAccountAuthorizatio
 import UserPasswordResetRequest from './components/users/UserPasswordResetRequest'
 import UserPasswordChange from './components/users/UserPasswordChange'
 import AuthInitializer from './components/users/AuthInitializer'
+import useIsLogged from './hooks/useIsLogged'
 
 function App() {
+
+  const isLogged = useIsLogged()
+
   return (
     <>
       <AuthInitializer/>
       <Routes>
         <Route path='/' element={<LandingPage />}/>
         <Route path='/products/:id' element={<ProductDetails/>}/>
-        <Route path='/login' element={<UserLogin/>}/>
-        <Route path='/register' element={<UserRegister/>}/>
+        {!isLogged && (
+          <>
+            <Route path='/login' element={<UserLogin />} />
+            <Route path='/register' element={<UserRegister />} />
+          </>
+        )}
         <Route path='/authorize-user/:id' element={<UserAccountAuthorization/>}/>
         <Route path='/reset-password' element={<UserPasswordResetRequest/>}/>
         <Route path='/reset-password/reset' element={<UserPasswordChange/>}/>
+        <Route path='*' element={<Navigate to="/" />} />
       </Routes>
     </>
   )
