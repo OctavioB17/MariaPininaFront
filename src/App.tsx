@@ -9,10 +9,12 @@ import UserRegister from './components/users/UserRegister'
 import UserAccountAuthorization from './components/users/UserAccountAuthorization'
 import UserPasswordResetRequest from './components/users/UserPasswordResetRequest'
 import UserPasswordChange from './components/users/UserPasswordChange'
+import AuthInitializer from './components/users/AuthInitializer'
 
 function App() {
   return (
     <>
+      <AuthInitializer/>
       <Routes>
         <Route path='/' element={<LandingPage />}/>
         <Route path='/products/:id' element={<ProductDetails/>}/>

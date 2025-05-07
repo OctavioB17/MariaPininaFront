@@ -6,7 +6,7 @@ import { JSX, useMemo, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../config/variables'
 import apiError from '../interfaces/ApiError'
-import { IUserRegister } from '../interfaces/users/IUser'
+import { IUserRegister } from '../../interfaces/IUser'
 
 
 const UserRegister: React.FC = (): JSX.Element => {

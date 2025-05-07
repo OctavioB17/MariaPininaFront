@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress, TextField, Typography } from '@mui/mater
 import NormalBox from '../reusable/NormalBox'
 import { Link, useNavigate } from 'react-router-dom'
 import { JSX, useState } from 'react'
-import { IUserLogin } from '../interfaces/users/IUser'
+import { IUserLogin } from '../../interfaces/IUser'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../config/variables'
 import Cookies from 'js-cookie'

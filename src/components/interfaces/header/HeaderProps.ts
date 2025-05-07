@@ -1,4 +1,4 @@
-import ICategory from "../categories/ICategories";
+import ICategory from "../../../interfaces/ICategories";
 import { IProduct } from "../products/IProducts";
 import { ISxProps } from "../SxProps";
 

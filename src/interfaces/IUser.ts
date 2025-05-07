@@ -7,7 +7,9 @@ export interface IUser {
     role: string;
     createdAt: string;
     updatedAt: string;
-  }
+}
+
+export interface IUserNoPassword extends Omit<IUser, 'password'> {}
   
 export interface IUserLogin {
   email: string;

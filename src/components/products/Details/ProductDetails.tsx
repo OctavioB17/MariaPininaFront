@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IProductWithUserAndCategory } from '../../interfaces/products/IProducts'
+import { IProductWithUserAndCategory } from '../../../interfaces/IProducts'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { variables } from '../../../config/variables'
