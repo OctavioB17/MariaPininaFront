@@ -6,9 +6,12 @@ import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { selectUser } from '../../store/userSlice'
 import Cookies from 'js-cookie'
+import { useUserLogout } from '../../hooks/useUserLogout'
+import useIsLogged from '../../hooks/useIsLogged'
 
 const AuthWidget: React.FC = () => {
 
+  const logout = useUserLogout()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
@@ -17,12 +20,15 @@ const AuthWidget: React.FC = () => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const user = useAppSelector(selectUser)
-  const token = Cookies.get('token')
+  const handleLogout = () => {
+    setAnchorEl(null); 
+    logout()
+  };
+
   const name = sessionStorage.getItem('name')
   const surname = sessionStorage.getItem('surname')
 
-  const isLogged = user && token && name && surname
+  const isLogged = useIsLogged()
 
   const stringToColor = (string: string) => {
     let hash = 0
@@ -109,7 +115,7 @@ const AuthWidget: React.FC = () => {
           <MenuItem component={Link} to="/me">Me</MenuItem>
           <MenuItem component={Link} to="/orders">Orders</MenuItem>
           <MenuItem component={Link} to="/publications">Publications</MenuItem>
-          <MenuItem component={Link} to="/logout">Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Paper>
       </Popper>
     </Box>
