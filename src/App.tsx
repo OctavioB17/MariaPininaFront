@@ -11,10 +11,12 @@ import UserPasswordResetRequest from './components/users/UserPasswordResetReques
 import UserPasswordChange from './components/users/UserPasswordChange'
 import AuthInitializer from './components/users/AuthInitializer'
 import useIsLogged from './hooks/useIsLogged'
+import useTokenRenewal from './hooks/useTokenRenewal'
 
 function App() {
 
   const isLogged = useIsLogged()
+  useTokenRenewal(isLogged);
 
   return (
     <>

@@ -27,11 +27,10 @@ const AuthInitializer: React.FC = (): null => {
             sessionStorage.setItem('surname', user.surname);
         };
 
-        // Solo llama a fetchUser si hay un token y no hay un usuario en el estado global
         if (token && !user) {
             fetchUser();
         }
-    }, [token, user, dispatch]); // Agrega user y dispatch como dependencias
+    }, [token, user, dispatch]);
 
     return null;
 };

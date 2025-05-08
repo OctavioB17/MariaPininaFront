@@ -10,6 +10,7 @@ import Cookies from 'js-cookie'
 import apiError from '../interfaces/ApiError'
 import { setUser } from '../../store/userSlice'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
+import IJwtLoginTokens from '../interfaces/IJwtLoginTokens'
 
 
 const UserLogin: React.FC = (): JSX.Element => {
@@ -31,20 +32,24 @@ const UserLogin: React.FC = (): JSX.Element => {
   const login = async (user: IUserLogin): Promise<void> => {
     setIsLoggingIn(true)
     try {
-      const apiResponse: AxiosResponse<string | apiError> = await axios.post(`${variables.backendIp}/login/local`, user)
+      const apiResponse: AxiosResponse<IJwtLoginTokens | apiError> = await axios.post(`${variables.backendIp}/login/local`, user)
       const token = apiResponse.data
-      if (typeof token === 'string') {
-        const isJWT = token.split('.').length === 3
+      if (token && 'refreshToken' in token && 'accessToken' in token) {
+        const accessToken = token.accessToken
+        const refreshToken = token.refreshToken
+        const isJWT = accessToken.split('.').length === 3
         if (isJWT) {
           const userResponse: AxiosResponse<IUserNoPassword> = await axios.get(`${variables.backendIp}/users/find/no-password/me`, {
             headers: {
-                  Authorization: `Bearer ${token}`
+                  Authorization: `Bearer ${accessToken}`
               }
             })
             const user = userResponse.data
             if (user) {
-              const expiresInSixHours = new Date(new Date().getTime() + 6 * 60 * 60 * 1000)
-              Cookies.set('token', token, { expires: expiresInSixHours })
+              const expiresInRefreshToken = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+              const expiresInAccessToken = new Date(new Date().getTime() + 15 * 60 * 1000);
+              Cookies.set('token', accessToken, { expires: expiresInAccessToken })
+              Cookies.set('refreshToken', refreshToken, { expires: expiresInRefreshToken }); 
               sessionStorage.setItem('name', user.name)
               sessionStorage.setItem('surname', user.surname)
               dispatch(setUser(user));
