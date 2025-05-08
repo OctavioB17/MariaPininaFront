@@ -1,9 +1,14 @@
- import React from 'react'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
+import { Box } from '@mui/material'
  
  const UserPublicationsMenu = () => {
    return (
-     <div>UserPublicationsMenu</div>
-   )
+    <NBoxWithHeaderAndFooter>
+      <Box>
+        
+      </Box>
+    </NBoxWithHeaderAndFooter>
+  )
  }
  
  export default UserPublicationsMenu

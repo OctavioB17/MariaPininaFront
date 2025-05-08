@@ -5,6 +5,8 @@ import Face6Icon from '@mui/icons-material/Face6'
 import { Link } from 'react-router-dom'
 import { useUserLogout } from '../../hooks/useUserLogout'
 import useIsLogged from '../../hooks/useIsLogged'
+import { selectUser } from '../../store/userSlice'
+import { useAppSelector } from '../../hooks/useAppSelector'
 
 const AuthWidget: React.FC = () => {
 
@@ -24,6 +26,7 @@ const AuthWidget: React.FC = () => {
 
   const name = sessionStorage.getItem('name')
   const surname = sessionStorage.getItem('surname')
+  const user = useAppSelector(selectUser);
 
   const isLogged = useIsLogged()
 
@@ -109,9 +112,11 @@ const AuthWidget: React.FC = () => {
       )}
       <Popper id={id} open={open} anchorEl={anchorEl} placement='bottom-end' disablePortal sx={{zIndex: 99}}>
         <Paper elevation={4} sx={{ mt: 1, p: 1, backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}>
-          <MenuItem component={Link} to="/me">Me</MenuItem>
           <MenuItem component={Link} to="/orders">Orders</MenuItem>
-          <MenuItem component={Link} to="/publications">Publications</MenuItem>
+          <MenuItem component={Link} to={`${user?.id}/publications`}>Publications</MenuItem>
+          {user && (user.role === 'ADMIN' || user.role === 'MODERATOR' || user.role === 'SUPER_ADMIN') && (
+            <MenuItem>Admin menu</MenuItem>
+          )}
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Paper>
       </Popper>

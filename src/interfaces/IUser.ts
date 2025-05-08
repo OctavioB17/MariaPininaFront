@@ -4,12 +4,16 @@ export interface IUser {
     surname: string;
     email: string;
     password: string
-    role: string;
+    role: UserRoles;
+    refreshToken: string
     createdAt: string;
     updatedAt: string;
 }
 
-export interface IUserNoPassword extends Omit<IUser, 'password'> {}
+export type UserRoles = 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'MODERATOR';
+
+
+export type IUserNoPassword = Omit<IUser, 'password'>
   
 export interface IUserLogin {
   email: string;
