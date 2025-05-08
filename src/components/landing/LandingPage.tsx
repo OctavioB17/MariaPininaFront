@@ -69,7 +69,7 @@ const LandingPage: React.FC = (): JSX.Element => {
     ));
   }, [products]);
 
-  const fakeCategories: ICategory[] = [
+  const fakeCategories = useMemo(() => [
     {
       id: "fake-1",
       name: "Claws and paws",
@@ -81,7 +81,7 @@ const LandingPage: React.FC = (): JSX.Element => {
     {
       id: "fake-2",
       name: "Fangs",
-      description: 'A category that highlights nature’s most fearsome and fascinating predators...',
+      description: "A category that highlights nature's most fearsome and fascinating predators...",
       imageUrl: '',
       createdAt: '',
       updatedAt: '',
@@ -94,8 +94,8 @@ const LandingPage: React.FC = (): JSX.Element => {
       createdAt: '',
       updatedAt: '',
     }
-  ];
-  
+  ], []);
+
   const randomCategories = useMemo(() => {
     const emptyCategory: ICategory = {
       id: '',
@@ -105,15 +105,15 @@ const LandingPage: React.FC = (): JSX.Element => {
       createdAt: '',
       updatedAt: '',
     };
-  
+
     if (categories.length >= 3) {
       return [...categories].sort(() => Math.random() - 0.5).slice(0, 3);
     }
-  
+
     const needed = 3 - categories.length;
     const shuffledFakes = [...fakeCategories].sort(() => Math.random() - 0.5);
     const selectedFakes = shuffledFakes.slice(0, needed);
-  
+
     return [
       ...categories.map((cat) => ({
         ...emptyCategory,
@@ -121,7 +121,7 @@ const LandingPage: React.FC = (): JSX.Element => {
       })),
       ...selectedFakes
     ];
-  }, [categories]);
+  }, [categories, fakeCategories]);
   
   const MemoizedCategoryCards = useMemo(() => {
     const emptyCategory: ICategory = {
