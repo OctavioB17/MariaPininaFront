@@ -3,16 +3,19 @@ import { Box, Button, CircularProgress, TextField, Typography } from '@mui/mater
 import NormalBox from '../reusable/NormalBox'
 import { Link, useNavigate } from 'react-router-dom'
 import { JSX, useState } from 'react'
-import { IUserLogin } from '../../interfaces/IUser'
+import { IUserLogin, IUserNoPassword } from '../../interfaces/IUser'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../config/variables'
 import Cookies from 'js-cookie'
 import apiError from '../interfaces/ApiError'
+import { setUser } from '../../store/userSlice'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 
 
 const UserLogin: React.FC = (): JSX.Element => {
 
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [loginData, setLoginData] = useState<IUserLogin>({
     email: '',
@@ -29,13 +32,24 @@ const UserLogin: React.FC = (): JSX.Element => {
     setIsLoggingIn(true)
     try {
       const apiResponse: AxiosResponse<string | apiError> = await axios.post(`${variables.backendIp}/login/local`, user)
-  
-      if (typeof apiResponse.data === 'string') {
-        const isJWT = apiResponse.data.split('.').length === 3
+      const token = apiResponse.data
+      if (typeof token === 'string') {
+        const isJWT = token.split('.').length === 3
         if (isJWT) {
-          const expiresInSixHours = new Date(new Date().getTime() + 6 * 60 * 60 * 1000)
-          Cookies.set('token', apiResponse.data, { expires: expiresInSixHours })
-          navigate('/')
+          const userResponse: AxiosResponse<IUserNoPassword> = await axios.get(`${variables.backendIp}/users/find/no-password/me`, {
+            headers: {
+                  Authorization: `Bearer ${token}`
+              }
+            })
+            const user = userResponse.data
+            if (user) {
+              const expiresInSixHours = new Date(new Date().getTime() + 6 * 60 * 60 * 1000)
+              Cookies.set('token', token, { expires: expiresInSixHours })
+              sessionStorage.setItem('name', user.name)
+              sessionStorage.setItem('surname', user.surname)
+              dispatch(setUser(user));
+              navigate('/')
+            }
           return
         }
       }

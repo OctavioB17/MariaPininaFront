@@ -37,7 +37,6 @@ const ProductDetails: React.FC = () => {
         }
     }
 
-      console.log(products)
   return (
     <NBoxWithHeaderAndFooter sx={{ width: '82vw' }}>
         <Box sx={{display: 'flex', flexDirection: 'column', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>

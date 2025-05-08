@@ -7,7 +7,6 @@ const useIsLogged = (): boolean => {
     const token = Cookies.get('token')
     const name = sessionStorage.getItem('name')
     const surname = sessionStorage.getItem('surname')
-  
     const isLogged = user && token && name && surname
     return Boolean(isLogged)
 } 
