@@ -2,10 +2,10 @@ import { Box, Typography, TextField, Button, CircularProgress } from '@mui/mater
 import axios, { AxiosResponse } from 'axios';
 import React, { JSX, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { variables } from '../../config/variables';
-import apiError from '../interfaces/ApiError';
-import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter';
-import NormalBox from '../reusable/NormalBox';
+import { variables } from '../../../config/variables';
+import apiError from '../../interfaces/ApiError';
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
+import NormalBox from '../../reusable/NormalBox';
 
 const UserPasswordChange: React.FC = (): JSX.Element => {
 
@@ -114,7 +114,7 @@ const UserPasswordChange: React.FC = (): JSX.Element => {
               {
                 imageLoad ?
                   <>
-                  <Box onLoad={() => setImageLoad(true) } component='img' src='../src/assets/pinina2.webp' sx={{width: '40vw'}}/>
+                  <Box onLoad={() => setImageLoad(true) } component='img' alt='pinina' src='../src/assets/pinina2.webp' sx={{width: '40vw'}}/>
                     <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '30vw', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
                         <Typography sx={{ paddingBottom: '1vw', fontSize: '3vw', textAlign: 'left' }}>
@@ -187,6 +187,7 @@ const UserPasswordChange: React.FC = (): JSX.Element => {
                     <CircularProgress sx={{color: 'primary.contrastText'}}/>
                     <Box
                       component='img'
+                      alt='pinina'
                       src='../src/assets/pinina.webp'
                       onLoad={() => setImageLoad(true)}
                       sx={{

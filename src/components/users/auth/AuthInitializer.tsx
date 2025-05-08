@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios, { AxiosResponse } from 'axios';
-import { variables } from '../../config/variables';
-import { IUserNoPassword } from '../../interfaces/IUser';
-import { selectUser, setUser } from '../../store/userSlice';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { useAppSelector } from '../../hooks/useAppSelector'; // Asegúrate de importar esto
+import { variables } from '../../../config/variables';
+import { IUserNoPassword } from '../../../interfaces/IUser';
+import { selectUser, setUser } from '../../../store/userSlice';
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../hooks/useAppSelector'; // Asegúrate de importar esto
 
 const AuthInitializer: React.FC = (): null => {
     const dispatch = useAppDispatch();

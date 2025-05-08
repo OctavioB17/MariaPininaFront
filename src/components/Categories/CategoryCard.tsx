@@ -1,4 +1,4 @@
-import React, { JSX } from 'react'
+import React, { JSX, useState } from 'react'
 import CategoryCardProps from '../interfaces/categories/CategoryCardProps'
 import NormalBox from '../reusable/NormalBox'
 import { Box, Typography } from '@mui/material'
@@ -6,13 +6,15 @@ import LoadingStatic from '../reusable/LoadingStatic'
 import { Link } from 'react-router-dom'
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   return (
     <Link to={`/category/${category.id}`} style={{ textDecoration: 'none' }}>
         <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw', color: 'primary.contrastText'}}>
             <Box>
                 {
-                    category.imageUrl ?
-                        <Box component='img' src={category.imageUrl} sx={{width: '25vw', height: '50vh', border: '2px solid black'}}/>
+                    category.imageUrl && isLoading ?
+                        <Box component='img' alt={category.name} src={category.imageUrl} sx={{width: '25vw', height: '50vh', border: '2px solid black'}} onLoad={() => setIsLoading(true)} onError={() => setIsLoading(false)}/>
                     :
                         <LoadingStatic sx={{width: '26vw', height: '50vh'}}/>
                 }

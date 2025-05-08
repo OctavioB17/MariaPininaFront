@@ -1,10 +1,10 @@
-import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
-import NormalBox from '../reusable/NormalBox'
+import NormalBox from '../../reusable/NormalBox'
 import { JSX, useState } from 'react'
 import axios from 'axios'
-import { variables } from '../../config/variables'
-import apiError from '../interfaces/ApiError'
+import { variables } from '../../../config/variables'
+import apiError from '../../interfaces/ApiError'
 
 
 const UserPasswordResetRequest: React.FC = (): JSX.Element => {
@@ -66,7 +66,7 @@ const UserPasswordResetRequest: React.FC = (): JSX.Element => {
                             </Typography>
                         }
                     </Box>
-                    <Box onLoad={() => setImageLoad(true) } component='img' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
+                    <Box onLoad={() => setImageLoad(true) } component='img' alt='pinina' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
                     </>
                 :
                   <Box sx={{ width: '33.5vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

@@ -1,12 +1,12 @@
-import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
-import NormalBox from '../reusable/NormalBox'
+import NormalBox from '../../reusable/NormalBox'
 import { Link } from 'react-router-dom'
 import { JSX, useMemo, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
-import { variables } from '../../config/variables'
-import apiError from '../interfaces/ApiError'
-import { IUserRegister } from '../../interfaces/IUser'
+import { variables } from '../../../config/variables'
+import apiError from '../../interfaces/ApiError'
+import { IUserRegister } from '../../../interfaces/IUser'
 
 
 const UserRegister: React.FC = (): JSX.Element => {
@@ -105,7 +105,7 @@ const UserRegister: React.FC = (): JSX.Element => {
               {
                 imageLoad ?
                   <>
-                  <Box onLoad={() => setImageLoad(true) } component='img' src='../src/assets/pinina2.webp' sx={{width: '40vw'}}/>
+                  <Box onLoad={() => setImageLoad(true) } alt='pinina' component='img' src='../src/assets/pinina2.webp' sx={{width: '40vw'}}/>
                     <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '30vw', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
                         <Typography sx={{ paddingBottom: '1vw', fontSize: '3vw', textAlign: 'left' }}>
@@ -238,6 +238,7 @@ const UserRegister: React.FC = (): JSX.Element => {
                     <CircularProgress sx={{color: 'primary.contrastText'}}/>
                     <Box
                       component='img'
+                      alt='pinina'
                       src='../src/assets/pinina.webp'
                       onLoad={() => setImageLoad(true)}
                       sx={{

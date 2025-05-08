@@ -1,16 +1,16 @@
-import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
-import NormalBox from '../reusable/NormalBox'
+import NormalBox from '../../reusable/NormalBox'
 import { Link, useNavigate } from 'react-router-dom'
 import { JSX, useState } from 'react'
-import { IUserLogin, IUserNoPassword } from '../../interfaces/IUser'
+import { IUserLogin, IUserNoPassword } from '../../../interfaces/IUser'
 import axios, { AxiosResponse } from 'axios'
-import { variables } from '../../config/variables'
+import { variables } from '../../../config/variables'
 import Cookies from 'js-cookie'
-import apiError from '../interfaces/ApiError'
-import { setUser } from '../../store/userSlice'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import IJwtLoginTokens from '../interfaces/IJwtLoginTokens'
+import apiError from '../../interfaces/ApiError'
+import { setUser } from '../../../store/userSlice'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import IJwtLoginTokens from '../../interfaces/IJwtLoginTokens'
 
 
 const UserLogin: React.FC = (): JSX.Element => {
@@ -123,7 +123,7 @@ const UserLogin: React.FC = (): JSX.Element => {
                         </Box>
                       </Box>
                     </Box>
-                  <Box onLoad={() => setImageLoad(true) } component='img' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
+                  <Box onLoad={() => setImageLoad(true) } component='img' alt='pinina' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
                 </>
                 :
                 <>
@@ -131,6 +131,7 @@ const UserLogin: React.FC = (): JSX.Element => {
                     <CircularProgress sx={{color: 'primary.contrastText'}}/>
                     <Box
                       component='img'
+                      alt='pinina'
                       src='../src/assets/pinina.webp'
                       onLoad={() => setImageLoad(true)}
                       sx={{

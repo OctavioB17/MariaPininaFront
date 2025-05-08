@@ -1,10 +1,10 @@
-import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
+import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { Box, CircularProgress, Typography } from '@mui/material'
-import NormalBox from '../reusable/NormalBox'
+import NormalBox from '../../reusable/NormalBox'
 import { useNavigate, useParams } from 'react-router-dom'
 import { JSX, useEffect, useState } from 'react'
 import axios from 'axios'
-import { variables } from '../../config/variables'
+import { variables } from '../../../config/variables'
 
 
 const UserAccountAuthorization: React.FC = (): JSX.Element => {
@@ -74,13 +74,14 @@ const UserAccountAuthorization: React.FC = (): JSX.Element => {
                             Redirecting to login page in {count}...
                         </Typography>
                     </Box>
-                    <Box onLoad={() => setImageLoad(true) } component='img' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
+                    <Box onLoad={() => setImageLoad(true) } component='img' alt='pinina' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
                     </>
                 :
                   <Box sx={{ width: '33.5vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <CircularProgress sx={{color: 'primary.contrastText'}}/>
                     <Box
                       component='img'
+                      alt='pinina'
                       src='../src/assets/pinina.webp'
                       onLoad={() => setImageLoad(true)}
                       sx={{
