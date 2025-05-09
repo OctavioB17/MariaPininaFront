@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
 import { Box, Button, Checkbox, CircularProgress, Divider, Pagination, Popper, Paper, TextField, MenuItem, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import { variables } from '../../../config/variables';
 import { IProduct } from '../../../interfaces/IProducts';
@@ -23,6 +23,7 @@ const UserPublicationsMenu = () => {
   const [sortOption, setSortOption] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const navigate = useNavigate();
 
   const userProducts = useCallback(async () => {
     setApiResponseLoading(true);
@@ -212,7 +213,7 @@ const UserPublicationsMenu = () => {
             <Button sx={{ color: 'inherit' }} disabled={!isAnySelected} onClick={deleteSelectedProducts}>
               Delete
             </Button>
-            <Button sx={{ color: 'inherit' }}>
+            <Button sx={{ color: 'inherit' }} onClick={() => navigate(`/${id}/publications/create`)}>
               Create publication
             </Button>
           </Box>

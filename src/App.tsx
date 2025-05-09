@@ -13,10 +13,10 @@ import UserAccountAuthorization from './components/users/auth/UserAccountAuthori
 import UserPasswordChange from './components/users/auth/UserPasswordChange';
 import UserPasswordResetRequest from './components/users/auth/UserPasswordResetRequest';
 import UserPublicationsMenu from './components/users/publications/UserPublicationsMenu';
-
 import ProtectedRoute from './components/Routes/UserProtectedRoute';
 import { useState } from 'react';
 import { Box, CircularProgress, useTheme } from '@mui/material';
+import PublicationCreation from './components/users/publications/PublicationCreation';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,7 +24,6 @@ function App() {
   const theme = useTheme();
   useTokenRenewal(isLogged);
 
-  // Mueve AuthInitializer fuera del condicional de loading
   return (
     <>
       <AuthInitializer setLoading={setLoading} />
@@ -59,6 +58,7 @@ function App() {
           {isLogged && (
             <Route path='/:id/publications' element={<ProtectedRoute />}>
               <Route path='/:id/publications' element={<UserPublicationsMenu />} />
+              <Route path='/:id/publications/create' element={<PublicationCreation />} />
             </Route>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />
