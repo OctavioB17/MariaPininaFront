@@ -83,6 +83,15 @@ export const themeOptions: ThemeOptions = {
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        list: {
+          backgroundColor: '#e8dcc7',
+          border: '2px solid black',
+          borderRadius: '4px',
+        },
+      },
+    },
   },
 };
 

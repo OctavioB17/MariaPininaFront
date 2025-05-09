@@ -41,6 +41,18 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
     }
   };
 
+  const deleteProduct = async () => {
+    setLoading(true);
+    try {
+      await axios.delete(`${variables.backendIp}/products/delete`, {
+        data: { ids: [product.id] },
+        headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <NormalBox sx={{ display: 'flex', height: '25vh', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
       <Box sx={{display: 'flex', gap: '0.5vw'}}>
@@ -106,7 +118,7 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
         <Button sx={{color: 'inherit'}}>
           Edit
         </Button>
-        <Button sx={{color: 'inherit'}}>
+        <Button sx={{color: 'inherit'}} onClick={deleteProduct}>
           Delete
         </Button>
       </Box>
