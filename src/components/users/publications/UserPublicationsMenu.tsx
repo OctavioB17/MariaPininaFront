@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
 import { Box, Button, Checkbox, CircularProgress, Divider, Pagination } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { IProduct } from '../../../interfaces/IProducts';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import NormalBox from '../../reusable/NormalBox';
 import UserPublicationBox from './UserPublicationBox';
+import Cookies from 'js-cookie';
 
 const UserPublicationsMenu = () => {
   const { id } = useParams();
@@ -16,26 +17,24 @@ const UserPublicationsMenu = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set()); // Estado para los checkboxes seleccionados
+  const [selectedProducts, setSelectedProducts] = useState<Set<IProduct>>(new Set());
   const limit = 30;
 
-  useEffect(() => {
-    const userProducts = async () => {
-      setApiResponseLoading(true);
-      try {
-        const offset = (page - 1) * limit;
-        const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`);
-        setProducts(response.data.data);
-        setTotalPages(Math.ceil(response.data.data.length / limit));
-      } catch (error) {
-        console.error('Error al obtener los productos:', error);
-      } finally {
-        setApiResponseLoading(false);
-      }
-    };
-
-    userProducts();
+  const userProducts = useCallback(async () => {
+    setApiResponseLoading(true);
+    try {
+      const offset = (page - 1) * limit;
+      const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`);
+      setProducts(response.data.data);
+      setTotalPages(Math.ceil(response.data.data.length / limit));
+    } finally {
+      setApiResponseLoading(false);
+    }
   }, [id, page]);
+
+  useEffect(() => {
+    userProducts();
+  }, [id, page, userProducts]);
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -45,25 +44,91 @@ const UserPublicationsMenu = () => {
     const checked = event.target.checked;
     setSelectAll(checked);
     if (checked) {
-      const allProductIds = new Set(products.map(product => product.id));
-      setSelectedProducts(allProductIds);
+      const allProducts = new Set(products);
+      setSelectedProducts(allProducts);
     } else {
       setSelectedProducts(new Set());
     }
   };
 
   const handleCheckboxChange = (productId: string) => {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
     const updatedSelectedProducts = new Set(selectedProducts);
-    if (updatedSelectedProducts.has(productId)) {
-      updatedSelectedProducts.delete(productId);
+    if (updatedSelectedProducts.has(product)) {
+      updatedSelectedProducts.delete(product);
     } else {
-      updatedSelectedProducts.add(productId);
+      updatedSelectedProducts.add(product);
     }
     setSelectedProducts(updatedSelectedProducts);
-    setSelectAll(updatedSelectedProducts.size === products.length); // Actualiza el estado de selectAll
+    setSelectAll(updatedSelectedProducts.size === products.length);
+  };
+
+  const updateProductPauseState = (productId: string, isPaused: boolean) => {
+    setProducts(prevProducts => prevProducts.map(product =>
+      product.id === productId ? { ...product, isPaused } : product
+    ));
+    setSelectedProducts(prevSelected => {
+      const updatedSelected = new Set(prevSelected);
+      const productToUpdate = Array.from(updatedSelected).find(p => p.id === productId);
+      if (productToUpdate) {
+        updatedSelected.delete(productToUpdate);
+        updatedSelected.add({ ...productToUpdate, isPaused });
+      }
+      return updatedSelected;
+    });
   };
 
   const isAnySelected = selectedProducts.size > 0;
+
+  const isPauseEnabled = Array.from(selectedProducts).some(product => !product.isPaused);
+  const isActivateEnabled = Array.from(selectedProducts).some(product => product.isPaused);
+  const isEditEnabled = selectedProducts.size === 1;
+    
+  const togglePauseState = async () => {
+    const selectedIds = Array.from(selectedProducts).map(product => product.id);
+    setApiResponseLoading(true);
+    try {
+      const response = await axios.patch(
+        `${variables.backendIp}/products/update/pause`,
+        { ids: selectedIds },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        await userProducts();
+        setSelectedProducts(new Set());
+      }
+    } finally {
+      setApiResponseLoading(false);
+    }
+  };
+
+  const deleteSelectedProducts = async () => {
+    const selectedIds = Array.from(selectedProducts).map(product => product.id);
+    setApiResponseLoading(true);
+    try {
+      const response = await axios.delete(
+        `${variables.backendIp}/products/delete`,
+        {
+          data: { ids: selectedIds },
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setProducts(prevProducts => prevProducts.filter(product => !selectedIds.includes(product.id)));
+        setSelectedProducts(new Set());
+      }
+    } finally {
+      setApiResponseLoading(false);
+    }
+  };
 
   return (
     <NBoxWithHeaderAndFooter>
@@ -76,16 +141,16 @@ const UserPublicationsMenu = () => {
             sx={{ fill: 'primary.contrastText', color: 'primary.contrastText' }}
           />
           <Box>
-            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected}>
+            <Button sx={{ color: 'inherit' }} disabled={!isPauseEnabled} onClick={togglePauseState}>
               Pause
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected}>
+            <Button sx={{ color: 'inherit' }} disabled={!isActivateEnabled} onClick={togglePauseState}>
               Activate
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected}>
+            <Button sx={{ color: 'inherit' }} disabled={!isEditEnabled}>
               Edit
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected}>
+            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected} onClick={deleteSelectedProducts}>
               Delete
             </Button>
             <Button sx={{ color: 'inherit' }}>
@@ -102,8 +167,9 @@ const UserPublicationsMenu = () => {
               <UserPublicationBox
                 key={product.id}
                 product={product}
-                isChecked={selectAll}
-                onCheckboxChange={handleCheckboxChange} // Pasa la función para manejar el cambio del checkbox
+                isChecked={selectedProducts.has(product)}
+                onCheckboxChange={handleCheckboxChange}
+                onPauseStateChange={updateProductPauseState}
               />
             ))}
           </Box>

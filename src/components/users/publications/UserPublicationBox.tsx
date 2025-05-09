@@ -7,7 +7,7 @@ import axios from 'axios';
 import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
 
-const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCheckboxChange: (productId: string) => void }> = ({ product, isChecked, onCheckboxChange }) => {
+const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
   const [isPaused, setIsPaused] = useState<boolean>(product.isPaused);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -19,8 +19,8 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
     setLoading(true);
     try {
       const pause = await axios.patch(
-        `${variables.backendIp}/products/update/pause/${product.id}`,
-        {},
+        `${variables.backendIp}/products/update/pause`,
+        { ids: [product.id] },
         {
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}`,
@@ -29,7 +29,9 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
       );
 
       if (pause.status === 200) {
-        setIsPaused((prev) => !prev);
+        const newIsPaused = !isPaused;
+        setIsPaused(newIsPaused);
+        onPauseStateChange(product.id, newIsPaused);
       }
       return pause;
     } catch (error) {
