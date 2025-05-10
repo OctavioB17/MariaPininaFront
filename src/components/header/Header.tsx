@@ -18,12 +18,14 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw', ...sx}}>
         <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'space-between'}}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component='img' src={catlogo} sx={{width: '6vw'}}/>
-                <Typography variant='h1' sx={{ fontSize: '0.8vw', fontWeight: 900 }}>
-                    MARÍA PININA
-                </Typography>
-            </Box>
+            <Link to={'/'} style={{textDecoration: 'none'}} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Box component='img' src={catlogo} sx={{width: '6vw'}}/>
+                    <Typography variant='h1' sx={{ fontSize: '0.8vw', fontWeight: 900, textDecoration: 'none' }}>
+                        MARÍA PININA
+                    </Typography>
+                </Box>
+            </Link>
             <Box>
               <SearchBar products={products}/>
             </Box>
