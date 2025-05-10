@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IProductWithUserAndCategory } from '../../interfaces/products/IProducts'
+import { IProductWithUserAndCategory } from '../../../interfaces/IProducts'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { variables } from '../../../config/variables'
@@ -37,9 +37,8 @@ const ProductDetails: React.FC = () => {
         }
     }
 
-      console.log(products)
   return (
-    <NBoxWithHeaderAndFooter>
+    <NBoxWithHeaderAndFooter sx={{ width: '82vw' }}>
         <Box sx={{display: 'flex', flexDirection: 'column', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
             {
                 products?.categoryId ? 
@@ -57,7 +56,7 @@ const ProductDetails: React.FC = () => {
                 :
                     <Skeleton sx={{width: "35vw", height: '2vw', marginBottom: '-10vw' }}/>
             }
-            <Box sx={{display: 'flex', gap: '2vw'}}>
+            <Box sx={{display: 'flex', gap: '2vw', justifyContent: 'space-between'}}>
                 {
                     products?.imageGallery ?
                         <ImageGalleryComponent imageLinks={products.imageGallery}/>

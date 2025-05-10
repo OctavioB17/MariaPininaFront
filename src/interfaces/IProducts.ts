@@ -1,5 +1,6 @@
-import ICategory from "../categories/ICategories";
-import IUser from "../users/IUser";
+import ICategory from "./ICategories";
+import { IUser } from "./IUser";
+
 
 
 export interface IProduct {

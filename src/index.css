@@ -45,8 +45,15 @@
   .image-gallery-slide .image-gallery-image {
     width: auto !important;
     object-fit: contain !important;
-}
+  }
 
+  .image-gallery-thumbnail.active, .image-gallery-thumbnail:focus {
+    border: 3.5px solid black !important;
+  }
+
+  .image-gallery-thumbnail:hover {
+    border: 3.5px solid #213547 !important;
+  }
 
   button {
     background-color: #f9f9f9;

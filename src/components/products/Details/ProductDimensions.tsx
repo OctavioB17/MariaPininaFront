@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import NormalBox from '../../reusable/NormalBox';
-import { IProductCharacteristic } from '../../interfaces/products/IProducts';
+import { IProductCharacteristic } from '../../../interfaces/IProducts';
 
 const ProductDimensions: React.FC<IProductCharacteristic> = ({ weight, width, length, height, material, category }) => {
 

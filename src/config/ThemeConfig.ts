@@ -30,11 +30,65 @@ export const themeOptions: ThemeOptions = {
       fontFamily: "'Space Grotesk'",
     },
   },
-    components: {
+  components: {
     MuiButton: {
       styleOverrides: {
         outlined: {
           color: '#213547',
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& fieldset': {
+            borderColor: '#213547',
+            outline: 1
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#213547',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#213547',
+          },
+        },
+        input: {
+          '&:focus': {
+            outline: '1px solid black',
+            borderRadius: '4px'
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: '#213547',
+          },
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        underline: {
+          '&:after': {
+            borderBottomColor: '#213547',
+          },
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        list: {
+          backgroundColor: '#e8dcc7',
+          border: '2px solid black',
+          borderRadius: '4px',
         },
       },
     },

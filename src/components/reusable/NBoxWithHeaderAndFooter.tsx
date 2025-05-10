@@ -4,7 +4,7 @@ import NormalBox from './NormalBox'
 import Header from '../Header/Header'
 import { IProduct } from '../interfaces/products/IProducts'
 import axios from 'axios'
-import ICategory from '../interfaces/categories/ICategories'
+import ICategory from '../../interfaces/ICategories'
 import IPaginationResponse from '../interfaces/IPaginationResponse'
 import { variables } from '../../config/variables'
 import Footer from '../Footer/Footer'
@@ -38,7 +38,7 @@ const NBoxWithHeaderAndFooter: React.FC<SxPropWithChildren> = ({ children, sx })
 
   return (
     <Box>
-        <NormalBox sx={{...sx}}>
+        <NormalBox sx={{width: '90vw', ...sx}}>
           <Header categories={categories} products={products} sx={{borderBottom: '2px solid black'}}/>
           <Box>
             {children}
