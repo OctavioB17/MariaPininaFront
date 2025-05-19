@@ -7,26 +7,29 @@ import { IProduct } from '../../../interfaces/IProducts'
 import axios, { AxiosResponse } from 'axios'
 import { variables } from '../../../config/variables'
 import ICategory from '../../../interfaces/ICategories'
-import IPaginationResponse from '../../../interfaces/IPaginationResponse'
 import WarningIcon from '@mui/icons-material/Warning';
+import IPaginationResponse from '../../interfaces/IPaginationResponse'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 const PublicationCreation = () => {
+const navigate = useNavigate();
 const [images, setImages] = useState<File[]>([])
 const [categories, setCategories] = useState<ICategory[]>([])
 const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
 const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' as 'error' | 'success' })
 
-// Form state
 const [title, setTitle] = useState('')
 const [price, setPrice] = useState('')
 const [stock, setStock] = useState('')
+const [sku, setSku] = useState('')
 const [length, setLength] = useState('')
 const [width, setWidth] = useState('')
 const [height, setHeight] = useState('')
 const [weight, setWeight] = useState('')
 const [description, setDescription] = useState('')
+const [material, setMaterial] = useState('')
 
-// Validation functions
 const validateTitle = (value: string) => {
     if (value.length > 35) {
         setSnackbar({ open: true, message: 'Title must not exceed 35 characters', severity: 'error' })
@@ -55,7 +58,7 @@ const validateDescription = (value: string) => {
     return true
 }
 
-const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
+const handleCloseSnackbar = (_event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
         return;
     }
@@ -69,13 +72,11 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 useEffect(() => {
     const categories = async () => {
-        const categories: AxiosResponse<IPaginationResponse<ICategory[]>> = await axios.get(`${variables.backendIp}/categories/get/all`)
-        setCategories(categories.data.data)
+        const response: AxiosResponse<IPaginationResponse<ICategory>> = await axios.get(`${variables.backendIp}/categories/get/all`)
+        setCategories(response.data.data)
     }
     categories()
 }, [])
-
-console.log(selectedCategory)
 
 const product: IProduct = {
     id: '',
@@ -97,6 +98,105 @@ const product: IProduct = {
     createdAt: '',
     updatedAt: ''
 }
+
+const validateAllFields = () => {
+    if (!title) {
+        setSnackbar({ open: true, message: 'Title is required', severity: 'error' })
+        return false
+    }
+    if (!validateTitle(title)) return false
+
+    if (!price) {
+        setSnackbar({ open: true, message: 'Price is required', severity: 'error' })
+        return false
+    }
+    if (!validateNumber(price, 'Price')) return false
+
+    if (!stock) {
+        setSnackbar({ open: true, message: 'Stock is required', severity: 'error' })
+        return false
+    }
+    if (!validateNumber(stock, 'Stock')) return false
+
+    if (length && !validateNumber(length, 'Length')) return false
+    if (width && !validateNumber(width, 'Width')) return false
+    if (height && !validateNumber(height, 'Height')) return false
+    if (weight && !validateNumber(weight, 'Weight')) return false
+
+    if (!description) {
+        setSnackbar({ open: true, message: 'Description is required', severity: 'error' })
+        return false
+    }
+    if (!validateDescription(description)) return false
+
+    if (!selectedCategory) {
+        setSnackbar({ open: true, message: 'Category is required', severity: 'error' })
+        return false
+    }
+
+    if (images.length === 0) {
+        setSnackbar({ open: true, message: 'At least one image is required', severity: 'error' })
+        return false
+    }
+
+    return true
+}
+
+const handlePublish = async () => {
+    if (validateAllFields()) {
+        try {
+            const formData = new FormData();
+            
+            formData.append('name', title);
+            formData.append('price', price);
+            formData.append('stock', stock);
+            formData.append('sku', sku);
+            formData.append('description', description);
+            formData.append('categoryId', selectedCategory?.id || '');
+            formData.append('isPaused', 'false');
+
+            if (length) formData.append('length', length);
+            if (width) formData.append('width', width);
+            if (height) formData.append('height', height);
+            if (weight) formData.append('weight', weight);
+
+            if (material) {
+                const materialsArray = material.split(',').map(m => m.trim()).filter(m => m !== '');
+                formData.append('material', JSON.stringify(materialsArray));
+            }
+
+            images.forEach((image) => {
+                formData.append('image', image);
+            });
+
+            const response = await axios.post(
+                `${variables.backendIp}/products/create`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${Cookies.get('token')}`
+                    }
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                setSnackbar({ 
+                    open: true, 
+                    message: 'Product created successfully', 
+                    severity: 'success' 
+                });
+            }
+        } catch (error) {
+            setSnackbar({ 
+                open: true, 
+                message: 'Error creating product. Please try again.', 
+                severity: 'error' 
+            });
+            console.error('Error creating product:', error);
+        }
+    }
+};
 
   return (
     <NBoxWithHeaderAndFooter >
@@ -160,7 +260,11 @@ const product: IProduct = {
                     <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
                         <Typography>Sku</Typography>
-                        <TextField sx={{ width: '100%' }}/>
+                        <TextField 
+                            sx={{ width: '100%' }}
+                            value={sku}
+                            onChange={(e) => setSku(e.target.value)}
+                        />
                     </Box>
                     <Typography>
                         The SKU (Stock Keeping Unit) is a unique identifier for each product.
@@ -169,7 +273,7 @@ const product: IProduct = {
                     </Typography>
                     <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                 </NormalBox>
-                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
+                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', height: '100%', justifyContent: 'center' }}>
                     <Typography variant='h5'>Category</Typography>
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', textAlign: 'left', padding: '0.2vw' }}>
@@ -178,7 +282,7 @@ const product: IProduct = {
                                 options={categories}
                                 value={selectedCategory}
                                 getOptionLabel={(option) => option.name}
-                                onChange={(event, newValue) => {
+                                onChange={(_event, newValue) => {
                                     setSelectedCategory(newValue);
                                     if (newValue) {
                                         product.categoryId = newValue.id;
@@ -207,7 +311,7 @@ const product: IProduct = {
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', textAlign: 'left', padding: '0.2vw' }}>
                             <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'left', width: '50%', gap: '0.9vw'}}>
-                                <Typography>Length</Typography>
+                                <Typography>Length (in cm)</Typography>
                                 <TextField 
                                     sx={{ width: '100%' }}
                                     value={length}
@@ -217,7 +321,7 @@ const product: IProduct = {
                                     }}
                                     error={length !== '' && (isNaN(Number(length)) || Number(length) < 0)}
                                 />
-                                <Typography>Width</Typography>
+                                <Typography>Width (in cm)</Typography>
                                 <TextField 
                                     sx={{ width: '100%' }}
                                     value={width}
@@ -229,7 +333,7 @@ const product: IProduct = {
                                 />
                             </Box>
                             <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'left', width: '50%', gap: '0.9vw'}}>
-                                <Typography>Height</Typography>
+                                <Typography>Height (in cm)</Typography>
                                 <TextField 
                                     sx={{ width: '100%' }}
                                     value={height}
@@ -239,7 +343,7 @@ const product: IProduct = {
                                     }}
                                     error={height !== '' && (isNaN(Number(height)) || Number(height) < 0)}
                                 />
-                                <Typography>Weight</Typography>
+                                <Typography>Weight (in g)</Typography>
                                 <TextField 
                                     sx={{ width: '100%' }}
                                     value={weight}
@@ -253,14 +357,18 @@ const product: IProduct = {
                         </Box>
                         <Box>
                             <Typography>Material</Typography>
-                            <TextField sx={{ width: '100%' }}/>
+                            <TextField 
+                                sx={{ width: '100%' }}
+                                value={material}
+                                onChange={(e) => setMaterial(e.target.value)}
+                                placeholder="Example: cotton, polyester, spandex"
+                            />
                         </Box>
                         <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                         <Box>
                         <Typography sx={{overflow: 'hidden'}}>
-                            The material of the product is a key factor in its quality and durability.
-                            Choose a material that is strong, durable, and comfortable to use.
-                            Consider the product's intended use and the materials that are commonly used in its production.
+                            Please specify the main materials used in your product.
+                            You can list multiple materials separated by commas (e.g., "cotton, polyester, spandex").
                         </Typography>
                         </Box>
                         <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
@@ -272,7 +380,16 @@ const product: IProduct = {
             <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                 <Typography variant='h5'>Product Description</Typography>
                 <TextField 
-                    sx={{ width: '100%' }} 
+                    sx={{ 
+                        width: '100%',
+                        '& .MuiOutlinedInput-input:focus': {
+                            outline: '0 !important',
+                            borderRadius: 0
+                        },
+                        border: '1px solid black',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                    }} 
                     multiline 
                     rows={20}
                     value={description}
@@ -293,8 +410,22 @@ const product: IProduct = {
         </Box>
         <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'flex-end', padding: '1vw'}}>
-            <Button variant='contained' color='primary' sx={{border: '1px solid black', width: '10vw'}}>Publish</Button>
-            <Button variant='contained' color='secondary' sx={{border: '1px solid black', width: '10vw'}}>Back</Button>
+            <Button 
+                variant='contained' 
+                color='primary' 
+                sx={{border: '1px solid black', width: '10vw'}}
+                onClick={handlePublish}
+            >
+                Publish
+            </Button>
+            <Button 
+                variant='contained' 
+                color='secondary' 
+                sx={{border: '1px solid black', width: '10vw'}}
+                onClick={() => navigate(-1)}
+            >
+                Back
+            </Button>
         </Box>
       </NormalBox>
       <Snackbar 
