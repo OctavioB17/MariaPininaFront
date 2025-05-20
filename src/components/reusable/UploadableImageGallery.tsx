@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { Box, Typography, Snackbar, Alert } from '@mui/material';
+import { Box, Typography, Snackbar, Alert, Button, IconButton } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import CloseIcon from '@mui/icons-material/Close';
+import { ExtendedUploadableImageGalleryProps } from '../interfaces/reusable/ImageGalleryProps';
 
-interface UploadableImageGalleryProps {
-  images: File[];
-  setImages: React.Dispatch<React.SetStateAction<File[]>>;
-  handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
 
-const UploadableImageGallery: React.FC<UploadableImageGalleryProps> = ({ images, setImages }) => {
+const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({ 
+  images, 
+  setImages, 
+  isEditMode = false,
+  onImageDelete 
+}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -24,6 +27,19 @@ const UploadableImageGallery: React.FC<UploadableImageGalleryProps> = ({ images,
         setImages(prevImages => [...prevImages, ...newFiles]);
       } else {
         setSnackbarOpen(true);
+      }
+    }
+  };
+
+  const handleDeleteImage = () => {
+    if (isEditMode && onImageDelete) {
+      onImageDelete(currentIndex);
+    } else {
+      const newImages = [...images];
+      newImages.splice(currentIndex, 1);
+      setImages(newImages);
+      if (currentIndex >= newImages.length) {
+        setCurrentIndex(Math.max(0, newImages.length - 1));
       }
     }
   };
@@ -80,35 +96,37 @@ const UploadableImageGallery: React.FC<UploadableImageGalleryProps> = ({ images,
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
-        padding: '1vw',
-        cursor: 'pointer'
+        padding: '1.5vw',
+        cursor: images.length === 0 ? 'pointer' : 'default'
       }}
     >
-      <input 
-        type="file" 
-        multiple 
-        accept="image/*" 
-        onChange={handleImageUpload} 
-        style={{ 
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          opacity: 0,
-          cursor: 'pointer',
-          zIndex: 2
-        }} 
-        id="upload-button" 
-      />
       {images.length === 0 ? (
-        <Box sx={{ textAlign: 'center', width: '50vw', pointerEvents: 'none' }}>
-          <Typography variant="h6" color="textSecondary">No images</Typography>
-          <Typography variant="body1" color="primary">Click or drag to upload</Typography>
-        </Box>
+        <>
+          <input 
+            type="file" 
+            multiple 
+            accept="image/*" 
+            onChange={handleImageUpload} 
+            style={{ 
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'pointer',
+              zIndex: 2
+            }} 
+            id="upload-button" 
+          />
+          <Box sx={{ textAlign: 'center', width: '50vw', pointerEvents: 'none' }}>
+            <Typography variant="h6" color="textSecondary">No images</Typography>
+            <Typography variant="body1" color="textSecondary">Click or drag to upload</Typography>
+          </Box>
+        </>
       ) : (
         <Box sx={{ 
           width: 'calc(100% - 2vw)', 
           height: 'calc(100% - 2vw)', 
-          pointerEvents: 'none',
+          position: 'relative',
           '& .image-gallery': {
             height: '100%',
             width: '100%'
@@ -145,15 +163,56 @@ const UploadableImageGallery: React.FC<UploadableImageGalleryProps> = ({ images,
             objectFit: 'cover'
           }
         }}>
-          <ImageGallery 
-            items={galleryItems} 
-            showThumbnails={true} 
-            showFullscreenButton={false} 
-            showPlayButton={false} 
-            thumbnailPosition="bottom" 
-            showNav={false} 
-            slideDuration={500}
-          />
+          <Box sx={{ display: 'flex', gap: '1vw', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%' }}>
+            <Box sx={{ position: 'relative', width: '100%' }}>
+              <IconButton
+                onClick={handleDeleteImage}
+                sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  backgroundColor: 'black',
+                  color: 'white',
+                  zIndex: 1000,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                  }
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <ImageGallery 
+                items={galleryItems} 
+                showThumbnails={true} 
+                showFullscreenButton={false} 
+                showPlayButton={false} 
+                thumbnailPosition="bottom" 
+                showNav={false} 
+                slideDuration={500}
+                onSlide={setCurrentIndex}
+              />
+            </Box>
+            <Box sx={{ position: 'relative', width: '100%' }}>
+              <input 
+                type="file" 
+                multiple 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+                style={{ 
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0,
+                  cursor: 'pointer',
+                  zIndex: 2
+                }} 
+                id="upload-button" 
+              />
+              <Button variant="contained" sx={{ width: '100%', backgroundColor: 'black', color: 'white' }}>
+                Add photo
+              </Button>
+            </Box>
+          </Box>
         </Box>
       )}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>

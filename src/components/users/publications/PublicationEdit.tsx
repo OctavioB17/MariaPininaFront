@@ -1,29 +1,24 @@
-import { Autocomplete, Box, Button, Divider, TextField, Typography, Snackbar, Alert, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
+import { Box, Button, Divider, TextField, Typography, Snackbar, Alert } from '@mui/material'
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import NormalBox from '../../reusable/NormalBox'
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import axios, { AxiosResponse } from 'axios'
-import { variables } from '../../../config/variables'
-import { IProduct } from '../../../interfaces/IProducts'
-import WarningIcon from '@mui/icons-material/Warning';
-import IPaginationResponse from '../../interfaces/IPaginationResponse'
-import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react'
 import UploadableImageGallery from '../../reusable/UploadableImageGallery'
-import ICategory from '../../../interfaces/ICategories'
-import SuccessCheckmark from '../../reusable/SuccessCheckmark'
+import axios from 'axios'
+import { variables } from '../../../config/variables'
+import WarningIcon from '@mui/icons-material/Warning';
+import { useNavigate, useParams } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { AxiosResponse } from 'axios'
+import { IProductWithUserAndCategory } from '../../../interfaces/IProducts'
 
-const PublicationCreation = () => {
+const PublicationEdit = () => {
 const navigate = useNavigate();
-const { id: userId } = useParams();
+const { productId } = useParams();
 const [images, setImages] = useState<File[]>([])
-const [categories, setCategories] = useState<ICategory[]>([])
-const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
 const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' as 'error' | 'success' })
-const [isLoading, setIsLoading] = useState(false);
-const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
 const [title, setTitle] = useState('')
+const [categoryName, setCategoryName] = useState('')
 const [price, setPrice] = useState('')
 const [stock, setStock] = useState('')
 const [sku, setSku] = useState('')
@@ -74,33 +69,64 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImages(files)
 }
 
-useEffect(() => {
-    const categories = async () => {
-        const response: AxiosResponse<IPaginationResponse<ICategory>> = await axios.get(`${variables.backendIp}/categories/get/all`)
-        setCategories(response.data.data)
-    }
-    categories()
-}, [])
+const convertUrlToFile = async (url: string): Promise<File> => {
+        const response = await axios.get(url, {
+            responseType: 'blob'
+        });
+        
+        const blob = response.data;
+        const filename = url.split('/').pop() || 'image.jpg';
+        return new File([blob], filename, { type: blob.type });
+};
 
-const product: IProduct = {
-    id: '',
-    name: '',
-    description: '',
-    imageGallery: [],
-    sku: '',
-    length: 0,
-    width: 0,
-    height: 0,
-    weight: 0,
-    price: 0,
-    stock: 0,
-    categoryId: '',
-    material: [],
-    isPaused: false,
-    userId: '',
-    createdAt: '',
-    updatedAt: ''
-}
+useEffect(() => {
+    const fetchProduct = async () => {
+        try {
+            const response: AxiosResponse<IProductWithUserAndCategory> = await axios.get(`${variables.backendIp}/products/get/id/${productId}`, {
+                headers: {
+                    'Authorization': `Bearer ${Cookies.get('token')}`
+                }
+            });
+            console.log(response.data);
+            const product = response.data;
+            
+            setTitle(product.name);
+            setCategoryName(product.categories.name || '');
+            setPrice(product.price.toString());
+            setStock(product.stock.toString());
+            setSku(product.sku);
+            setLength(product.length?.toString() || '');
+            setWidth(product.width?.toString() || '');
+            setHeight(product.height?.toString() || '');
+            setWeight(product.weight?.toString() || '');
+            setDescription(product.description);
+            setMaterial(product.material?.join(', ') || '');
+            
+            if (product.imageGallery && product.imageGallery.length > 0) {
+                try {
+                    const imageFiles = await Promise.all(
+                        product.imageGallery.map(url => convertUrlToFile(url))
+                    );
+                    setImages(imageFiles);
+                } catch {
+                    setSnackbar({
+                        open: true,
+                        message: 'Error loading product images',
+                        severity: 'error'
+                    });
+                }
+            }
+        } catch {
+            setSnackbar({ 
+                open: true, 
+                message: 'Error loading product data', 
+                severity: 'error' 
+            });
+        }
+    };
+
+    fetchProduct();
+}, [productId]);
 
 const validateAllFields = () => {
     if (!title) {
@@ -132,11 +158,6 @@ const validateAllFields = () => {
     }
     if (!validateDescription(description)) return false
 
-    if (!selectedCategory) {
-        setSnackbar({ open: true, message: 'Category is required', severity: 'error' })
-        return false
-    }
-
     if (images.length === 0) {
         setSnackbar({ open: true, message: 'At least one image is required', severity: 'error' })
         return false
@@ -145,71 +166,105 @@ const validateAllFields = () => {
     return true
 }
 
-const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    
-    if (!validateAllFields()) {
-        return;
-    }
+const handleEdit = async () => {
+    if (validateAllFields()) {
+        try {
+            const formData = new FormData();
+            
+            formData.append('name', title);
+            formData.append('price', Number(price).toString());
+            formData.append('stock', Number(stock).toString());
+            formData.append('sku', sku);
+            formData.append('description', description);
+            formData.append('isPaused', 'false');
 
-    setIsLoading(true);
-    try {
-        const formData = new FormData();
-        
-        formData.append('name', title);
-        formData.append('price', price);
-        formData.append('stock', stock);
-        formData.append('sku', sku);
-        formData.append('description', description);
-        formData.append('categoryId', selectedCategory?.id || '');
-        formData.append('isPaused', 'false');
+            if (length) formData.append('length', Number(length).toString());
+            if (width) formData.append('width', Number(width).toString());
+            if (height) formData.append('height', Number(height).toString());
+            if (weight) formData.append('weight', Number(weight).toString());
 
-        if (length) formData.append('length', length);
-        if (width) formData.append('width', width);
-        if (height) formData.append('height', height);
-        if (weight) formData.append('weight', weight);
+            if (material) {
+                const materialsArray = material.split(',').map(m => m.trim()).filter(m => m !== '');
+                formData.append('material', JSON.stringify(materialsArray));
+            }
 
-        if (material) {
-            const materialsArray = material.split(',').map(m => m.trim()).filter(m => m !== '');
-            formData.append('material', JSON.stringify(materialsArray));
+            const newImages = images.filter(image => image instanceof File);
+            if (newImages.length > 0) {
+                newImages.forEach((image) => {
+                    formData.append('image', image);
+                });
+            }
+
+            const response = await axios.patch(
+                `${variables.backendIp}/products/update/${productId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${Cookies.get('token')}`
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                setSnackbar({ 
+                    open: true, 
+                    message: 'Product updated successfully', 
+                    severity: 'success' 
+                });
+                navigate(-1);
+            }
+        } catch (error) {
+            console.error('Error completo:', error);
+            setSnackbar({ 
+                open: true, 
+                message: 'Error updating product. Please try again.', 
+                severity: 'error' 
+            });
         }
+    }
+};
 
-        images.forEach((image) => {
-            formData.append('image', image);
-        });
+const handleImageDelete = async (index: number) => {
+    try {
+        const imageUrl = images[index].name; 
+        const urlParts = imageUrl.split('/');
+        const photoId = urlParts[urlParts.length - 1];
 
-        const response = await axios.post(
-            `${variables.backendIp}/products/create`,
-            formData,
+        const response = await axios.delete(
+            `${variables.backendIp}/products/delete/${productId}/photo/${photoId}`,
             {
                 headers: {
-                    Authorization: `Bearer ${Cookies.get('token')}`,
-                },
+                    'Authorization': `Bearer ${Cookies.get('token')}`
+                }
             }
         );
 
-        if (response.status === 201) {
-            setShowSuccessDialog(true);
+        if (response.status === 200) {
+            const newImages = [...images];
+            newImages.splice(index, 1);
+            setImages(newImages);
+            setSnackbar({
+                open: true,
+                message: 'Image deleted successfully',
+                severity: 'success'
+            });
         }
     } catch (error) {
-        console.error('Error creating publication:', error);
-    } finally {
-        setIsLoading(false);
+        console.error('Error deleting image:', error);
+        setSnackbar({
+            open: true,
+            message: 'Error deleting image. Please try again.',
+            severity: 'error'
+        });
     }
 };
 
-const handleDialogClose = (publishAnother: boolean) => {
-    setShowSuccessDialog(false);
-    if (!publishAnother) {
-        navigate(`/${userId}/publications`);
-    }
-};
-
-  return (
+return (
     <NBoxWithHeaderAndFooter >
       <NormalBox sx={{ padding: '1vw', marginTop: '1vw', marginBottom: '1vw', display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
-            <Typography variant='h4'>Publication Creation</Typography>
+            <Typography variant='h4'>Edit Publication</Typography>
             <Divider sx={{ border: '1px solid black', width: '100%', marginBottom: '1vw' }} />
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'space-between' }}>
@@ -220,21 +275,9 @@ const handleDialogClose = (publishAnother: boolean) => {
                         <TextField 
                             sx={{ width: '100%' }}
                             value={title}
-                            onChange={(e) => {
-                                setTitle(e.target.value)
-                                validateTitle(e.target.value)
-                            }}
-                            error={title.length > 35}
+                            disabled
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
-                    <Typography>
-                        Ensure the title does not exceed 35 characters to keep it clear and concise.
-                        Use clear and precise words that accurately describe what you are selling.
-                        Include relevant keywords that potential buyers might use to search for your product.
-                        Keep the language simple and avoid jargon or abbreviations.
-                        Place the most important words at the beginning of the title to improve visibility in search engines.
-                    </Typography>
                     <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                 </NormalBox>
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
@@ -273,46 +316,34 @@ const handleDialogClose = (publishAnother: boolean) => {
                             onChange={(e) => setSku(e.target.value)}
                         />
                     </Box>
+                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                     <Typography>
                         The SKU (Stock Keeping Unit) is a unique identifier for each product.
                         It helps track inventory and ensure accurate stock levels.
                         Use a format that makes sense for your business, such as a number or a combination of letters and numbers.
                     </Typography>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
                 </NormalBox>
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', height: '100%', justifyContent: 'center' }}>
                     <Typography variant='h5'>Category</Typography>
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', textAlign: 'left', padding: '0.2vw' }}>
-                            <Autocomplete
-                                disablePortal
-                                options={categories}
-                                value={selectedCategory}
-                                getOptionLabel={(option) => option.name}
-                                onChange={(_event, newValue) => {
-                                    setSelectedCategory(newValue);
-                                    if (newValue) {
-                                        product.categoryId = newValue.id;
-                                    }
-                                }}
+                            <TextField
                                 sx={{ width: '100%' }}
-                                renderInput={(params) => <TextField {...params}/>}
-                                slotProps={{
-                                    paper: {
-                                        sx: {
-                                            backgroundColor: 'primary.main',
-                                            color: 'primary.contrastText',
-                                            border: '1px solid black'       
-                                        },
-                                    },
-                                }}
+                                value={categoryName}
+                                disabled
                             />
                         </Box>
                     </Box>
                 </NormalBox>
             </Box>
             <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', width: '50%' }}>
-                <UploadableImageGallery images={images} setImages={setImages} handleImageChange={handleImageChange} />
+                <UploadableImageGallery 
+                    images={images} 
+                    setImages={setImages} 
+                    handleImageChange={handleImageChange} 
+                    isEditMode={true}
+                    onImageDelete={handleImageDelete}
+                />
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left'}}>
                     <Typography variant='h5'>Product Characteristics</Typography>
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
@@ -421,18 +452,17 @@ const handleDialogClose = (publishAnother: boolean) => {
                 variant='contained' 
                 color='primary' 
                 sx={{border: '1px solid black', width: '10vw'}}
-                onClick={handleSubmit}
-                disabled={isLoading}
+                onClick={handleEdit}
             >
-                Publish
+                Save Changes
             </Button>
             <Button 
                 variant='contained' 
                 color='secondary' 
                 sx={{border: '1px solid black', width: '10vw'}}
-                onClick={() => navigate(`/${userId}/publications`)}
+                onClick={() => navigate(-1)}
             >
-                Back
+                Cancel
             </Button>
         </Box>
       </NormalBox>
@@ -450,41 +480,8 @@ const handleDialogClose = (publishAnother: boolean) => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <Dialog 
-        open={showSuccessDialog} 
-        onClose={() => handleDialogClose(false)}
-        PaperProps={{
-          sx: {
-            backgroundColor: 'primary.main',
-            border: '2px solid black',
-            '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root': {
-              color: 'primary.contrastText'
-            }
-          }
-        }}
-      >
-        <DialogTitle>Publication created successfully!</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-          <SuccessCheckmark />
-          <Typography>Publish another product?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleDialogClose(false)} sx={{ color: 'primary.contrastText' }}>
-            Back to publications
-          </Button>
-          <Button onClick={() => handleDialogClose(true)} sx={{ color: 'primary.contrastText' }}>
-            Publish another
-          </Button>
-        </DialogActions>
-      </Dialog>
     </NBoxWithHeaderAndFooter>
   )
 }
 
-export default PublicationCreation
+export default PublicationEdit 

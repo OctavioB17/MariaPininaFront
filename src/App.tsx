@@ -17,6 +17,7 @@ import ProtectedRoute from './components/Routes/UserProtectedRoute';
 import { useState } from 'react';
 import { Box, CircularProgress, useTheme } from '@mui/material';
 import PublicationCreation from './components/users/publications/PublicationCreation';
+import PublicationEdit from './components/users/publications/PublicationEdit';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,6 +60,7 @@ function App() {
             <Route path='/:id/publications' element={<ProtectedRoute />}>
               <Route path='/:id/publications' element={<UserPublicationsMenu />} />
               <Route path='/:id/publications/create' element={<PublicationCreation />} />
+              <Route path='/:id/publications/edit/:productId' element={<PublicationEdit />} />
             </Route>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />

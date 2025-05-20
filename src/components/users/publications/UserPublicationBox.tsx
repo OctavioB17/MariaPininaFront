@@ -6,11 +6,14 @@ import ThemedSwitch from '../../reusable/ThemedSwitch';
 import axios from 'axios';
 import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
   const [isPaused, setIsPaused] = useState<boolean>(product.isPaused);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     setIsPaused(product.isPaused);
   }, [product.isPaused]);
@@ -61,7 +64,7 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
             <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
           </Box>
           <NormalBox sx={{ padding: '0' }}>
-            <Box component='img' alt={product.name} src={product.thumbnailUrl} sx={{ width: '100%', height: '100%', borderRadius: '10px' }} />
+            <Box component='img' alt={product.name} src={product.imageGallery[0]} sx={{ width: '12.8rem', height: '12.8rem', borderRadius: '10px' }} />
           </NormalBox>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', gap: '0.2vw' }}>
@@ -75,7 +78,9 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
             <Typography>
               Sell price: ${product.price}
             </Typography>
-            <Button sx={{ color: 'inherit', padding: '1px' }}>
+            <Button onClick={() => {
+              navigate(`/${product.userId}/publications/edit/${product.id}`);
+            }} sx={{ color: 'inherit', padding: '1px' }}>
               Modify
             </Button>
           </Box>
@@ -114,8 +119,10 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
           </Box>
         )}
       </Box>
-      <Box sx={{display: 'flex', alignItems: 'start'}}>
-        <Button sx={{color: 'inherit'}}>
+      <Box sx={{display: 'flex', alignItems: 'start '}}>
+        <Button sx={{color: 'inherit'}} onClick={() => {
+          navigate(`/${product.userId}/publications/edit/${product.id}`);
+        }}>
           Edit
         </Button>
         <Button sx={{color: 'inherit'}} onClick={deleteProduct}>

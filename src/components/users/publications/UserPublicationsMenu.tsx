@@ -207,7 +207,12 @@ const UserPublicationsMenu = () => {
             <Button sx={{ color: 'inherit' }} disabled={!isActivateEnabled} onClick={togglePauseState}>
               Activate
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isEditEnabled}>
+            <Button sx={{ color: 'inherit' }} disabled={!isEditEnabled} onClick={() => {
+              const selectedProduct = Array.from(selectedProducts)[0];
+              if (selectedProduct) {
+                navigate(`/${id}/publications/edit/${selectedProduct.id}`);
+              }
+            }}>
               Edit
             </Button>
             <Button sx={{ color: 'inherit' }} disabled={!isAnySelected} onClick={deleteSelectedProducts}>
@@ -222,7 +227,7 @@ const UserPublicationsMenu = () => {
         {apiResponseLoading ? (
           <CircularProgress sx={{ color: 'primary.contrastText' }} />
         ) : (
-          <Box sx={{ paddingTop: '1vw', paddingBottom: '1vw', width: '100%' }}>
+          <Box sx={{ paddingTop: '1vw', paddingBottom: '1vw', width: '100%', display: 'flex', flexDirection: 'column', gap: '1vw' }}>
             {products.map(product => (
               <UserPublicationBox
                 key={product.id}
