@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { Box, CircularProgress, useTheme } from '@mui/material';
 import PublicationCreation from './components/users/publications/PublicationCreation';
 import PublicationEdit from './components/users/publications/PublicationEdit';
+import CartDetail from './components/Cart/CartDetail';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,11 +58,14 @@ function App() {
             </>
           )}
           {isLogged && (
-            <Route path='/:id/publications' element={<ProtectedRoute />}>
-              <Route path='/:id/publications' element={<UserPublicationsMenu />} />
-              <Route path='/:id/publications/create' element={<PublicationCreation />} />
-              <Route path='/:id/publications/edit/:productId' element={<PublicationEdit />} />
-            </Route>
+            <>
+              <Route path='/:id/publications' element={<ProtectedRoute />}>
+                <Route path='/:id/publications' element={<UserPublicationsMenu />} />
+                <Route path='/:id/publications/create' element={<PublicationCreation />} />
+                <Route path='/:id/publications/edit/:productId' element={<PublicationEdit />} />
+              </Route>
+              <Route path='/:id/cart' element={<CartDetail />} />
+            </>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />
           <Route path='/reset-password' element={<UserPasswordResetRequest />} />

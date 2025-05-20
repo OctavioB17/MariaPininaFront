@@ -29,7 +29,11 @@ const UserPublicationsMenu = () => {
     setApiResponseLoading(true);
     try {
       const offset = (page - 1) * limit;
-      const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`);
+      const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`
+        }
+      });
       setProducts(response.data.data);
       setTotalPages(Math.ceil(response.data.data.length / limit));
     } finally {

@@ -9,8 +9,13 @@ import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations';
 import { Link } from 'react-router-dom';
 import HeaderProps from '../interfaces/header/HeaderProps';
 import AuthWidget from './AuthWidget';
-
+import useIsLogged from '../../hooks/useIsLogged';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { selectUser } from '../../store/userSlice';
 const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Element => {
+  const isLogged = useIsLogged()
+  const user = useAppSelector(selectUser)
+  const userId = isLogged ? user?.id : null
 
   const categoriesNames = categories.map(category => category.name)
   return (
@@ -39,18 +44,26 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
               </Button>
             </Link>
           </Box>
-          <Box>
-            <Link to={'/my-orders'}>
-              <Button sx={muiButtonNoAnimations}>
-                My orders
-              </Button>
-            </Link>
-            <Link to={'/cart'}>
-              <IconButton aria-label="shopping-cart" sx={muiButtonNoAnimations}>
-                <ShoppingCartIcon sx={{ fontSize: '1.5vw'}}/>
-              </IconButton>
-            </Link>
-          </Box>
+          {isLogged && (
+              <Box>
+                <Link to={`/${userId}/publications`}>
+                  <Button sx={muiButtonNoAnimations}>
+                    Publications
+                  </Button>
+                </Link>
+                <Link to={'/my-orders'}>
+                  <Button sx={muiButtonNoAnimations}>
+                    My orders
+                  </Button>
+                </Link>
+                <Link to={`/${userId}/cart`}>
+                  <IconButton aria-label="shopping-cart" sx={muiButtonNoAnimations}>
+                    <ShoppingCartIcon sx={{ fontSize: '1.5vw'}}/>
+                  </IconButton>
+                </Link>
+              </Box>
+            )
+          }
         </Box>
     </Box>
   )

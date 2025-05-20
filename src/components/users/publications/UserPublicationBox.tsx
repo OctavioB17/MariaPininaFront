@@ -64,7 +64,7 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
             <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
           </Box>
           <NormalBox sx={{ padding: '0' }}>
-            <Box component='img' alt={product.name} src={product.imageGallery[0]} sx={{ width: '12.8rem', height: '12.8rem', borderRadius: '10px' }} />
+            <Box component='img' alt={product.name} src={product.imageGallery[0]} sx={{ width: '12.8rem', height: '12.8rem', borderRadius: '10px', backgroundColor: 'white' }} />
           </NormalBox>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', gap: '0.2vw' }}>

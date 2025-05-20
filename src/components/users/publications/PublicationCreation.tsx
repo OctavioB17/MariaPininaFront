@@ -459,12 +459,18 @@ const handleDialogClose = (publishAnother: boolean) => {
       <Dialog 
         open={showSuccessDialog} 
         onClose={() => handleDialogClose(false)}
-        PaperProps={{
-          sx: {
-            backgroundColor: 'primary.main',
-            border: '2px solid black',
-            '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root': {
-              color: 'primary.contrastText'
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: 'primary.main',
+              border: '2px solid black',
+              '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root': {
+                color: 'primary.contrastText'
+              },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2
             }
           }
         }}

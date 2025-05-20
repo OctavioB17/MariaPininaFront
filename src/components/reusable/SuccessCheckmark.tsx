@@ -31,7 +31,6 @@ const SuccessCheckmarkContainer = styled(Box)({
             content: '""',
             height: '100px',
             position: 'absolute',
-            background: '#FFFFFF',
             transform: 'rotate(-45deg)',
         },
         '& .icon-line': {
@@ -75,7 +74,6 @@ const SuccessCheckmarkContainer = styled(Box)({
             height: '85px',
             position: 'absolute',
             transform: 'rotate(-45deg)',
-            backgroundColor: '#FFFFFF',
         },
     },
     '@keyframes rotate-circle': {
