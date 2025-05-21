@@ -2,11 +2,10 @@ import ImageGallery, { ReactImageGalleryItem } from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import React from 'react'
 import { JSX } from "@emotion/react/jsx-runtime";
-import { imageGalleryProps } from "../interfaces/reusable/ImageGalleryProps";
+import { imageGalleryProps } from "../../interfaces/reusable/ImageGalleryProps";
 import { Box } from "@mui/material";
 
 const ImageGalleryComponent: React.FC<imageGalleryProps> = ({ imageLinks }): JSX.Element => {
-
   const galleryImages: ReactImageGalleryItem[] = imageLinks.map((link: string) => ({
     original: link,
     thumbnail: link,

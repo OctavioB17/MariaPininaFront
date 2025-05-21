@@ -55,7 +55,7 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
       setLoading(false);
     }
   }
-
+  console.log(product.imageGallery[0])
   return (
     <NormalBox sx={{ display: 'flex', height: '14.5vw', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
       <Box sx={{display: 'flex', gap: '0.5vw'}}>
@@ -64,7 +64,12 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
             <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
           </Box>
           <NormalBox sx={{ padding: '0' }}>
-            <Box component='img' alt={product.name} src={product.imageGallery[0]} sx={{ width: '100%', height: '100%', borderRadius: '10px', backgroundColor: 'white' }} />
+            <Box 
+              component='img' 
+              alt={product.name} 
+              src={product.imageGallery[0]}   
+              sx={{ width: '100%', height: '100%', borderRadius: '10px', backgroundColor: 'white' }} 
+            />
           </NormalBox>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', gap: '0.2vw' }}>

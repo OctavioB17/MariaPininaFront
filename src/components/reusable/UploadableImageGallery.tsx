@@ -4,8 +4,7 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import { Box, Typography, Snackbar, Alert, Button, IconButton } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import CloseIcon from '@mui/icons-material/Close';
-import { ExtendedUploadableImageGalleryProps } from '../interfaces/reusable/ImageGalleryProps';
-
+import { ExtendedUploadableImageGalleryProps } from '../../interfaces/reusable/ImageGalleryProps';
 
 const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({ 
   images, 
@@ -32,6 +31,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
   };
 
   const handleDeleteImage = () => {
+    console.log('Intentando eliminar imagen en índice:', currentIndex);
     if (isEditMode && onImageDelete) {
       onImageDelete(currentIndex);
     } else {
@@ -59,30 +59,36 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
     event.preventDefault();
   };
 
-  const galleryItems: ReactImageGalleryItem[] = images.map(file => ({
-    original: URL.createObjectURL(file),
-    thumbnail: URL.createObjectURL(file),
-    renderItem: (item) => (
-      <div style={{ 
-        width: '41vw', 
-        height: '31vw', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        margin: '0 auto'
-      }}>
-        <img 
-          src={item.original} 
-          alt={item.originalAlt || ''} 
-          style={{ 
-            width: '40vw', 
-            height: '30vw', 
-            objectFit: 'cover' 
-          }} 
-        />
-      </div>
-    )
-  }));
+  const galleryItems: ReactImageGalleryItem[] = images.map(item => {
+    const isFile = item instanceof File;
+    const imageUrl = isFile ? URL.createObjectURL(item) : `${item}?t=${Date.now()}`;
+    
+    return {
+      original: imageUrl,
+      thumbnail: imageUrl,
+      renderItem: (item) => (
+        <div style={{ 
+          width: '41vw', 
+          height: '31vw', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          margin: '0 auto'
+        }}>
+          <img 
+            src={item.original} 
+            alt={item.originalAlt || ''} 
+            style={{ 
+              width: '36vw', 
+              height: '29vw', 
+              objectFit: 'cover' 
+            }}
+            key={item.original}
+          />
+        </div>
+      )
+    };
+  });
 
   return (
     <Box 
@@ -169,8 +175,8 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                 onClick={handleDeleteImage}
                 sx={{
                   position: 'absolute',
-                  top: 10,
-                  right: 10,
+                  top: 20,
+                  right: 25,
                   backgroundColor: 'black',
                   color: 'white',
                   zIndex: 1000,
@@ -190,6 +196,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                 showNav={false} 
                 slideDuration={500}
                 onSlide={setCurrentIndex}
+                startIndex={currentIndex}
               />
             </Box>
             <Box sx={{ position: 'relative', width: '100%' }}>

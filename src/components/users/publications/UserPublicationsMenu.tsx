@@ -35,6 +35,7 @@ const UserPublicationsMenu = () => {
           Authorization: `Bearer ${Cookies.get('token')}`
         }
       });
+      
       setProducts(response.data.data);
       setTotalPages(Math.ceil(response.data.data.length / limit));
     } finally {
@@ -270,7 +271,9 @@ const UserPublicationsMenu = () => {
         </Box>
         <Divider sx={{ border: '1px solid black', width: '100%' }} />
         {apiResponseLoading ? (
-          <CircularProgress sx={{ color: 'primary.contrastText' }} />
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20vw' }}>
+            <CircularProgress sx={{ color: 'primary.contrastText' }} />
+          </Box>
         ) : (
           <Box sx={{ paddingTop: '1vw', paddingBottom: '1vw', width: '100%', display: 'flex', flexDirection: 'column', gap: '1vw' }}>
             {products.map(product => (

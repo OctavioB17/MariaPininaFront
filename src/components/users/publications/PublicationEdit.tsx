@@ -11,10 +11,12 @@ import Cookies from 'js-cookie'
 import { AxiosResponse } from 'axios'
 import { IProductWithUserAndCategory } from '../../../interfaces/IProducts'
 
+type ImageType = File | string;
+
 const PublicationEdit = () => {
 const navigate = useNavigate();
 const { productId } = useParams();
-const [images, setImages] = useState<File[]>([])
+const [images, setImages] = useState<ImageType[]>([])
 const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' as 'error' | 'success' })
 
 const [title, setTitle] = useState('')
@@ -66,18 +68,8 @@ const handleCloseSnackbar = (_event: React.SyntheticEvent | Event, reason?: stri
 
 const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || [])
-    setImages(files)
+    setImages(prevImages => [...prevImages, ...files])
 }
-
-const convertUrlToFile = async (url: string): Promise<File> => {
-        const response = await axios.get(url, {
-            responseType: 'blob'
-        });
-        
-        const blob = response.data;
-        const filename = url.split('/').pop() || 'image.jpg';
-        return new File([blob], filename, { type: blob.type });
-};
 
 useEffect(() => {
     const fetchProduct = async () => {
@@ -103,18 +95,7 @@ useEffect(() => {
             setMaterial(product.material?.join(', ') || '');
             
             if (product.imageGallery && product.imageGallery.length > 0) {
-                try {
-                    const imageFiles = await Promise.all(
-                        product.imageGallery.map(url => convertUrlToFile(url))
-                    );
-                    setImages(imageFiles);
-                } catch {
-                    setSnackbar({
-                        open: true,
-                        message: 'Error loading product images',
-                        severity: 'error'
-                    });
-                }
+                setImages(product.imageGallery);
             }
         } catch {
             setSnackbar({ 
@@ -227,34 +208,49 @@ const handleEdit = async () => {
 
 const handleImageDelete = async (index: number) => {
     try {
-        const imageUrl = images[index].name; 
-        const urlParts = imageUrl.split('/');
-        const photoId = urlParts[urlParts.length - 1];
-
-        const response = await axios.delete(
-            `${variables.backendIp}/products/delete/${productId}/photo/${photoId}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${Cookies.get('token')}`
+        const image = images[index];
+        console.log('Eliminando imagen:', image);
+        
+        if (typeof image === 'string') {
+            const urlParts = image.split('/');
+            const photoId = urlParts[urlParts.length - 1];
+            const deleteUrl = `${variables.backendIp}/products/delete/${productId}/photo/${photoId}`;
+            console.log('URL de eliminación:', deleteUrl);
+            
+            const response = await axios.delete(
+                deleteUrl,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${Cookies.get('token')}`
+                    }
                 }
-            }
-        );
+            );
 
-        if (response.status === 200) {
+            if (response.status === 200) {
+                const newImages = [...images];
+                newImages.splice(index, 1);
+                setImages(newImages);
+                setSnackbar({
+                    open: true,
+                    message: 'Imagen eliminada exitosamente',
+                    severity: 'success'
+                });
+            }
+        } else {
             const newImages = [...images];
             newImages.splice(index, 1);
             setImages(newImages);
             setSnackbar({
                 open: true,
-                message: 'Image deleted successfully',
+                message: 'Imagen eliminada exitosamente',
                 severity: 'success'
             });
         }
     } catch (error) {
-        console.error('Error deleting image:', error);
+        console.error('Error al eliminar la imagen:', error);
         setSnackbar({
             open: true,
-            message: 'Error deleting image. Please try again.',
+            message: 'Error al eliminar la imagen. Por favor, intente nuevamente.',
             severity: 'error'
         });
     }
