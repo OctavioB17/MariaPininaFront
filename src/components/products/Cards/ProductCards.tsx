@@ -9,7 +9,7 @@ const productCards: React.FC<ProductsProps> = ({ product }): JSX.Element => {
   return (
     <NormalBox sx={{ display: 'flex', flexDirection: 'column', padding: '0.5vw', borderRadius: '5px', alignItems: 'center'}}>
       {product.imageGallery[0] ? (
-        <Box component='img' src={product.imageGallery[0]} alt={product.name} sx={{ width: '15vw', height: '15vw', border: '2px solid black' }} />
+        <Box component='img' src={product.imageGallery[0]} alt={product.name} sx={{ width: '15vw', height: '15vw', border: '2px solid black', backgroundColor: 'white' }} />
       ) : (
         <LoadingStatic />
       )}      

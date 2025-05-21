@@ -14,17 +14,26 @@ import UserPasswordChange from './components/users/auth/UserPasswordChange';
 import UserPasswordResetRequest from './components/users/auth/UserPasswordResetRequest';
 import UserPublicationsMenu from './components/users/publications/UserPublicationsMenu';
 import ProtectedRoute from './components/Routes/UserProtectedRoute';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, CircularProgress, useTheme } from '@mui/material';
 import PublicationCreation from './components/users/publications/PublicationCreation';
 import PublicationEdit from './components/users/publications/PublicationEdit';
 import CartDetail from './components/Cart/CartDetail';
+import ProductGridGallery from './components/products/ProductGrids/ProductGridGallery';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const isLogged = useIsLogged();
   const theme = useTheme();
   useTokenRenewal(isLogged);
+
+  useEffect(() => {
+    if (loading) {
+      document.body.classList.add('no-padding');
+    } else {
+      document.body.classList.remove('no-padding');
+    }
+  }, [loading]);
 
   return (
     <>
@@ -51,6 +60,9 @@ function App() {
         <Routes>
           <Route path='/' element={<LandingPage />} />
           <Route path='/products/:id' element={<ProductDetails />} />
+          <Route path='/products/category/:categoryId' element={<ProductGridGallery />} />
+          <Route path='/products/search/:searchTerm' element={<ProductGridGallery />} />
+          <Route path='/products/user/:userId' element={<ProductGridGallery />} />
           {!isLogged && (
             <>
               <Route path='/login' element={<UserLogin />} />
