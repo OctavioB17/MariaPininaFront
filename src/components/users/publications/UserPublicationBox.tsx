@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NormalBox from '../../reusable/NormalBox';
-import { IProduct } from '../../../interfaces/IProducts';
+import { IProductWithUserAndCategory } from '../../../interfaces/IProducts';
 import { Box, Button, Checkbox, Typography, CircularProgress } from '@mui/material';
 import ThemedSwitch from '../../reusable/ThemedSwitch';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
-const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
+const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
   const [isPaused, setIsPaused] = useState<boolean>(product.isPaused);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -57,13 +57,13 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
   }
 
   return (
-    <NormalBox sx={{ display: 'flex', height: '25vh', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
+    <NormalBox sx={{ display: 'flex', height: '14.5vw', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
       <Box sx={{display: 'flex', gap: '0.5vw'}}>
-        <Box sx={{display: 'flex', gap: '0.5vw'}}>
+        <Box sx={{display: 'flex', gap: '0.5vw', width: '17vw', height: '14vw'}}>
           <Box sx={{display: 'flex', paddingTop: '0.25vw', alignItems: 'center'}}>
             <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
           </Box>
-          <NormalBox sx={{ padding: '0', width: '11.7vw' }}>
+          <NormalBox sx={{ padding: '0' }}>
             <Box component='img' alt={product.name} src={product.imageGallery[0]} sx={{ width: '100%', height: '100%', borderRadius: '10px', backgroundColor: 'white' }} />
           </NormalBox>
         </Box>
@@ -71,29 +71,34 @@ const UserPublicationBox: React.FC<{ product: IProduct, isChecked: boolean, onCh
           <Typography sx={{ fontSize: '2vw' }}>
             {product.name}
           </Typography>
-          <Typography>
+          <Typography sx={{ fontSize: '1.2vw' }}>
             ID: {product.id}
           </Typography>
           <Box sx={{ display: 'flex', gap: '0.5vw' }}>
-            <Typography>
+            <Typography sx={{ fontSize: '1.2vw' }}>
               Sell price: ${product.price}
             </Typography>
             <Button onClick={() => {
               navigate(`/${product.userId}/publications/edit/${product.id}`);
-            }} sx={{ color: 'inherit', padding: '1px' }}>
+            }} sx={{ color: 'inherit', padding: '1px', fontSize: '1.2vw', height: '1.8vw' }}>
               Modify
             </Button>
           </Box>
           <Box sx={{ display: 'flex', gap: '1vw' }}>
-            <Typography>
+            <Typography sx={{ fontSize: '1.2vw' }}>
               Stock: {product.stock} units
             </Typography>
-            <Typography>
+            <Typography sx={{ fontSize: '1.2vw' }}>
               SKU: {product.sku}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
-            <Typography>
+            <Typography sx={{ fontSize: '1.2vw' }}>
+              Category: {product.categories.name}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', bottom: '0.4vw' }}>
+            <Typography sx={{ fontSize: '1.2vw' }}>
               Paused: {isPaused ? 'Yes' : 'No'}
             </Typography>
             <ThemedSwitch checked={!isPaused} onClick={() => pausePublication()} />

@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
-import { Box, Button, Checkbox, CircularProgress, Divider, Pagination, Popper, Paper, TextField, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, Divider, Pagination, Menu, TextField, MenuItem, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import { variables } from '../../../config/variables';
-import { IProduct } from '../../../interfaces/IProducts';
+import { IProduct, IProductWithUserAndCategory } from '../../../interfaces/IProducts';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import NormalBox from '../../reusable/NormalBox';
 import UserPublicationBox from './UserPublicationBox';
@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 const UserPublicationsMenu = () => {
   const { id } = useParams();
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IProductWithUserAndCategory[]>([]);
   const [apiResponseLoading, setApiResponseLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -23,13 +23,14 @@ const UserPublicationsMenu = () => {
   const [sortOption, setSortOption] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const navigate = useNavigate();
 
   const userProducts = useCallback(async () => {
     setApiResponseLoading(true);
     try {
       const offset = (page - 1) * limit;
-      const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`, {
+      const response: AxiosResponse<IPaginationResponse<IProductWithUserAndCategory>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}?limit=${limit}&offset=${offset}`, {
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`
         }
@@ -143,44 +144,84 @@ const UserPublicationsMenu = () => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
+  const handleMenuClose = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.target instanceof HTMLElement && event.target.closest('.MuiMenu-root')) {
+      return;
+    }
+    setAnchorEl(null);
+  };
+
   const open = Boolean(anchorEl);
   const popperId = open ? 'filter-popper' : undefined;
 
   const applyFilters = async () => {
-    let sortedProducts = [...products];
-
-    if (sortOption === 'createdAt') {
-      sortedProducts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } else if (sortOption === 'updatedAt') {
-      sortedProducts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-    } else if (sortOption === 'name') {
-      sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    if (minPrice !== '' || maxPrice !== '') {
-      setApiResponseLoading(true);
-      try {
-        const response: AxiosResponse<IPaginationResponse<IProduct>> = await axios.get(`${variables.backendIp}/products/get-all/user/${id}`, {
-          params: {
-            minPrice: minPrice !== '' ? minPrice : undefined,
-            maxPrice: maxPrice !== '' ? maxPrice : undefined,
-            limit,
-            offset: (page - 1) * limit,
-          },
-        });
-        sortedProducts = response.data.data;
-        setTotalPages(Math.ceil(response.data.data.length / limit));
-      } finally {
-        setApiResponseLoading(false);
+    setApiResponseLoading(true);
+    try {
+      interface FilterParams {
+        limit: number;
+        offset: number;
+        min_price?: number;
+        max_price?: number;
+        categoryId?: string;
       }
-    }
 
-    setProducts(sortedProducts);
+      const params: FilterParams = {
+        limit,
+        offset: (page - 1) * limit
+      };
+
+      if (minPrice !== '') {
+        params.min_price = minPrice;
+      }
+      if (maxPrice !== '') {
+        params.max_price = maxPrice;
+      }
+      if (selectedCategory !== '') {
+        console.log(selectedCategory);
+        params.categoryId = selectedCategory;
+      }
+
+      const response: AxiosResponse<IPaginationResponse<IProductWithUserAndCategory>> = await axios.get(
+        `${variables.backendIp}/products/get-all/user/${id}`,
+        {
+          params,
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`
+          }
+        }
+      );
+
+      const sortedProducts = response.data.data;
+
+      switch (sortOption) {
+        case 'createdAt':
+          sortedProducts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          break;
+        case 'updatedAt':
+          sortedProducts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+          break;
+        case 'name':
+          sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+      }
+
+      setProducts(sortedProducts);
+      setTotalPages(Math.ceil(response.data.data.length / limit));
+      setAnchorEl(null);
+    } catch (error) {
+      console.error('Error applying filters:', error);
+    } finally {
+      setApiResponseLoading(false);
+    }
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (anchorEl && !anchorEl.contains(event.target as Node)) {
+      const popperElement = document.getElementById(popperId || '');
+      if (anchorEl && 
+          !anchorEl.contains(event.target as Node) && 
+          popperElement && 
+          !popperElement.contains(event.target as Node)) {
         setAnchorEl(null);
       }
     };
@@ -189,7 +230,7 @@ const UserPublicationsMenu = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [anchorEl]);
+  }, [anchorEl, popperId]);
 
   return (
     <NBoxWithHeaderAndFooter>
@@ -249,19 +290,101 @@ const UserPublicationsMenu = () => {
           onChange={handlePageChange}
           color="primary"
         />
-        <Popper id={popperId} open={open} anchorEl={anchorEl} placement="bottom-start">
-          <Paper sx={{ border: '2px solid black', padding: '1rem', backgroundColor: 'primary.main', gap: '1rem' }}>
+        <Menu
+          id={popperId}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+        >
+          <Box sx={{ padding: '1rem' }}>
             <Typography>Sort by</Typography>
             <TextField
               select
               value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
+              onChange={(e) => {
+                e.stopPropagation();
+                setSortOption(e.target.value);
+              }}
+              slotProps={{
+                select: {
+                  MenuProps: {
+                    disablePortal: true,
+                    onClose: (e: React.MouseEvent) => e.stopPropagation()
+                  }
+                }
+              }}
               fullWidth
               margin="normal"
             >
-              <MenuItem sx={{ color: 'primary.contrastText' }} value="createdAt">Newest</MenuItem>
-              <MenuItem sx={{ color: 'primary.contrastText' }} value="updatedAt">Recently updated</MenuItem>
-              <MenuItem sx={{ color: 'primary.contrastText' }} value="name">Alphabetically</MenuItem>
+              <MenuItem 
+                sx={{ color: 'primary.contrastText' }} 
+                value="createdAt"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Newest
+              </MenuItem>
+              <MenuItem 
+                sx={{ color: 'primary.contrastText' }} 
+                value="updatedAt"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Recently updated
+              </MenuItem>
+              <MenuItem 
+                sx={{ color: 'primary.contrastText' }} 
+                value="name"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Alphabetically
+              </MenuItem>
+            </TextField>
+            <Typography>Category</Typography>
+            <TextField
+              select
+              value={selectedCategory}
+              onChange={(e) => {
+                e.stopPropagation();
+                setSelectedCategory(e.target.value);
+              }}
+              slotProps={{
+                select: {
+                  MenuProps: {
+                    disablePortal: true,
+                    onClose: (e: React.MouseEvent) => e.stopPropagation()
+                  }
+                }
+              }}
+              fullWidth
+              margin="normal"
+            >
+              <MenuItem 
+                sx={{ color: 'primary.contrastText' }} 
+                value=""
+                onClick={(e) => e.stopPropagation()}
+              >
+                All Categories
+              </MenuItem>
+              {Array.from(new Set(products.map(product => product.categories.id))).map(categoryId => {
+                const category = products.find(p => p.categories.id === categoryId)?.categories;
+                return category ? (
+                  <MenuItem 
+                    key={categoryId}
+                    sx={{ color: 'primary.contrastText' }} 
+                    value={categoryId}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {category.name}
+                  </MenuItem>
+                ) : null;
+              })}
             </TextField>
             <Typography>Min Price</Typography>
             <TextField
@@ -282,8 +405,8 @@ const UserPublicationsMenu = () => {
             <Button sx={{ marginTop: '1rem' }} onClick={applyFilters} variant="contained" color="primary">
               Apply filters
             </Button>
-          </Paper>
-        </Popper>
+          </Box>
+        </Menu>
       </NormalBox>
     </NBoxWithHeaderAndFooter>
   );
