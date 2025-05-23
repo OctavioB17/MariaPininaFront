@@ -18,7 +18,7 @@ export const useOrders = () => {
       });
       setLoading(false);
       return { success: true, message: 'Order created successfully', data: response.data };
-    } catch{
+    } catch {
       setLoading(false);
       return { success: false, message: 'Failed to create order' };
     }
@@ -26,6 +26,6 @@ export const useOrders = () => {
 
   return {
     createOrder,
-    loading
+    loading,
   };
 }; 

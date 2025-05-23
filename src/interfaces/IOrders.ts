@@ -1,4 +1,16 @@
-import { IProductWithUserAndCategory } from "./IProducts";
+import { IProduct, IProductWithUserAndCategory } from "./IProducts";
+import { IUser } from "./IUser";
+
+export interface Order {
+    id: string;
+    status: string;
+    totalPrice: number;
+    paymentMethod: string;
+    taxes: Taxes[];
+    products: IProduct[];
+    user: IUser;
+    userId: string;
+}
 
 export interface IOrder {
     sellerId: string;

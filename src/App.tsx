@@ -18,9 +18,10 @@ import { useState, useEffect } from 'react';
 import { Box, CircularProgress, useTheme } from '@mui/material';
 import PublicationCreation from './components/users/publications/PublicationCreation';
 import PublicationEdit from './components/users/publications/PublicationEdit';
-import CartDetail from './components/Cart/CartDetail';
+import CartDetail from './components/Orders/Cart/CartDetail';
 import ProductGridGallery from './components/products/ProductGrids/ProductGridGallery';
 import AllCategoriesDisplay from './components/Categories/AllCategoriesDisplay';
+import OrdersView from './components/Orders/OrdersView';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,6 +81,7 @@ function App() {
                 <Route path='/:id/publications/edit/:productId' element={<PublicationEdit />} />
               </Route>
               <Route path='/cart' element={<CartDetail />} />
+              <Route path='/orders' element={<OrdersView />} />
             </>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />

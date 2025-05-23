@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
                     Publications
                   </Button>
                 </Link>
-                <Link to={'/my-orders'}>
+                <Link to={`/orders`}>
                   <Button sx={muiButtonNoAnimations}>
                     My orders
                   </Button>

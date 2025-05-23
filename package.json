@@ -17,6 +17,7 @@
     "@reduxjs/toolkit": "^2.8.0",
     "@types/react-slick": "^0.23.13",
     "axios": "^1.8.4",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.9.2",
     "js-cookie": "^3.0.5",
     "react": "^19.0.0",
