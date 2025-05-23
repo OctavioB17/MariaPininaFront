@@ -11,6 +11,8 @@ import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { useCart } from '../../../hooks/useCart'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import WarningIcon from '@mui/icons-material/Warning'
 
 const ProductDetails: React.FC = () => {
     const { id } = useParams()
@@ -21,7 +23,7 @@ const ProductDetails: React.FC = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'warning'>('success')
     const { addItem } = useCart()
     const userId = useSelector((state: RootState) => state.user.user?.id)
-    console.log(userId)
+
     useEffect(() => {
         const fetchProducts = async () => {
             const productsRequest = await axios.get<IProductWithUserAndCategory>(`${variables.backendIp}/products/get/id/${id}`)
@@ -172,10 +174,11 @@ const ProductDetails: React.FC = () => {
                     severity={snackbarSeverity} 
                     sx={{ 
                         width: '100%', 
-                        backgroundColor: snackbarSeverity === 'success' ? 'primary.main' : 'warning.main',
+                        backgroundColor: 'primary.main',
                         color: 'primary.contrastText', 
                         border: '2px solid #0d3e45' 
                     }}
+                    icon={snackbarSeverity === 'success' ? <CheckCircleIcon/> : <WarningIcon sx={{ color: 'primary.contrastText' }} />}
                 >
                     {snackbarMessage}
                 </Alert>

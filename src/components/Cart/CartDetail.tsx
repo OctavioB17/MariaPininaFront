@@ -1,21 +1,94 @@
-import { Box, Typography, Button, Divider, IconButton } from '@mui/material'
+import { Box, Typography, Button, Divider, IconButton, CircularProgress, Snackbar, Alert } from '@mui/material'
 import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 import { useCart } from '../../hooks/useCart'
+import { useOrders } from '../../hooks/useOrders'
 import { useNavigate } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import NormalBox from '../reusable/NormalBox'
+import { useState } from 'react'
+import { IOrder } from '../../interfaces/ICart'
+import { IOrderItem } from '../../interfaces/IOrders'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import WarningIcon from '@mui/icons-material/Warning'
 
 const CartDetail = () => {
-  const { orders, removeItem, updateItemQuantity, getTotalAmount } = useCart()
+  const { orders, removeItem, updateItemQuantity, getTotalAmount, clearCart, clearOrder } = useCart()
+  const { createOrder, loading } = useOrders()
   const navigate = useNavigate()
-  console.log(orders)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success')
+
   const handleQuantityChange = (sellerId: string, productId: string, currentQuantity: number, change: number) => {
     const newQuantity = currentQuantity + change
     if (newQuantity > 0) {
       updateItemQuantity(sellerId, productId, newQuantity)
     }
+  }
+
+  const handleCheckout = async (orderToCheckout?: IOrder) => {
+    try {
+      if (orderToCheckout) {
+        const orderData = {
+          order: {
+            paymentMethod: 'CREDIT_CARD'
+          },
+          orderHasProducts: orderToCheckout.items.map((item: IOrderItem) => ({
+            productId: item.product.id,
+            quantity: item.quantity
+          }))
+        }
+
+        const result = await createOrder(orderData)
+        if (result.success) {
+          clearOrder(orderToCheckout.sellerId)
+          setSnackbarMessage('Order created successfully')
+          setSnackbarSeverity('success')
+        } else {
+          setSnackbarMessage('Failed to create order')
+          setSnackbarSeverity('error')
+        }
+      } else {
+        let allSuccessful = true
+        for (const order of orders) {
+          const orderData = {
+            order: {
+              paymentMethod: 'CREDIT_CARD'
+            },
+            orderHasProducts: order.items.map(item => ({
+              productId: item.product.id,
+              quantity: item.quantity
+            }))
+          }
+
+          const result = await createOrder(orderData)
+          if (!result.success) {
+            allSuccessful = false
+            break
+          }
+        }
+
+        if (allSuccessful) {
+          clearCart()
+          setSnackbarMessage('All orders created successfully')
+          setSnackbarSeverity('success')
+        } else {
+          setSnackbarMessage('Failed to create some orders')
+          setSnackbarSeverity('error')
+        }
+      }
+      setSnackbarOpen(true)
+    } catch {
+      setSnackbarMessage('An error occurred while creating orders')
+      setSnackbarSeverity('error')
+      setSnackbarOpen(true)
+    }
+  }
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false)
   }
 
   return (
@@ -87,6 +160,8 @@ const CartDetail = () => {
                 <Typography variant="h6">Order Total: ${order.total.toFixed(2)}</Typography>
                 <Button 
                   variant="contained" 
+                  onClick={() => handleCheckout(order)}
+                  disabled={loading}
                   sx={{ 
                     backgroundColor: 'primary.contrastText', 
                     color: 'primary.main',
@@ -96,7 +171,7 @@ const CartDetail = () => {
                     }
                   }}
                 >
-                  Checkout
+                  {loading ? <CircularProgress size={24} /> : 'Checkout'}
                 </Button>
               </Box>
             </NormalBox>
@@ -108,6 +183,8 @@ const CartDetail = () => {
             <Typography variant="h5">Total: ${getTotalAmount().toFixed(2)}</Typography>
             <Button 
               variant="contained" 
+              onClick={() => handleCheckout()}
+              disabled={loading}
               sx={{ 
                 backgroundColor: 'primary.contrastText', 
                 color: 'primary.main',
@@ -117,11 +194,31 @@ const CartDetail = () => {
                 }
               }}
             >
-              Checkout All
+              {loading ? <CircularProgress size={24} /> : 'Checkout All'}
             </Button>
           </Box>
         )}
       </Box>
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={3000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbarSeverity} 
+          sx={{ 
+            width: '100%', 
+            backgroundColor: 'primary.main',
+            color: 'primary.contrastText',
+            border: '1px solid #0d3e45'
+          }}
+          icon={snackbarSeverity === 'success' ? <CheckCircleIcon/> : <WarningIcon sx={{ color: 'primary.contrastText' }} />}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </NBoxWithHeaderAndFooter>
   )
 }

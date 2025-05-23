@@ -1,11 +1,27 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICartItem, ICartState, IOrder } from '../../interfaces/ICart';
 
-const initialState: ICartState = {
-    orders: [],
-    loading: false,
-    error: null
+const loadState = (): ICartState => {
+  try {
+    const serializedState = localStorage.getItem('cart');
+    if (serializedState === null) {
+      return {
+        orders: [],
+        loading: false,
+        error: null
+      };
+    }
+    return JSON.parse(serializedState);
+  } catch {
+    return {
+      orders: [],
+      loading: false,
+      error: null
+    };
+  }
 };
+
+const initialState: ICartState = loadState();
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -16,7 +32,6 @@ const cartSlice = createSlice({
             const sellerId = product.userId;
             const sellerName = `${product.user.name} ${product.user.surname}`;
 
-            // Buscar si ya existe una orden para este vendedor
             const existingOrderIndex = state.orders.findIndex(
                 order => order.sellerId === sellerId
             );
@@ -45,6 +60,7 @@ const cartSlice = createSlice({
                 };
                 state.orders.push(newOrder);
             }
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         removeFromCart: (state, action: PayloadAction<{ sellerId: string; productId: string }>) => {
             const { sellerId, productId } = action.payload;
@@ -64,6 +80,7 @@ const cartSlice = createSlice({
                     state.orders.splice(orderIndex, 1);
                 }
             }
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         updateQuantity: (state, action: PayloadAction<{ sellerId: string; productId: string; quantity: number }>) => {
             const { sellerId, productId, quantity } = action.payload;
@@ -82,18 +99,25 @@ const cartSlice = createSlice({
                     );
                 }
             }
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         clearOrder: (state, action: PayloadAction<string>) => {
             state.orders = state.orders.filter(order => order.sellerId !== action.payload);
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         clearAllOrders: (state) => {
             state.orders = [];
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
         setError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;
+        },
+        clearCart: (state) => {
+            state.orders = [];
+            localStorage.setItem('cart', JSON.stringify(state));
         }
     }
 });
@@ -105,7 +129,8 @@ export const {
     clearOrder,
     clearAllOrders,
     setLoading,
-    setError
+    setError,
+    clearCart
 } = cartSlice.actions;
 
 export default cartSlice.reducer; 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NormalBox from '../../reusable/NormalBox';
 import { IProductWithUserAndCategory } from '../../../interfaces/IProducts';
-import { Box, Button, Checkbox, Typography, CircularProgress } from '@mui/material';
+import { Box, Button, Checkbox, Typography, CircularProgress, Snackbar } from '@mui/material';
 import ThemedSwitch from '../../reusable/ThemedSwitch';
 import axios from 'axios';
 import { variables } from '../../../config/variables';
@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
   const [isPaused, setIsPaused] = useState<boolean>(product.isPaused);
   const [loading, setLoading] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean, message: string, severity: 'success' | 'error' }>({ open: false, message: '', severity: 'success' });
 
   const navigate = useNavigate();
   
@@ -37,8 +38,12 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
         onPauseStateChange(product.id, newIsPaused);
       }
       return pause;
-    } catch (error) {
-      console.error('Error al pausar la publicación:', error);
+    } catch {
+      setSnackbar({
+        open: true,
+        message: 'Error pausing publication. Please try again.',
+        severity: 'error'
+      });
     } finally {
       setLoading(false);
     }
@@ -139,6 +144,12 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
           Delete
         </Button>
       </Box>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ open: false, message: '', severity: 'success' })}
+        message={snackbar.message}
+      />
     </NormalBox>
   );
 };

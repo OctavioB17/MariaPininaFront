@@ -4,8 +4,9 @@ import {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearOrder,
+    clearOrder as clearOrderAction,
     clearAllOrders,
+    clearCart as clearCartAction,
 } from '../store/slices/cartSlice';
 import { IProductWithUserAndCategory } from '../interfaces/IProducts';
 
@@ -28,7 +29,7 @@ export const useCart = () => {
     };
 
     const clearSellerOrder = (sellerId: string) => {
-        dispatch(clearOrder(sellerId));
+        dispatch(clearOrderAction(sellerId));
     };
 
     const clearAll = () => {
@@ -49,6 +50,14 @@ export const useCart = () => {
         return orders.reduce((total, order) => total + order.total, 0);
     };
 
+    const clearCart = () => {
+        dispatch(clearCartAction());
+    };
+
+    const clearOrder = (sellerId: string) => {
+        dispatch(clearOrderAction(sellerId));
+    };
+
     return {
         orders,
         loading,
@@ -61,5 +70,7 @@ export const useCart = () => {
         getOrderBySeller,
         getTotalItems,
         getTotalAmount,
+        clearCart,
+        clearOrder
     };
 }; 

@@ -31,7 +31,6 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
   };
 
   const handleDeleteImage = () => {
-    console.log('Intentando eliminar imagen en índice:', currentIndex);
     if (isEditMode && onImageDelete) {
       onImageDelete(currentIndex);
     } else {

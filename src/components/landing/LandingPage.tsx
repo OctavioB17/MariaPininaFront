@@ -27,7 +27,7 @@ const LandingPage: React.FC = (): JSX.Element => {
         setProducts(productsResponse.data.data)
         setCategories(categoriesResponse.data.data)
       } catch (error) {
-        console.error('Error al traer los productos', error)
+        console.error('Error to get products and categories', error)
       }
     }
     fetchProducts()

@@ -79,7 +79,6 @@ useEffect(() => {
                     'Authorization': `Bearer ${Cookies.get('token')}`
                 }
             });
-            console.log(response.data);
             const product = response.data;
             
             setTitle(product.name);
@@ -195,8 +194,7 @@ const handleEdit = async () => {
                 });
                 navigate(-1);
             }
-        } catch (error) {
-            console.error('Error completo:', error);
+        } catch {
             setSnackbar({ 
                 open: true, 
                 message: 'Error updating product. Please try again.', 
@@ -209,13 +207,11 @@ const handleEdit = async () => {
 const handleImageDelete = async (index: number) => {
     try {
         const image = images[index];
-        console.log('Eliminando imagen:', image);
         
         if (typeof image === 'string') {
             const urlParts = image.split('/');
             const photoId = urlParts[urlParts.length - 1];
             const deleteUrl = `${variables.backendIp}/products/delete/${productId}/photo/${photoId}`;
-            console.log('URL de eliminación:', deleteUrl);
             
             const response = await axios.delete(
                 deleteUrl,
@@ -232,7 +228,7 @@ const handleImageDelete = async (index: number) => {
                 setImages(newImages);
                 setSnackbar({
                     open: true,
-                    message: 'Imagen eliminada exitosamente',
+                    message: 'Image deleted successfully',
                     severity: 'success'
                 });
             }
@@ -242,15 +238,14 @@ const handleImageDelete = async (index: number) => {
             setImages(newImages);
             setSnackbar({
                 open: true,
-                message: 'Imagen eliminada exitosamente',
+                message: 'Image deleted successfully',
                 severity: 'success'
             });
         }
-    } catch (error) {
-        console.error('Error al eliminar la imagen:', error);
+    } catch {
         setSnackbar({
             open: true,
-            message: 'Error al eliminar la imagen. Por favor, intente nuevamente.',
+            message: 'Error deleting image. Please try again.',
             severity: 'error'
         });
     }

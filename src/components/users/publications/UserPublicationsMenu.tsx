@@ -178,7 +178,6 @@ const UserPublicationsMenu = () => {
         params.max_price = maxPrice;
       }
       if (selectedCategory !== '') {
-        console.log(selectedCategory);
         params.categoryId = selectedCategory;
       }
 
@@ -209,8 +208,6 @@ const UserPublicationsMenu = () => {
     setProducts(sortedProducts);
       setTotalPages(Math.ceil(response.data.data.length / limit));
       setAnchorEl(null);
-    } catch (error) {
-      console.error('Error applying filters:', error);
     } finally {
       setApiResponseLoading(false);
     }
