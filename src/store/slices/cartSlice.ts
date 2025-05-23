@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ICartItem, ICartState } from '../../interfaces/ICart';
+import { ICartItem, ICartState, IOrder } from '../../interfaces/ICart';
 
 const initialState: ICartState = {
-    items: [],
-    total: 0,
+    orders: [],
     loading: false,
     error: null
 };
@@ -13,45 +12,82 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<ICartItem>) => {
-            const existingItem = state.items.find(
-                item => item.product.id === action.payload.product.id
+            const { product, quantity } = action.payload;
+            const sellerId = product.userId;
+            const sellerName = `${product.user.name} ${product.user.surname}`;
+
+            // Buscar si ya existe una orden para este vendedor
+            const existingOrderIndex = state.orders.findIndex(
+                order => order.sellerId === sellerId
             );
 
-            if (existingItem) {
-                existingItem.quantity += action.payload.quantity;
-            } else {
-                state.items.push(action.payload);
-            }
+            if (existingOrderIndex !== -1) {
+                const existingItemIndex = state.orders[existingOrderIndex].items.findIndex(
+                    item => item.product.id === product.id
+                );
 
-            state.total = state.items.reduce(
-                (total, item) => total + (item.product.price * item.quantity),
-                0
-            );
-        },
-        removeFromCart: (state, action: PayloadAction<string>) => {
-            state.items = state.items.filter(
-                item => item.product.id !== action.payload
-            );
-            state.total = state.items.reduce(
-                (total, item) => total + (item.product.price * item.quantity),
-                0
-            );
-        },
-        updateQuantity: (state, action: PayloadAction<{ productId: string; quantity: number }>) => {
-            const item = state.items.find(
-                item => item.product.id === action.payload.productId
-            );
-            if (item) {
-                item.quantity = action.payload.quantity;
-                state.total = state.items.reduce(
+                if (existingItemIndex !== -1) {
+                    state.orders[existingOrderIndex].items[existingItemIndex].quantity += quantity;
+                } else {
+                    state.orders[existingOrderIndex].items.push({ product, quantity });
+                }
+
+                state.orders[existingOrderIndex].total = state.orders[existingOrderIndex].items.reduce(
                     (total, item) => total + (item.product.price * item.quantity),
                     0
                 );
+            } else {
+                const newOrder: IOrder = {
+                    sellerId,
+                    sellerName,
+                    items: [{ product, quantity }],
+                    total: product.price * quantity
+                };
+                state.orders.push(newOrder);
             }
         },
-        clearCart: (state) => {
-            state.items = [];
-            state.total = 0;
+        removeFromCart: (state, action: PayloadAction<{ sellerId: string; productId: string }>) => {
+            const { sellerId, productId } = action.payload;
+            const orderIndex = state.orders.findIndex(order => order.sellerId === sellerId);
+
+            if (orderIndex !== -1) {
+                state.orders[orderIndex].items = state.orders[orderIndex].items.filter(
+                    item => item.product.id !== productId
+                );
+
+                state.orders[orderIndex].total = state.orders[orderIndex].items.reduce(
+                    (total, item) => total + (item.product.price * item.quantity),
+                    0
+                );
+
+                if (state.orders[orderIndex].items.length === 0) {
+                    state.orders.splice(orderIndex, 1);
+                }
+            }
+        },
+        updateQuantity: (state, action: PayloadAction<{ sellerId: string; productId: string; quantity: number }>) => {
+            const { sellerId, productId, quantity } = action.payload;
+            const orderIndex = state.orders.findIndex(order => order.sellerId === sellerId);
+
+            if (orderIndex !== -1) {
+                const itemIndex = state.orders[orderIndex].items.findIndex(
+                    item => item.product.id === productId
+                );
+
+                if (itemIndex !== -1) {
+                    state.orders[orderIndex].items[itemIndex].quantity = quantity;
+                    state.orders[orderIndex].total = state.orders[orderIndex].items.reduce(
+                        (total, item) => total + (item.product.price * item.quantity),
+                        0
+                    );
+                }
+            }
+        },
+        clearOrder: (state, action: PayloadAction<string>) => {
+            state.orders = state.orders.filter(order => order.sellerId !== action.payload);
+        },
+        clearAllOrders: (state) => {
+            state.orders = [];
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
@@ -66,7 +102,8 @@ export const {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart,
+    clearOrder,
+    clearAllOrders,
     setLoading,
     setError
 } = cartSlice.actions;

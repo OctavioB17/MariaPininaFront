@@ -79,7 +79,7 @@ function App() {
                 <Route path='/:id/publications/create' element={<PublicationCreation />} />
                 <Route path='/:id/publications/edit/:productId' element={<PublicationEdit />} />
               </Route>
-              <Route path='/:id/cart' element={<CartDetail />} />
+              <Route path='/cart' element={<CartDetail />} />
             </>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />

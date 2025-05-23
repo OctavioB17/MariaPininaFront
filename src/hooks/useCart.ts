@@ -1,44 +1,65 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '../store/index';
 import {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart,
+    clearOrder,
+    clearAllOrders,
 } from '../store/slices/cartSlice';
-import { IProduct } from '../interfaces/IProducts';
+import { IProductWithUserAndCategory } from '../interfaces/IProducts';
 
 export const useCart = () => {
     const dispatch = useDispatch();
-    const items = useSelector((state: RootState) => state.cart.items);
-    const total = useSelector((state: RootState) => state.cart.total);
+    const orders = useSelector((state: RootState) => state.cart.orders);
     const loading = useSelector((state: RootState) => state.cart.loading);
     const error = useSelector((state: RootState) => state.cart.error);
 
-    const addItem = (product: IProduct, quantity: number = 1) => {
+    const addItem = (product: IProductWithUserAndCategory, quantity: number = 1) => {
         dispatch(addToCart({ product, quantity }));
     };
 
-    const removeItem = (productId: string) => {
-        dispatch(removeFromCart(productId));
+    const removeItem = (sellerId: string, productId: string) => {
+        dispatch(removeFromCart({ sellerId, productId }));
     };
 
-    const updateItemQuantity = (productId: string, quantity: number) => {
-        dispatch(updateQuantity({ productId, quantity }));
+    const updateItemQuantity = (sellerId: string, productId: string, quantity: number) => {
+        dispatch(updateQuantity({ sellerId, productId, quantity }));
     };
 
-    const clear = () => {
-        dispatch(clearCart());
+    const clearSellerOrder = (sellerId: string) => {
+        dispatch(clearOrder(sellerId));
+    };
+
+    const clearAll = () => {
+        dispatch(clearAllOrders());
+    };
+
+    const getOrderBySeller = (sellerId: string) => {
+        return orders.find(order => order.sellerId === sellerId);
+    };
+
+    const getTotalItems = () => {
+        return orders.reduce((total, order) => 
+            total + order.items.reduce((orderTotal, item) => orderTotal + item.quantity, 0), 
+        0);
+    };
+
+    const getTotalAmount = () => {
+        return orders.reduce((total, order) => total + order.total, 0);
     };
 
     return {
-        items,
-        total,
+        orders,
         loading,
         error,
         addItem,
         removeItem,
         updateItemQuantity,
-        clear,
+        clearSellerOrder,
+        clearAll,
+        getOrderBySeller,
+        getTotalItems,
+        getTotalAmount,
     };
 }; 

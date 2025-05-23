@@ -1,13 +1,19 @@
-import { IProduct } from './IProducts';
+import { IProductWithUserAndCategory } from './IProducts';
 
 export interface ICartItem {
-    product: IProduct;
+    product: IProductWithUserAndCategory;
     quantity: number;
 }
 
-export interface ICartState {
+export interface IOrder {
+    sellerId: string;
+    sellerName: string;
     items: ICartItem[];
     total: number;
+}
+
+export interface ICartState {
+    orders: IOrder[];
     loading: boolean;
     error: string | null;
 } 

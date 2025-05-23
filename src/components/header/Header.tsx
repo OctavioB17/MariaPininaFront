@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
                     My orders
                   </Button>
                 </Link>
-                <Link to={`/${userId}/cart`}>
+                <Link to={`/cart`}>
                   <IconButton aria-label="shopping-cart" sx={muiButtonNoAnimations}>
                     <ShoppingCartIcon sx={{ fontSize: '1.5vw'}}/>
                   </IconButton>
