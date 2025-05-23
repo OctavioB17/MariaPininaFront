@@ -1,5 +1,5 @@
 import ICategory from "../../../interfaces/ICategories";
-import { IProduct } from "../products/IProducts";
+import { IProduct } from "../../../interfaces/IProducts";
 import { ISxProps } from "../SxProps";
 
 export default interface HeaderProps extends ISxProps {
