@@ -36,7 +36,7 @@ const CartDetail = () => {
               </Typography>
               <Divider sx={{ margin: '1vw 0', borderColor: 'primary.contrastText', border: '1px solid' }} />
               {order.items.map((item) => (
-                <Box key={item.product.id} sx={{ display: 'flex', alignItems: 'center', gap: '1vw', marginBottom: '1vw' }}>
+                <Box key={item.product.id} sx={{ display: 'flex', alignItems: 'center', gap: '1vw', marginBottom: '1vw', justifyContent: 'space-between', textAlign: 'left' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
                     <Box 
                       component="img"
@@ -51,31 +51,33 @@ const CartDetail = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5vw' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5vw' }}>
+                      <IconButton 
+                        onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, -1)}
+                        size="small"
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography>{item.quantity}</Typography>
+                      <IconButton 
+                        onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, 1)}
+                        size="small"
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Box>
+
+                    <Typography sx={{ minWidth: '100px', textAlign: 'right' }}>
+                      ${(item.product.price * item.quantity).toFixed(2)}
+                    </Typography>
+
                     <IconButton 
-                      onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, -1)}
-                      size="small"
+                      onClick={() => removeItem(order.sellerId, item.product.id)}
+                      color="error"
                     >
-                      <RemoveIcon />
-                    </IconButton>
-                    <Typography>{item.quantity}</Typography>
-                    <IconButton 
-                      onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, 1)}
-                      size="small"
-                    >
-                      <AddIcon />
+                      <DeleteIcon />
                     </IconButton>
                   </Box>
-
-                  <Typography sx={{ minWidth: '100px', textAlign: 'right' }}>
-                    ${(item.product.price * item.quantity).toFixed(2)}
-                  </Typography>
-
-                  <IconButton 
-                    onClick={() => removeItem(order.sellerId, item.product.id)}
-                    color="error"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
                 </Box>
               ))}
 
