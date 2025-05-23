@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import DropDownMenuProps from '../interfaces/reusable/DropDownMenuProps'
 import { muiButtonNoAnimations } from '../../themes/MuiButtonNoAnimations'
 
-const DropDownMenu: React.FC<DropDownMenuProps> = ({ menuName, menuList, linkTo, queryParamName }) => {
+const DropDownMenu: React.FC<DropDownMenuProps> = ({ menuName, menuList, linkTo, subMenusLinks, queryParamName }) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [open, setOpen] = useState(false)
 
@@ -51,11 +51,11 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({ menuName, menuList, linkTo,
             border: '2px solid #0d3e45'
           }}
         >
-          {menuList.map((item) => (
+          {menuList.map((item, index) => (
             <MenuItem
               key={item}
               component={Link}
-              to={`${linkTo}?${queryParamName}=${encodeURIComponent(item)}`} 
+              to={subMenusLinks ? subMenusLinks[index] : `${linkTo}?${queryParamName}=${encodeURIComponent(item)}`} 
               onClick={() => setOpen(false)}
               sx={{ whiteSpace: 'nowrap' }}
             >

@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
   const user = useAppSelector(selectUser)
   const userId = isLogged ? user?.id : null
 
-  const categoriesNames = categories.map(category => category.name)
+  const categoriesNamesAndIds = categories.map(category => ({ name: category.name, productIdUrl: `/products/category/${category.id}` }))
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw', ...sx}}>
         <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'space-between', paddingLeft: '0.5vw', paddingRight: '0.5vw'}}>
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
         <Divider sx={{ border: '1px solid #0d3e45' }}/>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <DropDownMenu linkTo='/categories' menuName={'Categories'} menuList={categoriesNames} queryParamName='category'/>
+            <DropDownMenu linkTo='/categories' menuName={'Categories'} menuList={categoriesNamesAndIds.map(category => category.name)} subMenusLinks={categoriesNamesAndIds.map(category => category.productIdUrl)} queryParamName='category'/>
             <Link to={'/products'}>
               <Button
                 sx={muiButtonNoAnimations}

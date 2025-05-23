@@ -4,7 +4,6 @@ import SearchBarProps from '../interfaces/header/SearchBarProps'
 import { useNavigate } from 'react-router-dom'
 
 const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
-
   const navigate = useNavigate()
   const productNameOnly = products.map(product => product.name)
 
@@ -12,7 +11,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
     if (selectedProduct) {
       const product = products.find(p => p.name === selectedProduct)
       if (product) {
-        navigate(`/products/${product.name}`)
+        navigate(`/products/search/${product.name}`)
+      }
+    }
+  }
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      const input = event.target as HTMLInputElement
+      if (input.value) {
+        navigate(`/products/search/${input.value}`)
       }
     }
   }
@@ -20,9 +28,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
   return (
     <Box>
       <Autocomplete
+        freeSolo
         disablePortal
         options={productNameOnly}
         onChange={handleProductSelect}
+        onKeyDown={handleKeyPress}
         sx={{ width: '50vw' }}
         slotProps={{
           paper: {
