@@ -51,7 +51,7 @@ const ProductDetails: React.FC = () => {
                             <Typography>{`Categories`}</Typography>
                         </Link>
                         <Typography>{` > `}</Typography>
-                        <Link style={{color: '#213547'}} to={`/categories/${products.categories.id}`}>{products.categories.name}</Link>
+                        <Link style={{color: '#0d3e45'}} to={`/categories/${products.categories.id}`}>{products.categories.name}</Link>
                     </Box>
                 :
                     <Skeleton sx={{width: "35vw", height: '2vw', marginBottom: '-10vw' }}/>
@@ -76,18 +76,18 @@ const ProductDetails: React.FC = () => {
                                 <span>
                                     <StockImportance/>
                                 </span>
-                                <Divider sx={{borderColor: 'black'}}/>
+                                <Divider sx={{borderColor: '#0d3e45'}}/>
                                 <Box>
                                 <span style={{fontSize: '1.5vw'}}>
-                                    Offered by <Link style={{textDecoration: 'underline'}} to={``}>{products.user.name} {products.user.surname}</Link>
+                                    Offered by <Link style={{textDecoration: 'underline', color: 'inherit'}} to={`/products/user/${products.user.id}`}>{products.user.name} {products.user.surname}</Link>
                                 </span>
                                 </Box>
                             </Box>
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
-                                <Button sx={{color: 'inherit', border: '2px solid black', width: '100%'}}>
+                                <Button sx={{color: 'inherit', border: '2px solid #0d3e45', width: '100%'}}>
                                     Buy
                                 </Button>
-                                <Button sx={{color: 'inherit', border: '2px solid black', width: '100%'}}>
+                                <Button sx={{color: 'inherit', border: '2px solid #0d3e45', width: '100%'}}>
                                     Add to cart
                                 </Button>
                             </Box>
@@ -96,7 +96,7 @@ const ProductDetails: React.FC = () => {
                         <Skeleton sx={{width: "25vw", height: '50vw', marginBottom: '-8vw'}}/>
                 }
             </Box>
-            <Divider sx={{border: '1px solid black'}}/>
+            <Divider sx={{border: '1px solid #0d3e45'}}/>
             <Box sx={{display: 'flex', gap: '1vw', position: 'relative', justifyContent: 'space-between'}}>
                 {
                     products?.description ?

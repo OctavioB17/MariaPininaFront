@@ -156,8 +156,8 @@ const UserPublicationsMenu = () => {
   const popperId = open ? 'filter-popper' : undefined;
 
   const applyFilters = async () => {
-    setApiResponseLoading(true);
-    try {
+      setApiResponseLoading(true);
+      try {
       interface FilterParams {
         limit: number;
         offset: number;
@@ -167,7 +167,7 @@ const UserPublicationsMenu = () => {
       }
 
       const params: FilterParams = {
-        limit,
+            limit,
         offset: (page - 1) * limit
       };
 
@@ -204,9 +204,9 @@ const UserPublicationsMenu = () => {
         case 'name':
           sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
           break;
-      }
+    }
 
-      setProducts(sortedProducts);
+    setProducts(sortedProducts);
       setTotalPages(Math.ceil(response.data.data.length / limit));
       setAnchorEl(null);
     } catch (error) {
@@ -269,10 +269,10 @@ const UserPublicationsMenu = () => {
             </Button>
           </Box>
         </Box>
-        <Divider sx={{ border: '1px solid black', width: '100%' }} />
+        <Divider sx={{ border: '1px solid #0d3e45', width: '100%' }} />
         {apiResponseLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20vw' }}>
-            <CircularProgress sx={{ color: 'primary.contrastText' }} />
+          <CircularProgress sx={{ color: 'primary.contrastText' }} />
           </Box>
         ) : (
           <Box sx={{ paddingTop: '1vw', paddingBottom: '1vw', width: '100%', display: 'flex', flexDirection: 'column', gap: '1vw' }}>

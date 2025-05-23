@@ -20,11 +20,11 @@ const LandingPage: React.FC = (): JSX.Element => {
       try {
 
         const [productsResponse, categoriesResponse] = await Promise.all([
-          axios.get<IProduct[]>(`${variables.backendIp}/products/get-all/random`),
+          axios.get<IPaginationResponse<IProduct>>(`${variables.backendIp}/products/get-all/random`),
           axios.get<IPaginationResponse<ICategory>>(`${variables.backendIp}/categories/get/all`)
         ])
         
-        setProducts(productsResponse.data)
+        setProducts(productsResponse.data.data)
         setCategories(categoriesResponse.data.data)
       } catch (error) {
         console.error('Error al traer los productos', error)
@@ -189,7 +189,7 @@ const LandingPage: React.FC = (): JSX.Element => {
   
       return (
         <Box key={category.id}>
-          <Divider sx={{ border: '1px solid black' }} />
+          <Divider sx={{ border: '1px solid #0d3e45' }} />
           <ProductsCarrousel carrouselName={category.name}>
             {categoryProducts.map(product => (
               <ProductCards key={product.id} product={product} />
@@ -208,7 +208,7 @@ const LandingPage: React.FC = (): JSX.Element => {
             <ProductsCarrousel carrouselName='Products'>
               {memoizedProductCards}
             </ProductsCarrousel>
-            <Divider sx={{border: '1px solid black'}}/>
+            <Divider sx={{border: '1px solid #0d3e45'}}/>
             {MemoizedCategoryCards}
             <Box>
               {productCarouselsByCategory}

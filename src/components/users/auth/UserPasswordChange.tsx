@@ -167,7 +167,7 @@ const UserPasswordChange: React.FC = (): JSX.Element => {
                           registerSuccessMessage ?
                           <Typography sx={{textDecoration: 'underline'}}>Password successfully changed. Redirecting to email in {count}...</Typography>
                           :
-                          <Button disabled={isDisabled} onClick={() => resetPassword()}  sx={{color: 'inherit', border: '1px solid black', width: '100%', padding: '0.8vw'}}>
+                          <Button disabled={isDisabled} onClick={() => resetPassword()}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
                             { passChangeSuccessful ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Register'  }
                           </Button>
                         }

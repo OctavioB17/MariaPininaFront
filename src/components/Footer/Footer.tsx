@@ -15,16 +15,16 @@ const Footer: React.FC = (): JSX.Element => {
     <Box sx={{ bgcolor: 'primary.main', padding: isSmallScreen ? '5vw' : '2vw', display: 'flex', flexDirection: 'column', gap: '1vw', justifyContent: 'center', alignItems: 'center' }}>
         <Box sx={{display: 'flex', justifyContent: 'space-evenly', width: isSmallScreen ? '90vw' : '25vw' }}>
             <Link href='https://github.com/OctavioB17' target='_blank'>
-                <FaGithub style={{fontSize: '1.5vw'}} fill='#213547'/>
+                <FaGithub style={{fontSize: '1.5vw'}} fill='#0d3e45'/>
             </Link>
             <Link href='https://www.linkedin.com/in/octavio-bruza-2b9290292/' target='_blank'>
-                <FaLinkedin style={{fontSize: '1.5vw'}} fill='#213547'/>
+                <FaLinkedin style={{fontSize: '1.5vw'}} fill='#0d3e45'/>
             </Link>
             <Link href='mailto:octaviobruza17@gmail.com' >
-                <SiGmail style={{fontSize: '1.5vw'}} fill='#213547'/>
+                <SiGmail style={{fontSize: '1.5vw'}} fill='#0d3e45'/>
             </Link>
             <Link href='https://wa.me/5493426264721' target='_blank'>
-                <FaWhatsapp style={{fontSize: '1.5vw'}} fill='#213547'/>
+                <FaWhatsapp style={{fontSize: '1.5vw'}} fill='#0d3e45'/>
             </Link>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: isSmallScreen ? 'column' : 'row', gap: '1vw'}}>

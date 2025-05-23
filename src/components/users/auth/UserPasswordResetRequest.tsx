@@ -56,7 +56,7 @@ const UserPasswordResetRequest: React.FC = (): JSX.Element => {
                           </Typography>
                           <TextField type='email' onChange={(e) => setMail(e.target.value)} sx={{width: '100%'}}/>
                         </Box>
-                        <Button disabled={!mail} onClick={() => sendPassRequest()}  sx={{color: 'inherit', border: '1px solid black', width: '100%', padding: '0.8vw'}}>
+                        <Button disabled={!mail} onClick={() => sendPassRequest()}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
                             { apiCall ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Reset Password'  }
                         </Button>
                         {

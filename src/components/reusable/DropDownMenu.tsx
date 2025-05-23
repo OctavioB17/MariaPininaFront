@@ -48,7 +48,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({ menuName, menuList, linkTo,
             overflowX: 'auto',
             backgroundColor: 'primary.main',
             color: 'primary.contrastText',
-            border: '2px solid black'
+            border: '2px solid #0d3e45'
           }}
         >
           {menuList.map((item) => (

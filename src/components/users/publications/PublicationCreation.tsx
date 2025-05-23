@@ -16,7 +16,7 @@ import SuccessCheckmark from '../../reusable/SuccessCheckmark'
 const PublicationCreation = () => {
 const navigate = useNavigate();
 const { id: userId } = useParams();
-const [images, setImages] = useState<File[]>([])
+const [images, setImages] = useState<(string | File)[]>([])
 const [categories, setCategories] = useState<ICategory[]>([])
 const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
 const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' as 'error' | 'success' })
@@ -210,7 +210,7 @@ const handleDialogClose = (publishAnother: boolean) => {
       <NormalBox sx={{ padding: '1vw', marginTop: '1vw', marginBottom: '1vw', display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
             <Typography variant='h4'>Publication Creation</Typography>
-            <Divider sx={{ border: '1px solid black', width: '100%', marginBottom: '1vw' }} />
+            <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: '1vw' }} />
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2vw', textAlign: 'left', width: '50%' }}>
@@ -227,7 +227,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                             error={title.length > 35}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Typography>
                         Ensure the title does not exceed 35 characters to keep it clear and concise.
                         Use clear and precise words that accurately describe what you are selling.
@@ -235,7 +235,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                         Keep the language simple and avoid jargon or abbreviations.
                         Place the most important words at the beginning of the title to improve visibility in search engines.
                     </Typography>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                 </NormalBox>
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                     <Typography variant='h5'>Commercial Information</Typography>
@@ -251,7 +251,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                             error={price !== '' && (isNaN(Number(price)) || Number(price) < 0)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
                         <Typography>Stock</Typography>
                         <TextField 
@@ -264,7 +264,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                             error={stock !== '' && (isNaN(Number(stock)) || Number(stock) < 0)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
                         <Typography>Sku</Typography>
                         <TextField 
@@ -278,7 +278,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                         It helps track inventory and ensure accurate stock levels.
                         Use a format that makes sense for your business, such as a number or a combination of letters and numbers.
                     </Typography>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                 </NormalBox>
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', height: '100%', justifyContent: 'center' }}>
                     <Typography variant='h5'>Category</Typography>
@@ -302,7 +302,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                                         sx: {
                                             backgroundColor: 'primary.main',
                                             color: 'primary.contrastText',
-                                            border: '1px solid black'       
+                                            border: '1px solid #0d3e45'       
                                         },
                                     },
                                 }}
@@ -371,14 +371,14 @@ const handleDialogClose = (publishAnother: boolean) => {
                                 placeholder="Example: cotton, polyester, spandex"
                             />
                         </Box>
-                        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                         <Box>
                         <Typography sx={{overflow: 'hidden'}}>
                             Please specify the main materials used in your product.
                             You can list multiple materials separated by commas (e.g., "cotton, polyester, spandex").
                         </Typography>
                         </Box>
-                        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     </Box>
                 </NormalBox>
             </Box>
@@ -393,7 +393,7 @@ const handleDialogClose = (publishAnother: boolean) => {
                             outline: '0 !important',
                             borderRadius: 0
                         },
-                        border: '1px solid black',
+                        border: '1px solid #0d3e45',
                         borderRadius: '4px',
                         cursor: 'pointer'
                     }} 
@@ -415,12 +415,12 @@ const handleDialogClose = (publishAnother: boolean) => {
                 </Typography>
             </NormalBox>
         </Box>
-        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'flex-end', padding: '1vw'}}>
             <Button 
                 variant='contained' 
                 color='primary' 
-                sx={{border: '1px solid black', width: '10vw'}}
+                sx={{border: '1px solid #0d3e45', width: '10vw'}}
                 onClick={handleSubmit}
                 disabled={isLoading}
             >
@@ -429,7 +429,7 @@ const handleDialogClose = (publishAnother: boolean) => {
             <Button 
                 variant='contained' 
                 color='secondary' 
-                sx={{border: '1px solid black', width: '10vw'}}
+                sx={{border: '1px solid #0d3e45', width: '10vw'}}
                 onClick={() => navigate(`/${userId}/publications`)}
             >
                 Back
@@ -444,7 +444,7 @@ const handleDialogClose = (publishAnother: boolean) => {
       >
         <Alert
           onClose={handleCloseSnackbar}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}
+          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           {snackbar.message}
@@ -463,7 +463,7 @@ const handleDialogClose = (publishAnother: boolean) => {
           paper: {
             sx: {
               backgroundColor: 'primary.main',
-              border: '2px solid black',
+              border: '2px solid #0d3e45',
               '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root': {
                 color: 'primary.contrastText'
               },

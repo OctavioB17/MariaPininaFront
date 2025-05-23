@@ -97,7 +97,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
       sx={{ 
         position: 'relative', 
         height: '600px', 
-        border: images.length === 0 ? '2px dashed #213547' : '2px solid #213547', 
+        border: images.length === 0 ? '2px dashed #0d3e45' : '2px solid #0d3e45', 
         borderRadius: images.length === 0 ? '0px' : '10px', 
         display: 'flex', 
         alignItems: 'center', 
@@ -161,7 +161,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
           '& .image-gallery-thumbnail': {
             height: '5.5vw',
             width: '5.5vw',
-            border: '2px solid black',
+            border: '2px solid #0d3e45',
           },
           '& .image-gallery-thumbnail .image-gallery-thumbnail-image': {
             height: '5vw',
@@ -177,7 +177,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                   position: 'absolute',
                   top: 20,
                   right: 25,
-                  backgroundColor: 'black',
+                  backgroundColor: '#0d3e45',
                   color: 'white',
                   zIndex: 1000,
                   '&:hover': {
@@ -215,7 +215,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                 }} 
                 id="upload-button" 
               />
-              <Button variant="contained" sx={{ width: '100%', backgroundColor: 'black', color: 'white' }}>
+              <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
                 Add photo
               </Button>
             </Box>
@@ -225,7 +225,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert
           onClose={handleSnackbarClose}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}
+          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           You can only upload up to 10 images.

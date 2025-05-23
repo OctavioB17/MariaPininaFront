@@ -12,7 +12,7 @@ const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children, carrous
     return (
       <ArrowForwardIosIcon
         className={className}
-        style={{ ...style, display: "block", color: "#213547" }}
+        style={{ ...style, display: "block", color: "#0d3e45" }}
         onClick={onClick}
       />
     );
@@ -23,7 +23,7 @@ const ProductsCarrousel: React.FC<ProductsCarrouselProps> = ({ children, carrous
     return (
       <ArrowBackIosIcon
         className={className}
-        style={{ ...style, display: "block", color: "#213547" }}
+        style={{ ...style, display: "block", color: "#0d3e45" }}
         onClick={onClick}
       />
     );

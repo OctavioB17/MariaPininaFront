@@ -218,7 +218,7 @@ const UserRegister: React.FC = (): JSX.Element => {
                           registerSuccessMessage ?
                           <Typography sx={{textDecoration: 'underline'}}>{registerSuccessMessage}</Typography>
                           :
-                          <Button disabled={isDisabled} onClick={() => (register(registerData))}  sx={{color: 'inherit', border: '1px solid black', width: '100%', padding: '0.8vw'}}>
+                          <Button disabled={isDisabled} onClick={() => (register(registerData))}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
                             { registerSuccessful ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Register'  }
                           </Button>
                         }

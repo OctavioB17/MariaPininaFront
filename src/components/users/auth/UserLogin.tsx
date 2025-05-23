@@ -106,7 +106,7 @@ const UserLogin: React.FC = (): JSX.Element => {
                         </Typography>
                         )
                       }
-                        <Button onClick={() => (login(loginData))}  sx={{color: 'inherit', border: '1px solid black', width: '100%', padding: '0.8vw'}}>
+                        <Button onClick={() => (login(loginData))}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
                             { isLoggingIn ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Log in'  }
                         </Button>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

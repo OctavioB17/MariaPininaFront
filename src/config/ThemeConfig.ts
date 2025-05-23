@@ -3,14 +3,14 @@ import { createTheme, ThemeOptions } from "@mui/material";
 export const themeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: "#e8dcc7",
-      contrastText: '#213547'
+      main: "#efefe3",
+      contrastText: '#0d3e45'
     },
     secondary: {
       main: "#000000",
     },
     background: {
-      default: "#e8dcc7",
+      default: "#efefe3",
     },
   },
   typography: {
@@ -26,7 +26,7 @@ export const themeOptions: ThemeOptions = {
       fontFamily: "'Satoshi-Regular'",
     },
     button: {
-      color: '#213547',
+      color: '#0d3e45',
       fontFamily: "'Space Grotesk'",
     },
   },
@@ -34,7 +34,7 @@ export const themeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         outlined: {
-          color: '#213547',
+          color: '#0d3e45',
         },
       },
     },
@@ -47,19 +47,19 @@ export const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           '& fieldset': {
-            borderColor: '#213547',
+            borderColor: '#0d3e45',
             outline: 1
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#213547',
+            borderColor: '#0d3e45',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#213547',
+            borderColor: '#0d3e45',
           },
         },
         input: {
           '&:focus': {
-            outline: '1px solid black',
+            outline: '1px solid #0d3e45',
             borderRadius: '4px'
           },
         },
@@ -69,7 +69,7 @@ export const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.Mui-focused': {
-            color: '#213547',
+            color: '#0d3e45',
           },
         },
       },
@@ -78,7 +78,7 @@ export const themeOptions: ThemeOptions = {
       styleOverrides: {
         underline: {
           '&:after': {
-            borderBottomColor: '#213547',
+            borderBottomColor: '#0d3e45',
           },
         },
       },
@@ -86,8 +86,8 @@ export const themeOptions: ThemeOptions = {
     MuiMenu: {
       styleOverrides: {
         list: {
-          backgroundColor: '#e8dcc7',
-          border: '2px solid black',
+          backgroundColor: '#efefe3',
+          border: '2px solid #0d3e45',
           borderRadius: '4px',
         },
       },

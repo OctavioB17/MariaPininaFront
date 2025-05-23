@@ -261,7 +261,7 @@ return (
       <NormalBox sx={{ padding: '1vw', marginTop: '1vw', marginBottom: '1vw', display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
             <Typography variant='h4'>Edit Publication</Typography>
-            <Divider sx={{ border: '1px solid black', width: '100%', marginBottom: '1vw' }} />
+            <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: '1vw' }} />
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2vw', textAlign: 'left', width: '50%' }}>
@@ -274,7 +274,7 @@ return (
                             disabled
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                 </NormalBox>
                 <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
                     <Typography variant='h5'>Commercial Information</Typography>
@@ -290,7 +290,7 @@ return (
                             error={price !== '' && (isNaN(Number(price)) || Number(price) < 0)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
                         <Typography>Stock</Typography>
                         <TextField 
@@ -303,7 +303,7 @@ return (
                             error={stock !== '' && (isNaN(Number(stock)) || Number(stock) < 0)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
                         <Typography>Sku</Typography>
                         <TextField 
@@ -312,7 +312,7 @@ return (
                             onChange={(e) => setSku(e.target.value)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     <Typography>
                         The SKU (Stock Keeping Unit) is a unique identifier for each product.
                         It helps track inventory and ensure accurate stock levels.
@@ -398,14 +398,14 @@ return (
                                 placeholder="Example: cotton, polyester, spandex"
                             />
                         </Box>
-                        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                         <Box>
                         <Typography sx={{overflow: 'hidden'}}>
                             Please specify the main materials used in your product.
                             You can list multiple materials separated by commas (e.g., "cotton, polyester, spandex").
                         </Typography>
                         </Box>
-                        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+                        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                     </Box>
                 </NormalBox>
             </Box>
@@ -420,7 +420,7 @@ return (
                             outline: '0 !important',
                             borderRadius: 0
                         },
-                        border: '1px solid black',
+                        border: '1px solid #0d3e45',
                         borderRadius: '4px',
                         cursor: 'pointer'
                     }} 
@@ -442,12 +442,12 @@ return (
                 </Typography>
             </NormalBox>
         </Box>
-        <Divider sx={{ border: '1px solid #213547', width: '100%'}} />
+        <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
         <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'flex-end', padding: '1vw'}}>
             <Button 
                 variant='contained' 
                 color='primary' 
-                sx={{border: '1px solid black', width: '10vw'}}
+                sx={{border: '1px solid #0d3e45', width: '10vw'}}
                 onClick={handleEdit}
             >
                 Save Changes
@@ -455,7 +455,7 @@ return (
             <Button 
                 variant='contained' 
                 color='secondary' 
-                sx={{border: '1px solid black', width: '10vw'}}
+                sx={{border: '1px solid #0d3e45', width: '10vw'}}
                 onClick={() => navigate(-1)}
             >
                 Cancel
@@ -470,7 +470,7 @@ return (
       >
         <Alert
           onClose={handleCloseSnackbar}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}
+          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           {snackbar.message}

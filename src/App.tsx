@@ -60,9 +60,10 @@ function App() {
         <Routes>
           <Route path='/' element={<LandingPage />} />
           <Route path='/products/:id' element={<ProductDetails />} />
-          <Route path='/products/category/:categoryId' element={<ProductGridGallery />} />
-          <Route path='/products/search/:searchTerm' element={<ProductGridGallery />} />
-          <Route path='/products/user/:userId' element={<ProductGridGallery />} />
+          <Route path='/products' element={<ProductGridGallery filterBy='Product'/>} />
+          <Route path='/products/category/:categoryId' element={<ProductGridGallery filterBy='Category'/>} />
+          <Route path='/products/search/:searchTerm' element={<ProductGridGallery filterBy='Search'/>} />
+          <Route path='/products/user/:userId' element={<ProductGridGallery filterBy='User'/>} />
           {!isLogged && (
             <>
               <Route path='/login' element={<UserLogin />} />

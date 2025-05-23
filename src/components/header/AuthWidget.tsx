@@ -100,18 +100,18 @@ const AuthWidget: React.FC = () => {
         </Box>
       ) : (
         <Box sx={{ display: 'flex', gap: '1vw', color: 'primary.contrastText' }}>
-          <Link to="/login" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547' }}>
+          <Link to="/login" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#0d3e45' }}>
             <Typography variant="h4">Log-in</Typography>
             <Face5Icon />
           </Link>
-          <Link to="/register" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#213547' }}>
+          <Link to="/register" style={{ display: 'flex', gap: '1vw', alignItems: 'center', color: '#0d3e45' }}>
             <Typography variant="h4">Sign-in</Typography>
             <Face6Icon />
           </Link>
         </Box>
       )}
       <Popper id={id} open={open} anchorEl={anchorEl} placement='bottom-end' disablePortal sx={{zIndex: 99}}>
-        <Paper elevation={4} sx={{ mt: 1, p: 1, backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid black' }}>
+        <Paper elevation={4} sx={{ mt: 1, p: 1, backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}>
           <MenuItem component={Link} to="/orders">Orders</MenuItem>
           <MenuItem component={Link} to={`${user?.id}/publications`}>Publications</MenuItem>
           {user && (user.role === 'ADMIN' || user.role === 'MODERATOR' || user.role === 'SUPER_ADMIN') && (

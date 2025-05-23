@@ -9,7 +9,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   return (
-    <Link to={`/category/${category.id}`} style={{ textDecoration: 'none' }}>
+    <Link to={`/products/category/${category.id}`} style={{ textDecoration: 'none' }}>
         <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw', color: 'primary.contrastText'}}>
             <Box>
                 {

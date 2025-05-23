@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
             </Box>
             <AuthWidget/>
         </Box>
-        <Divider sx={{ border: '1px solid black' }}/>
+        <Divider sx={{ border: '1px solid #0d3e45' }}/>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <DropDownMenu linkTo='/categories' menuName={'Categories'} menuList={categoriesNames} queryParamName='category'/>
