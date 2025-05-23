@@ -10,7 +10,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
 
   return (
     <Link to={`/products/category/${category.id}`} style={{ textDecoration: 'none' }}>
-        <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw', color: 'primary.contrastText'}}>
+        <NormalBox sx={{display: 'flex', flexDirection: 'column', padding: '0.5vw', color: 'primary.contrastText', borderRadius: '4px', paddingLeft: '0.1vw', paddingRight: '0.1vw'}}>
             <Box>
                 {
                     category.imageUrl && isLoading ?
@@ -27,7 +27,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
                         }
                     </Typography>
                 </Box>
-                <Box sx={{ width: '25vw', textAlign: 'left', height: '12vh', overflow: 'hidden'}}>
+                <Box sx={{ width: '25vw', textAlign: 'left', height: '13vh', overflow: 'hidden'}}>
                     <Typography>
                         {
                             category.description

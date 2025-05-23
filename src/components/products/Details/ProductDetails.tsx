@@ -51,7 +51,7 @@ const ProductDetails: React.FC = () => {
                             <Typography>{`Categories`}</Typography>
                         </Link>
                         <Typography>{` > `}</Typography>
-                        <Link style={{color: '#0d3e45'}} to={`/categories/${products.categories.id}`}>{products.categories.name}</Link>
+                        <Link style={{color: '#0d3e45'}} to={`/products/category/${products.categories.id}`}>{products.categories.name}</Link>
                     </Box>
                 :
                     <Skeleton sx={{width: "35vw", height: '2vw', marginBottom: '-10vw' }}/>

@@ -20,6 +20,7 @@ import PublicationCreation from './components/users/publications/PublicationCrea
 import PublicationEdit from './components/users/publications/PublicationEdit';
 import CartDetail from './components/Cart/CartDetail';
 import ProductGridGallery from './components/products/ProductGrids/ProductGridGallery';
+import AllCategoriesDisplay from './components/Categories/AllCategoriesDisplay';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,6 +60,7 @@ function App() {
       ) : (
         <Routes>
           <Route path='/' element={<LandingPage />} />
+          <Route path='/categories' element={<AllCategoriesDisplay />} />
           <Route path='/products/:id' element={<ProductDetails />} />
           <Route path='/products' element={<ProductGridGallery filterBy='Product'/>} />
           <Route path='/products/category/:categoryId' element={<ProductGridGallery filterBy='Category'/>} />
@@ -83,7 +85,7 @@ function App() {
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />
           <Route path='/reset-password' element={<UserPasswordResetRequest />} />
           <Route path='/reset-password/reset' element={<UserPasswordChange />} />
-          <Route path='*' element={<Navigate to="/" />} />
+          {/* <Route path='*' element={<Navigate to="/" />} /> */}
         </Routes>
       )}
     </>
