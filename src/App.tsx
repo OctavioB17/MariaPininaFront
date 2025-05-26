@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import LandingPage from './components/landing/LandingPage';
 import ProductDetails from './components/products/Details/ProductDetails';
@@ -22,12 +22,16 @@ import CartDetail from './components/Orders/Cart/CartDetail';
 import ProductGridGallery from './components/products/ProductGrids/ProductGridGallery';
 import AllCategoriesDisplay from './components/Categories/AllCategoriesDisplay';
 import OrdersView from './components/Orders/OrdersView';
+import AdminMenu from './components/users/admin/AdminMenu';
+import { useAppSelector } from './hooks/useAppSelector';
+import { selectUser } from './store/userSlice';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const isLogged = useIsLogged();
   const theme = useTheme();
   useTokenRenewal(isLogged);
+  const user = useAppSelector(selectUser);
 
   useEffect(() => {
     if (loading) {
@@ -82,6 +86,9 @@ function App() {
               </Route>
               <Route path='/cart' element={<CartDetail />} />
               <Route path='/orders' element={<OrdersView />} />
+              {(user?.role === 'ADMIN' || user?.role === 'MODERATOR' || user?.role === 'SUPER_ADMIN') && (
+                <Route path='/admin/*' element={<AdminMenu />} />
+              )}
             </>
           )}
           <Route path='/authorize-user/:id' element={<UserAccountAuthorization />} />

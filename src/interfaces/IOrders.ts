@@ -1,4 +1,4 @@
-import { IProduct, IProductWithUserAndCategory } from "./IProducts";
+import { IProductWithQuantity, IProductWithUserAndCategory } from "./IProducts";
 import { IUser } from "./IUser";
 
 export interface Order {
@@ -7,7 +7,7 @@ export interface Order {
     totalPrice: number;
     paymentMethod: string;
     taxes: Taxes[];
-    products: IProduct[];
+    products: IProductWithQuantity[];
     user: IUser;
     userId: string;
 }

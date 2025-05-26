@@ -1,4 +1,5 @@
 import { createTheme, ThemeOptions } from "@mui/material";
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 export const themeOptions: ThemeOptions = {
   palette: {
@@ -31,16 +32,42 @@ export const themeOptions: ThemeOptions = {
     },
   },
   components: {
-    MuiButton: {
+    MuiDataGrid: {
       styleOverrides: {
-        outlined: {
-          color: '#0d3e45',
+        panelContent: {
+          backgroundColor: '#efefe3',
+          border: '1px solid #0d3e45',
+        },
+        root: {
+          backgroundColor: '#efefe3',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#efefe3',
+          border: '1px solid #0d3e45',
         },
       },
     },
     MuiTextField: {
       defaultProps: {
         variant: 'outlined',
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: '#0d3e45',
+        },
+      },
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fill: '#0d3e45',
+        },
       },
     },
     MuiOutlinedInput: {

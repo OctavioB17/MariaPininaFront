@@ -36,3 +36,7 @@ export interface IProductWithUserAndCategory extends IProduct {
     user: IUser; 
     categories: ICategory;
 }
+
+export interface IProductWithQuantity extends IProduct {
+  quantity: number;
+}

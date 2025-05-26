@@ -62,30 +62,30 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
   }
 
   return (
-    <NormalBox sx={{ display: 'flex', height: '14.5vw', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
+    <NormalBox sx={{ display: 'flex', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
       <Box sx={{display: 'flex', gap: '0.5vw'}}>
-        <Box sx={{display: 'flex', gap: '0.5vw', width: '17vw', height: '14vw'}}>
+        <Box sx={{display: 'flex', gap: '0.5vw', width: '17vw'}}>
           <Box sx={{display: 'flex', paddingTop: '0.25vw', alignItems: 'center'}}>
             <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
           </Box>
-          <NormalBox sx={{ padding: '0' }}>
+          <NormalBox sx={{ padding: '0', width: 175, height: 175 }}>
             <Box 
               component='img' 
               alt={product.name} 
               src={product.imageGallery[0]}   
-              sx={{ width: '13.5vw', height: '100%', borderRadius: '10px', backgroundColor: 'white' }} 
+              sx={{ width: 175, height: 175, objectFit: 'cover', borderRadius: '10px', backgroundColor: 'white' }} 
             />
           </NormalBox>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', gap: '0.2vw' }}>
-          <Typography sx={{ fontSize: '2vw' }}>
+          <Typography sx={{ fontSize: '1.5vw' }}>
             {product.name}
           </Typography>
-          <Typography sx={{ fontSize: '1.2vw' }}>
+          <Typography sx={{ fontSize: '1vw' }}>
             ID: {product.id}
           </Typography>
           <Box sx={{ display: 'flex', gap: '0.5vw' }}>
-            <Typography sx={{ fontSize: '1.2vw' }}>
+            <Typography sx={{ fontSize: '1vw' }}>
               Sell price: ${product.price}
             </Typography>
             <Button onClick={() => {
@@ -95,20 +95,20 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
             </Button>
           </Box>
           <Box sx={{ display: 'flex', gap: '1vw' }}>
-            <Typography sx={{ fontSize: '1.2vw' }}>
+            <Typography sx={{ fontSize: '1vw' }}>
               Stock: {product.stock} units
             </Typography>
-            <Typography sx={{ fontSize: '1.2vw' }}>
+            <Typography sx={{ fontSize: '1vw' }}>
               SKU: {product.sku}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
-            <Typography sx={{ fontSize: '1.2vw' }}>
+            <Typography sx={{ fontSize: '1vw' }}>
               Category: {product.categories.name}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', bottom: '0.4vw' }}>
-            <Typography sx={{ fontSize: '1.2vw' }}>
+            <Typography sx={{ fontSize: '1vw' }}>
               Paused: {isPaused ? 'Yes' : 'No'}
             </Typography>
             <ThemedSwitch checked={!isPaused} onClick={() => pausePublication()} />

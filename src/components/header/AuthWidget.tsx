@@ -113,9 +113,9 @@ const AuthWidget: React.FC = () => {
       <Popper id={id} open={open} anchorEl={anchorEl} placement='bottom-end' disablePortal sx={{zIndex: 99}}>
         <Paper elevation={4} sx={{ mt: 1, p: 1, backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}>
           <MenuItem component={Link} to="/orders">Orders</MenuItem>
-          <MenuItem component={Link} to={`${user?.id}/publications`}>Publications</MenuItem>
+          <MenuItem component={Link} to={`/${user?.id}/publications`}>Publications</MenuItem>
           {user && (user.role === 'ADMIN' || user.role === 'MODERATOR' || user.role === 'SUPER_ADMIN') && (
-            <MenuItem>Admin menu</MenuItem>
+            <MenuItem component={Link} to="/admin">Admin menu</MenuItem>
           )}
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Paper>

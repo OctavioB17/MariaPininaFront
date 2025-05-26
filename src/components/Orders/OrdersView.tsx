@@ -94,16 +94,19 @@ const OrdersView: React.FC = () => {
                     <Box key={product.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box 
                         component="img"
-                        src={''}
-                        sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 1 }}
+                        src={product.imageGallery[0]}
+                        sx={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 1, border: '1px solid #0d3e45' }}
                       />
-                      <Box sx={{ flex: 1 }}>
+                      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Typography variant="subtitle1">{product.name}</Typography>
                         <Typography variant="body2" color="text.secondary">
                           SKU: {product.sku}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Price: ${product.price}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Quantity: {product.quantity}
                         </Typography>
                       </Box>
                       <Typography variant="subtitle1">
@@ -116,13 +119,17 @@ const OrdersView: React.FC = () => {
                 <Divider sx={{ my: 2 }} />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <Typography variant="body2" color="text.secondary">
                       Taxes:
                     </Typography>
                     {order.taxes?.map((tax, index) => (
                       <Typography key={index} variant="body2" color="text.secondary">
-                        {tax.type}: ${tax.number.toFixed(2)}
+                        {tax.type
+                          .replace(/([A-Z])/g, ' $1')
+                          .split(' ')
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                          .join(' ')}: ${tax.number.toFixed(2)}
                       </Typography>
                     ))}
                   </Box>
