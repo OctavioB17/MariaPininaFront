@@ -14,6 +14,7 @@ interface AdminTableProps {
   paginationModel?: GridPaginationModel;
   onPaginationModelChange?: (model: GridPaginationModel) => void;
   rowCount?: number;
+  processRowUpdate?: (newRow: Record<string, unknown>, oldRow: Record<string, unknown>) => Promise<Record<string, unknown>>;
 }
 
 const AdminTable: React.FC<AdminTableProps & ISxProps> = ({
@@ -26,7 +27,8 @@ const AdminTable: React.FC<AdminTableProps & ISxProps> = ({
   sx,
   paginationModel,
   onPaginationModelChange,
-  rowCount
+  rowCount,
+  processRowUpdate
 }) => {
   return (
     <Box sx={{ height: '70vh', padding: '2vw', ...sx }}>
@@ -45,6 +47,8 @@ const AdminTable: React.FC<AdminTableProps & ISxProps> = ({
         disableRowSelectionOnClick
         onRowClick={onRowClick}
         localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
+        paginationMode="server"
+        processRowUpdate={processRowUpdate}
         sx={{
           '& .MuiDataGrid-cell:focus': {
             outline: 'none',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Box, Typography, CircularProgress, Divider, Chip, Pagination } from '@mui/material';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { selectUser } from '../../store/userSlice';
@@ -18,7 +18,7 @@ const OrdersView: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
     console.log(orders[0])
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!user?.id) return;
     
     setLoading(true);
@@ -39,11 +39,11 @@ const OrdersView: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id, offset, limit]);
 
   useEffect(() => {
     fetchOrders();
-  }, [user?.id, offset]);
+  }, [fetchOrders]);
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setOffset((value - 1) * limit);

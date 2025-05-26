@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GridColDef, GridRowParams, GridPaginationModel } from '@mui/x-data-grid';
 import AdminTable from './AdminTable';
 import axios, { AxiosResponse } from 'axios';
 import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
-import { IUser } from '../../../interfaces/IUser';
+import { IUser, UserRoles } from '../../../interfaces/IUser';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
+import { IconButton, Popper, Paper, MenuItem, ClickAwayListener, Snackbar, Alert } from '@mui/material';
+import { useAppSelector } from '../../../hooks/useAppSelector';
 
 const AdminMenuUsers: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -18,6 +19,15 @@ const AdminMenuUsers: React.FC = () => {
     page: 0,
   });
   const [rowCount, setRowCount] = useState(0);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'error' as 'error' | 'success'
+  });
+
+  const currentUser = useAppSelector(state => state.user.user);
 
   const handleDeleteUser = async (id: string) => {
     try {
@@ -29,11 +39,69 @@ const AdminMenuUsers: React.FC = () => {
           }
         }
       );
-      console.log('Usuario eliminado:', id);
       setRefreshKey(prev => prev + 1);
     } catch (error) {
-      console.error('Error al eliminar usuario:', error);
+      console.error('Error to delete user:', error);
+      setSnackbar({
+        open: true,
+        message: 'Error to delete user',
+        severity: 'error'
+      });
     }
+  };
+
+  const handleRoleClick = (event: React.MouseEvent<HTMLElement>, userId: string) => {
+    if (!currentUser || (currentUser.role !== 'ADMIN' && currentUser.role !== 'SUPER_ADMIN')) {
+      setSnackbar({
+        open: true,
+        message: 'You do not have permission to change roles',
+        severity: 'error'
+      });
+      return;
+    }
+    setAnchorEl(event.currentTarget);
+    setSelectedUserId(userId);
+  };
+
+  const handleRoleChange = async (newRole: UserRoles) => {
+    if (!selectedUserId) return;
+
+    try {
+      await axios.patch(
+        `${variables.backendIp}/users/change/role/${selectedUserId}`,
+        { role: newRole },
+        {
+          headers: {
+            'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+        }
+      );
+      setRefreshKey(prev => prev + 1);
+      setSnackbar({
+        open: true,
+        message: 'Role updated successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      console.error('Error to change role:', error);
+      setSnackbar({
+        open: true,
+        message: 'Error to change role',
+        severity: 'error'
+      });
+    } finally {
+      setAnchorEl(null);
+      setSelectedUserId(null);
+    }
+  };
+
+  const handleClickAway = () => {
+    setAnchorEl(null);
+    setSelectedUserId(null);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
   };
 
   const columns: GridColDef[] = [
@@ -45,6 +113,17 @@ const AdminMenuUsers: React.FC = () => {
       field: 'role', 
       headerName: 'Role', 
       width: 130,
+      renderCell: (params) => (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            handleRoleClick(e, params.row.id);
+          }}
+          style={{ cursor: 'pointer', width: '100%', height: '100%', display: 'flex', alignItems: 'center' }}
+        >
+          {params.value}
+        </div>
+      )
     },
     { 
       field: 'createdAt', 
@@ -79,7 +158,7 @@ const AdminMenuUsers: React.FC = () => {
     },
   ];
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const response: AxiosResponse<IPaginationResponse<IUser>> = await axios.get(
@@ -102,31 +181,72 @@ const AdminMenuUsers: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [paginationModel]);
 
   useEffect(() => {
     fetchUsers();
-  }, [paginationModel, refreshKey]);
+  }, [fetchUsers, refreshKey]);
 
   const handleRowClick = (params: GridRowParams) => {
     console.log('Clicked user:', params.row);
   };
 
   return (
-    <AdminTable
-      columns={columns}
-      rows={users.map(user => ({
-        ...user,
-        id: user.id.toString(),
-      }))}
-      title="Users management"
-      loading={loading}
-      onRowClick={handleRowClick}
-      sx={{ paddingBottom: '3.2vw', width: '76vw' }}
-      paginationModel={paginationModel}
-      onPaginationModelChange={setPaginationModel}
-      rowCount={rowCount}
-    />
+    <>
+      <AdminTable
+        columns={columns}
+        rows={users.map(user => ({
+          ...user,
+          id: user.id.toString(),
+        }))}
+        title="Users management"
+        loading={loading}
+        onRowClick={handleRowClick}
+        sx={{ paddingBottom: '3.2vw', width: '76vw' }}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        rowCount={rowCount}
+      />
+
+      <Popper
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        placement="bottom-start"
+        style={{ zIndex: 1300 }}
+      >
+        <ClickAwayListener onClickAway={handleClickAway}>
+          <Paper elevation={3}>
+            <MenuItem onClick={() => handleRoleChange('USER')}>USER</MenuItem>
+            <MenuItem onClick={() => handleRoleChange('ADMIN')}>ADMIN</MenuItem>
+            <MenuItem onClick={() => handleRoleChange('SUPER_ADMIN')}>SUPER_ADMIN</MenuItem>
+            <MenuItem onClick={() => handleRoleChange('MODERATOR')}>MODERATOR</MenuItem>
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbar.severity}
+          sx={{
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            border: '1px solid',
+            borderColor: 'primary.contrastText',
+            '& .MuiAlert-icon': {
+              color: 'primary.contrastText'
+            }
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
