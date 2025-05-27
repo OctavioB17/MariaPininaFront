@@ -1,10 +1,12 @@
-import { Autocomplete, Box, TextField } from '@mui/material'
+import { Autocomplete, Box, TextField, useMediaQuery, useTheme } from '@mui/material'
 import React, { JSX, SyntheticEvent } from 'react'
 import SearchBarProps from '../interfaces/header/SearchBarProps'
 import { useNavigate } from 'react-router-dom'
 
 const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
   const navigate = useNavigate()
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const productNameOnly = products.map(product => product.name)
 
   const handleProductSelect = (_event: SyntheticEvent, selectedProduct: string | null) => {
@@ -26,21 +28,33 @@ const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <Autocomplete
         freeSolo
         disablePortal
         options={productNameOnly}
         onChange={handleProductSelect}
         onKeyDown={handleKeyPress}
-        sx={{ width: '50vw' }}
+        sx={{ 
+          width: isMobile ? '100%' : '50vw',
+          '& .MuiInputBase-root': {
+            height: isMobile ? '40px' : 'auto',
+            fontSize: isMobile ? '14px' : '16px'
+          }
+        }}
         slotProps={{
           paper: {
             sx: {
               backgroundColor: 'primary.main',
-              color: 'primary.contrastText',       
+              color: 'primary.contrastText',
+              fontSize: isMobile ? '14px' : '16px'
             },
           },
+          listbox: {
+            sx: {
+              maxHeight: isMobile ? '200px' : '300px'
+            }
+          }
         }}
         renderInput={(params) => (
           <TextField
@@ -50,8 +64,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ products }): JSX.Element => {
             sx={{
               fontFamily: (theme) => theme.typography.subtitle1.fontFamily,
               borderRadius: '10px',
+              '& .MuiOutlinedInput-root': {
+                padding: isMobile ? '0 8px' : '0 14px'
+              },
+              '& .MuiInputBase-input': {
+                padding: isMobile ? '8px 4px' : '14px 8px'
+              }
             }}
-            placeholder='Search anything you want'
+            placeholder={isMobile ? 'Search...' : 'Search anything you want'}
           />
         )}
       />

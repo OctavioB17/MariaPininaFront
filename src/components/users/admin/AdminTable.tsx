@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataGrid, GridColDef, GridRowParams, GridPaginationModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { enUS } from '@mui/x-data-grid/locales';
 import { Box, Typography } from '@mui/material';
 import { ISxProps } from '../../interfaces/SxProps';

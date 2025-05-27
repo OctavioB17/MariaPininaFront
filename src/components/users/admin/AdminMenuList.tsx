@@ -11,7 +11,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconButton from '@mui/material/IconButton';
-import { Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ISxProps } from '../../interfaces/SxProps';
 
 const AdminMenuList: React.FC<ISxProps> = ({sx}) => {

@@ -10,8 +10,12 @@ import { variables } from '../../config/variables'
 import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter'
 import CategoryCardCarrousel from '../Categories/CategoryCardCarrousel'
 import CategoryCard from '../Categories/CategoryCard'
+import defaultImage from '../../assets/ChatGPT Image 27 may 2025, 15_29_19.png';
+import heroImage from '../../assets/hero.webp';
+import { useNavigate } from 'react-router-dom'
+
 const LandingPage: React.FC = (): JSX.Element => {
-  
+  const navigate = useNavigate();
   const [products, setProducts] = useState<IProduct[]>([])
   const [categories, setCategories] = useState<ICategory[]>([])
 
@@ -205,6 +209,22 @@ const LandingPage: React.FC = (): JSX.Element => {
   return (
     <Box>
         <NBoxWithHeaderAndFooter sx={{width: '90vw', padding: '1vw'}}>
+            <Box 
+              component='img' 
+              alt='Hero' 
+              src={heroImage} 
+              sx={{
+                width: '100%',
+                height: '30vw',
+                objectFit: 'cover',
+                borderBottom: '2px solid #0d3e45',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                navigate('/products');
+              }}
+            />
             <ProductsCarrousel carrouselName='Products'>
               {memoizedProductCards}
             </ProductsCarrousel>

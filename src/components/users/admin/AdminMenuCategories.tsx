@@ -8,7 +8,6 @@ import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Snackbar, Alert, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Backdrop, CircularProgress } from '@mui/material';
 import ICategory from '../../../interfaces/ICategories';
-import WarningIcon from '@mui/icons-material/Warning';
 
 const AdminMenuCategories: React.FC = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);

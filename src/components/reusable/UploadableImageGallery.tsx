@@ -199,25 +199,25 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
               />
             </Box>
             {images.length < maxImages && (
-              <Box sx={{ position: 'relative', width: '100%' }}>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleImageUpload} 
-                  style={{ 
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    opacity: 0,
-                    cursor: 'pointer',
-                    zIndex: 2
-                  }} 
-                  id="upload-button" 
-                />
-                <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
-                  Add photo
-                </Button>
-              </Box>
+            <Box sx={{ position: 'relative', width: '100%' }}>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+                style={{ 
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0,
+                  cursor: 'pointer',
+                  zIndex: 2
+                }} 
+                id="upload-button" 
+              />
+              <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
+                Add photo
+              </Button>
+            </Box>
             )}
           </Box>
         </Box>
