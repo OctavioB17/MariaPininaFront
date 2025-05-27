@@ -10,7 +10,8 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
   images, 
   setImages, 
   isEditMode = false,
-  onImageDelete 
+  onImageDelete,
+  maxImages = 10
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -22,7 +23,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files);
-      if (images.length + newFiles.length <= 10) {
+      if (images.length + newFiles.length <= maxImages) {
         setImages(prevImages => [...prevImages, ...newFiles]);
       } else {
         setSnackbarOpen(true);
@@ -47,7 +48,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
     event.preventDefault();
     const files = event.dataTransfer.files;
     const newFiles = Array.from(files);
-    if (images.length + newFiles.length <= 10) {
+    if (images.length + newFiles.length <= maxImages) {
       setImages(prevImages => [...prevImages, ...newFiles]);
     } else {
       setSnackbarOpen(true);
@@ -109,7 +110,6 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
         <>
           <input 
             type="file" 
-            multiple 
             accept="image/*" 
             onChange={handleImageUpload} 
             style={{ 
@@ -184,7 +184,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                   }
                 }}
               >
-                <CloseIcon />
+                <CloseIcon sx={{ fill: 'white' }} />
               </IconButton>
               <ImageGallery 
                 items={galleryItems} 
@@ -198,26 +198,27 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                 startIndex={currentIndex}
               />
             </Box>
-            <Box sx={{ position: 'relative', width: '100%' }}>
-              <input 
-                type="file" 
-                multiple 
-                accept="image/*" 
-                onChange={handleImageUpload} 
-                style={{ 
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  opacity: 0,
-                  cursor: 'pointer',
-                  zIndex: 2
-                }} 
-                id="upload-button" 
-              />
-              <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
-                Add photo
-              </Button>
-            </Box>
+            {images.length < maxImages && (
+              <Box sx={{ position: 'relative', width: '100%' }}>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleImageUpload} 
+                  style={{ 
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    opacity: 0,
+                    cursor: 'pointer',
+                    zIndex: 2
+                  }} 
+                  id="upload-button" 
+                />
+                <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
+                  Add photo
+                </Button>
+              </Box>
+            )}
           </Box>
         </Box>
       )}
@@ -227,7 +228,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
           sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
-          You can only upload up to 10 images.
+          {maxImages === 1 ? 'Only one image is allowed' : `You can only upload up to ${maxImages} images.`}
         </Alert>
       </Snackbar>
     </Box>
