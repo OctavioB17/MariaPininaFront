@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Box, Typography, CircularProgress, Divider, Chip, Pagination } from '@mui/material';
+import { Box, Typography, CircularProgress, Divider, Chip, Pagination, useMediaQuery } from '@mui/material';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { selectUser } from '../../store/userSlice';
 import NBoxWithHeaderAndFooter from '../reusable/NBoxWithHeaderAndFooter';
@@ -9,15 +9,16 @@ import Cookies from 'js-cookie';
 import { Order } from '../../interfaces/IOrders';
 import IPaginationResponse from '../interfaces/IPaginationResponse';
 import NormalBox from '../reusable/NormalBox';
+import { theme } from '../../config/ThemeConfig';
 
 const OrdersView: React.FC = () => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const user = useAppSelector(selectUser);
   const [offset, setOffset] = useState(0);
   const limit = 5;
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
-    console.log(orders[0])
   const fetchOrders = useCallback(async () => {
     if (!user?.id) return;
     
@@ -51,11 +52,33 @@ const OrdersView: React.FC = () => {
 
   return (
     <NBoxWithHeaderAndFooter>
-      <Box sx={{ padding: '2vw', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
-        <Typography variant="h4" sx={{ textAlign: 'left' }}>My Orders</Typography>
+      <Box sx={{ 
+        padding: isMobile ? '4vw' : '2vw', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: isMobile ? '4vw' : '2vw' 
+      }}>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            textAlign: 'left',
+            fontSize: isMobile ? '6vw' : '2.5vw'
+          }}
+        >
+          My Orders
+        </Typography>
         
         {(loading || error) ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '200px', gap: 2, paddingBottom: '15vw', paddingTop: '10vw', }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            minHeight: '200px', 
+            gap: isMobile ? '4vw' : 2, 
+            paddingBottom: isMobile ? '30vw' : '15vw', 
+            paddingTop: isMobile ? '20vw' : '10vw' 
+          }}>
             <CircularProgress />
             {error && (
               <>
@@ -64,67 +87,159 @@ const OrdersView: React.FC = () => {
             )}
           </Box>
         ) : orders.length === 0 ? (
-          <Box sx={{ p: 3, textAlign: 'center', border: '1px dotted #0d3e45', borderRadius: '10px', padding: '5vw' }}>
-            <Typography>No orders found</Typography>
+          <Box sx={{ 
+            p: isMobile ? '10vw' : 3, 
+            textAlign: 'center', 
+            border: '1px dotted #0d3e45', 
+            borderRadius: '10px' 
+          }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>
+              No orders found
+            </Typography>
           </Box>
         ) : (
           <>
             {orders.map((order) => (
               <NormalBox key={order.id}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: isMobile ? 'column' : 'row',
+                  justifyContent: 'space-between', 
+                  alignItems: isMobile ? 'flex-start' : 'center', 
+                  mb: isMobile ? '4vw' : 2,
+                  gap: isMobile ? '2vw' : 0
+                }}>
                   <Box>
-                    <Typography variant="h6">Order #{order.id}</Typography>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}
+                    >
+                      Order #{order.id}
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: isMobile ? '2vw' : 1,
+                    flexWrap: 'wrap'
+                  }}>
                     <Chip 
                       label={order.status} 
                       color={order.status === 'COMPLETED' ? 'success' : 'primary'}
+                      sx={{ 
+                        fontSize: isMobile ? '3.5vw' : 'inherit',
+                        height: isMobile ? '8vw' : 'inherit'
+                      }}
                     />
                     <Chip 
                       label={order.paymentMethod} 
                       variant="outlined"
+                      sx={{ 
+                        fontSize: isMobile ? '3.5vw' : 'inherit',
+                        height: isMobile ? '8vw' : 'inherit'
+                      }}
                     />
                   </Box>
                 </Box>
                 
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: isMobile ? '4vw' : 2 }} />
                 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '4vw' : 2 }}>
                   {order.products?.map((product) => (
-                    <Box key={product.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box key={product.id} sx={{ 
+                      display: 'flex', 
+                      flexDirection: isMobile ? 'column' : 'row',
+                      alignItems: 'center', 
+                      gap: isMobile ? '2vw' : 2 
+                    }}>
                       <Box 
                         component="img"
                         src={product.imageGallery[0]}
-                        sx={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 1, border: '1px solid #0d3e45' }}
+                        sx={{ 
+                          width: isMobile ? '60vw' : 100, 
+                          height: isMobile ? '60vw' : 100, 
+                          objectFit: 'cover', 
+                          borderRadius: 1, 
+                          border: '1px solid #0d3e45' 
+                        }}
                       />
-                      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <Typography variant="subtitle1">{product.name}</Typography>
-                        <Typography variant="body2" color="text.secondary">
+                      <Box sx={{ 
+                        flex: 1, 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'flex-start',
+                        gap: isMobile ? '2vw' : 0
+                      }}>
+                        <Typography 
+                          variant="subtitle1" 
+                          sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}
+                        >
+                          {product.name}
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}
+                        >
                           SKU: {product.sku}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}
+                        >
                           Price: ${product.price}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}
+                        >
                           Quantity: {product.quantity}
                         </Typography>
                       </Box>
-                      <Typography variant="subtitle1">
+                      <Typography 
+                        variant="subtitle1"
+                        sx={{ 
+                          fontSize: isMobile ? '4vw' : 'inherit',
+                          alignSelf: isMobile ? 'flex-end' : 'center'
+                        }}
+                      >
                         ${product.price.toFixed(2)}
                       </Typography>
                     </Box>
                   ))}
                 </Box>
 
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: isMobile ? '4vw' : 2 }} />
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Typography variant="body2" color="text.secondary">
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: isMobile ? 'column' : 'row',
+                  justifyContent: 'space-between', 
+                  alignItems: isMobile ? 'flex-start' : 'center',
+                  gap: isMobile ? '4vw' : 0
+                }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'flex-start',
+                    gap: isMobile ? '2vw' : 0
+                  }}>
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}
+                    >
                       Taxes:
                     </Typography>
                     {order.taxes?.map((tax, index) => (
-                      <Typography key={index} variant="body2" color="text.secondary">
+                      <Typography 
+                        key={index} 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}
+                      >
                         {tax.type
                           .replace(/([A-Z])/g, ' $1')
                           .split(' ')
@@ -133,19 +248,34 @@ const OrdersView: React.FC = () => {
                       </Typography>
                     ))}
                   </Box>
-                  <Typography variant="h6">
+                  <Typography 
+                    variant="h6"
+                    sx={{ 
+                      fontSize: isMobile ? '5vw' : 'inherit',
+                      alignSelf: isMobile ? 'flex-end' : 'center'
+                    }}
+                  >
                     Total: ${Number(order.totalPrice || 0).toFixed(2)}
                   </Typography>
                 </Box>
               </NormalBox>
             ))}
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              mt: isMobile ? '4vw' : 2 
+            }}>
               <Pagination 
                 count={Math.ceil(orders.length / limit)} 
                 page={Math.floor(offset / limit) + 1} 
                 onChange={handlePageChange}
                 color="primary"
+                sx={{
+                  '& .MuiPaginationItem-root': {
+                    fontSize: isMobile ? '4vw' : 'inherit'
+                  }
+                }}
               />
             </Box>
           </>

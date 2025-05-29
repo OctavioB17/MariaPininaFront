@@ -7,14 +7,16 @@ import Cookies from 'js-cookie';
 import { IProduct } from '../../../interfaces/IProducts';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
+import { IconButton, useMediaQuery } from '@mui/material';
+import { theme } from '../../../config/ThemeConfig';
 
 const AdminMenuProducts: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: 10,
+    pageSize: isMobile ? 5 : 10,
     page: 0,
   });
   const [rowCount, setRowCount] = useState(0);
@@ -36,51 +38,73 @@ const AdminMenuProducts: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'userId', headerName: 'User ID', width: 70 },
+    { 
+      field: 'id', 
+      headerName: 'ID', 
+      width: isMobile ? 50 : 70,
+      headerAlign: 'center',
+      align: 'center'
+    },
+    { 
+      field: 'userId', 
+      headerName: 'User ID', 
+      width: isMobile ? 50 : 70,
+      headerAlign: 'center',
+      align: 'center'
+    },
     { 
       field: 'name', 
       headerName: 'Name', 
-      width: 200,
+      width: isMobile ? 120 : 200,
       editable: true,
-      type: 'string'
+      type: 'string',
+      headerAlign: 'center',
+      align: 'center'
     },
     { 
       field: 'sku', 
       headerName: 'SKU', 
-      width: 150,
+      width: isMobile ? 100 : 150,
       editable: true,
-      type: 'string'
+      type: 'string',
+      headerAlign: 'center',
+      align: 'center'
     },
     { 
       field: 'price', 
       headerName: 'Price', 
-      width: 100,
+      width: isMobile ? 80 : 100,
       editable: true,
       type: 'number',
       valueGetter: (params: number) => `$${params.toFixed(2)}`,
       valueSetter: (params) => {
         const value = params.value.toString().replace('$', '');
         return Number(value);
-      }
+      },
+      headerAlign: 'center',
+      align: 'center'
     },
     { 
       field: 'stock', 
       headerName: 'Stock', 
-      width: 100,
+      width: isMobile ? 80 : 100,
       editable: true,
-      type: 'number'
+      type: 'number',
+      headerAlign: 'center',
+      align: 'center'
     },
     { 
       field: 'isPaused', 
       headerName: 'Status', 
-      width: 130,
-      valueGetter: (params: boolean) => params ? 'Paused' : 'Active'
+      width: isMobile ? 100 : 130,
+      valueGetter: (params: boolean) => params ? 'Paused' : 'Active',
+      headerAlign: 'center',
+      align: 'center'
     },
     { 
       field: 'createdAt', 
       headerName: 'Date created', 
-      width: 200,
+      width: isMobile ? 150 : 200,
       valueGetter: (params: string) => {
         if (!params) return '';
         return new Date(params).toLocaleDateString('en-US', {
@@ -90,19 +114,28 @@ const AdminMenuProducts: React.FC = () => {
           hour: '2-digit',
           minute: '2-digit'
         });
-      }
+      },
+      headerAlign: 'center',
+      align: 'center'
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: isMobile ? 80 : 100,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: (params) => (
         <IconButton 
           onClick={(e) => {
             e.stopPropagation();
             handleDeleteProduct(params.row.id);
           }}
-          size="small"
+          size={isMobile ? "small" : "medium"}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '4vw' : 'inherit'
+            }
+          }}
         >
           <DeleteIcon />
         </IconButton>
@@ -180,7 +213,19 @@ const AdminMenuProducts: React.FC = () => {
       title="Products management"
       loading={loading}
       onRowClick={handleRowClick}
-      sx={{ paddingBottom: '3.2vw', width: '76vw' }}
+      sx={{ 
+        paddingBottom: isMobile ? '15vw' : '3.2vw', 
+        width: isMobile ? '90vw' : '76vw',
+        '& .MuiDataGrid-cell': {
+          fontSize: isMobile ? '3vw' : 'inherit'
+        },
+        '& .MuiDataGrid-columnHeader': {
+          fontSize: isMobile ? '3.5vw' : 'inherit'
+        },
+        '& .MuiTablePagination-root': {
+          fontSize: isMobile ? '3vw' : 'inherit'
+        }
+      }}
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
       rowCount={rowCount}

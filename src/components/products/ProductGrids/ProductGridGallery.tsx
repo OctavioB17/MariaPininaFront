@@ -1,4 +1,4 @@
-import { Box, Button, Pagination, CircularProgress } from '@mui/material';
+import { Box, Button, Pagination, CircularProgress, useMediaQuery } from '@mui/material';
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
 import { ProductGridGalleryProps } from '../../interfaces/products/ProductGridGallery';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -11,16 +11,18 @@ import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import ProductCards from '../Cards/ProductCards';
 import notFoundImage from '../../../assets/notFound.webp';
 import Cookies from 'js-cookie';
+import { theme } from '../../../config/ThemeConfig';
 
 const ProductGridGallery: React.FC<ProductGridGalleryProps> = ({ filterBy }) => {
   const params = useParams();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const productsPerPage = 80;
+  const productsPerPage = isMobile ? 20 : 80;
 
   useEffect(() => {
     const getFilterValue = () => {
@@ -95,7 +97,7 @@ const ProductGridGallery: React.FC<ProductGridGalleryProps> = ({ filterBy }) => 
   return (
     <NBoxWithHeaderAndFooter sx={{width: '94vw'}}>
       <Box sx={{paddingTop: '2vw', paddingBottom: '2vw', display: 'flex'}}>
-        <Box sx={{borderRight: '1px solid #0d3e45', paddingRight: '1vw'}}>
+        <Box sx={{borderRight: isMobile ? 'none' : '1px solid #0d3e45', paddingRight: '1vw'}}>
           <FilterAndOrderProductGrid />
         </Box>
         <Box sx={{ width: '100%' }}>
@@ -107,13 +109,13 @@ const ProductGridGallery: React.FC<ProductGridGalleryProps> = ({ filterBy }) => 
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%'}}>
               <Box sx={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
                   gap: '1vw',
                   paddingLeft: '1vw',
                   marginBottom: '2vw'
                 }}>
                   {products.map((product) => (
-                    <ProductCards key={product.id} product={product} sx={{width: '85%'}}/>
+                    <ProductCards key={product.id} product={product} sx={{width: isMobile ? '95%' : '85%'}}/>
                   ))}
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2vw' }}>

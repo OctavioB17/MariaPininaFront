@@ -20,6 +20,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
           borderRadius: '4px', 
           paddingLeft: isMobile ? '2vw' : '0.1vw', 
           paddingRight: isMobile ? '2vw' : '0.1vw',
+          paddingTop: isMobile ? '2vw' : '0.1vw',
           width: isMobile ? '80vw' : 'auto',
           height: isMobile ? '90vw' : 'auto'
         }}>
@@ -31,7 +32,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
                           alt={category.name} 
                           src={category.imageUrl} 
                           sx={{
-                            width: isMobile ? '80vw' : '25vw', 
+                            width: isMobile ? '78vw' : '25vw', 
                             height: isMobile ? '50vw' : '50vh', 
                             border: '2px solid black',
                             objectFit: 'contain'
@@ -41,14 +42,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }): JSX.Element =>
                         />
                     :
                         <LoadingStatic sx={{
-                          width: isMobile ? '86vw' : '26vw', 
+                          width: isMobile ? '78vw' : '25vw', 
                           height: isMobile ? '50vw' : '50vh'
                         }}/>
                 }
             </Box>
             <Box sx={{ 
               display: 'flex', 
-              flexDirection: 'column', 
+              flexDirection: 'column',
               padding: isMobile ? '2vw' : '0.5vw',
               height: '100%'
             }}>

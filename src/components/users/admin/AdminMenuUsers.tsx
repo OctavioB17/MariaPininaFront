@@ -7,15 +7,17 @@ import Cookies from 'js-cookie';
 import { IUser, UserRoles } from '../../../interfaces/IUser';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, Popper, Paper, MenuItem, ClickAwayListener, Snackbar, Alert } from '@mui/material';
+import { IconButton, Popper, Paper, MenuItem, ClickAwayListener, Snackbar, Alert, useMediaQuery } from '@mui/material';
 import { useAppSelector } from '../../../hooks/useAppSelector';
+import { theme } from '../../../config/ThemeConfig';
 
 const AdminMenuUsers: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: 10,
+    pageSize: isMobile ? 5 : 10,
     page: 0,
   });
   const [rowCount, setRowCount] = useState(0);
@@ -105,21 +107,55 @@ const AdminMenuUsers: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'surname', headerName: 'Surname', width: 200 },
-    { field: 'email', headerName: 'Email', width: 250 },
+    { 
+      field: 'id', 
+      headerName: 'ID', 
+      width: isMobile ? 50 : 70,
+      headerAlign: 'center',
+      align: 'center'
+    },
+    { 
+      field: 'name', 
+      headerName: 'Name', 
+      width: isMobile ? 120 : 200,
+      headerAlign: 'center',
+      align: 'center'
+    },
+    { 
+      field: 'surname', 
+      headerName: 'Surname', 
+      width: isMobile ? 120 : 200,
+      headerAlign: 'center',
+      align: 'center'
+    },
+    { 
+      field: 'email', 
+      headerName: 'Email', 
+      width: isMobile ? 150 : 250,
+      headerAlign: 'center',
+      align: 'center'
+    },
     { 
       field: 'role', 
       headerName: 'Role', 
-      width: 130,
+      width: isMobile ? 100 : 130,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: (params) => (
         <div
           onClick={(e) => {
             e.stopPropagation();
             handleRoleClick(e, params.row.id);
           }}
-          style={{ cursor: 'pointer', width: '100%', height: '100%', display: 'flex', alignItems: 'center' }}
+          style={{ 
+            cursor: 'pointer', 
+            width: '100%', 
+            height: '100%', 
+            display: 'flex', 
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: isMobile ? '3vw' : 'inherit'
+          }}
         >
           {params.value}
         </div>
@@ -128,7 +164,9 @@ const AdminMenuUsers: React.FC = () => {
     { 
       field: 'createdAt', 
       headerName: 'Date created', 
-      width: 200,
+      width: isMobile ? 150 : 200,
+      headerAlign: 'center',
+      align: 'center',
       valueGetter: (params: { row: IUser }) => {
         if (!params.row?.createdAt) return '';
         return new Date(params.row.createdAt).toLocaleDateString('en-US', {
@@ -143,14 +181,21 @@ const AdminMenuUsers: React.FC = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: isMobile ? 80 : 100,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: (params) => (
         <IconButton 
           onClick={(e) => {
             e.stopPropagation();
             handleDeleteUser(params.row.id);
           }}
-          size="small"
+          size={isMobile ? "small" : "medium"}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '4vw' : 'inherit'
+            }
+          }}
         >
           <DeleteIcon />
         </IconButton>
@@ -202,7 +247,19 @@ const AdminMenuUsers: React.FC = () => {
         title="Users management"
         loading={loading}
         onRowClick={handleRowClick}
-        sx={{ paddingBottom: '3.2vw', width: '76vw' }}
+        sx={{ 
+          paddingBottom: isMobile ? '15vw' : '3.2vw', 
+          width: isMobile ? '90vw' : '76vw',
+          '& .MuiDataGrid-cell': {
+            fontSize: isMobile ? '3vw' : 'inherit'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            fontSize: isMobile ? '3.5vw' : 'inherit'
+          },
+          '& .MuiTablePagination-root': {
+            fontSize: isMobile ? '3vw' : 'inherit'
+          }
+        }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         rowCount={rowCount}
@@ -216,10 +273,30 @@ const AdminMenuUsers: React.FC = () => {
       >
         <ClickAwayListener onClickAway={handleClickAway}>
           <Paper elevation={3}>
-            <MenuItem onClick={() => handleRoleChange('USER')}>USER</MenuItem>
-            <MenuItem onClick={() => handleRoleChange('ADMIN')}>ADMIN</MenuItem>
-            <MenuItem onClick={() => handleRoleChange('SUPER_ADMIN')}>SUPER_ADMIN</MenuItem>
-            <MenuItem onClick={() => handleRoleChange('MODERATOR')}>MODERATOR</MenuItem>
+            <MenuItem 
+              onClick={() => handleRoleChange('USER')}
+              sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}
+            >
+              USER
+            </MenuItem>
+            <MenuItem 
+              onClick={() => handleRoleChange('ADMIN')}
+              sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}
+            >
+              ADMIN
+            </MenuItem>
+            <MenuItem 
+              onClick={() => handleRoleChange('SUPER_ADMIN')}
+              sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}
+            >
+              SUPER_ADMIN
+            </MenuItem>
+            <MenuItem 
+              onClick={() => handleRoleChange('MODERATOR')}
+              sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}
+            >
+              MODERATOR
+            </MenuItem>
           </Paper>
         </ClickAwayListener>
       </Popper>
@@ -240,7 +317,8 @@ const AdminMenuUsers: React.FC = () => {
             borderColor: 'primary.contrastText',
             '& .MuiAlert-icon': {
               color: 'primary.contrastText'
-            }
+            },
+            fontSize: isMobile ? '3vw' : 'inherit'
           }}
         >
           {snackbar.message}

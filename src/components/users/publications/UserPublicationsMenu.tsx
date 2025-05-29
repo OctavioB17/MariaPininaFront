@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter';
-import { Box, Button, Checkbox, CircularProgress, Divider, Pagination, Menu, TextField, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, Divider, Pagination, Menu, TextField, MenuItem, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import { variables } from '../../../config/variables';
@@ -9,8 +9,10 @@ import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import NormalBox from '../../reusable/NormalBox';
 import UserPublicationBox from './UserPublicationBox';
 import Cookies from 'js-cookie';
+import { theme } from '../../../config/ThemeConfig';
 
 const UserPublicationsMenu = () => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { id } = useParams();
   const [products, setProducts] = useState<IProductWithUserAndCategory[]>([]);
   const [apiResponseLoading, setApiResponseLoading] = useState<boolean>(false);
@@ -232,47 +234,145 @@ const UserPublicationsMenu = () => {
 
   return (
     <NBoxWithHeaderAndFooter>
-      <NormalBox sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1vw', marginTop: '1vw', marginBottom: '1vw' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <Box>
-            <Checkbox
-            checked={selectAll}
-            onChange={handleSelectAllChange}
-            color='default'
-            sx={{ fill: 'primary.contrastText', color: 'primary.contrastText' }}
-          />
-          <Button sx={{ color: 'inherit' }} onClick={handleFilterClick}>Filter</Button>
+      <NormalBox sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        padding: isMobile ? '4vw' : '1vw', 
+        marginTop: isMobile ? '4vw' : '1vw', 
+        marginBottom: isMobile ? '4vw' : '1vw' 
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          width: '100%',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '4vw' : '0'
+        }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: isMobile ? '4vw' : '1vw',
+            width: isMobile ? '100%' : 'auto',
+            justifyContent: isMobile ? 'space-between' : 'flex-start'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Checkbox
+                checked={selectAll}
+                onChange={handleSelectAllChange}
+                color='default'
+                sx={{ 
+                  fill: 'primary.contrastText', 
+                  color: 'primary.contrastText',
+                  transform: isMobile ? 'scale(1.5)' : 'scale(1)'
+                }}
+              />
+              <Button 
+                sx={{ 
+                  color: 'inherit',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }} 
+                onClick={handleFilterClick}
+              >
+                Filter
+              </Button>
+            </Box>
           </Box>
-          <Box>
-            <Button sx={{ color: 'inherit' }} disabled={!isPauseEnabled} onClick={togglePauseState}>
+          <Box sx={{
+            display: 'flex',
+            gap: isMobile ? '2vw' : '1vw',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            justifyContent: isMobile ? 'center' : 'flex-end',
+            width: isMobile ? '100%' : 'auto'
+          }}>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              disabled={!isPauseEnabled} 
+              onClick={togglePauseState}
+            >
               Pause
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isActivateEnabled} onClick={togglePauseState}>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              disabled={!isActivateEnabled} 
+              onClick={togglePauseState}
+            >
               Activate
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isEditEnabled} onClick={() => {
-              const selectedProduct = Array.from(selectedProducts)[0];
-              if (selectedProduct) {
-                navigate(`/${id}/publications/edit/${selectedProduct.id}`);
-              }
-            }}>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              disabled={!isEditEnabled} 
+              onClick={() => {
+                const selectedProduct = Array.from(selectedProducts)[0];
+                if (selectedProduct) {
+                  navigate(`/${id}/publications/edit/${selectedProduct.id}`);
+                }
+              }}
+            >
               Edit
             </Button>
-            <Button sx={{ color: 'inherit' }} disabled={!isAnySelected} onClick={deleteSelectedProducts}>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              disabled={!isAnySelected} 
+              onClick={deleteSelectedProducts}
+            >
               Delete
             </Button>
-            <Button sx={{ color: 'inherit' }} onClick={() => navigate(`/${id}/publications/create`)}>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              onClick={() => navigate(`/${id}/publications/create`)}
+            >
               Create publication
             </Button>
           </Box>
         </Box>
-        <Divider sx={{ border: '1px solid #0d3e45', width: '100%' }} />
+        <Divider sx={{ 
+          border: '1px solid #0d3e45', 
+          width: '100%',
+          marginTop: isMobile ? '4vw' : '1vw',
+          marginBottom: isMobile ? '4vw' : '1vw'
+        }} />
         {apiResponseLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20vw' }}>
-          <CircularProgress sx={{ color: 'primary.contrastText' }} />
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100%', 
+            padding: isMobile ? '40vw' : '20vw' 
+          }}>
+            <CircularProgress sx={{ color: 'primary.contrastText' }} />
           </Box>
         ) : (
-          <Box sx={{ paddingTop: '1vw', paddingBottom: '1vw', width: '100%', display: 'flex', flexDirection: 'column', gap: '1vw' }}>
+          <Box sx={{ 
+            paddingTop: isMobile ? '4vw' : '1vw', 
+            paddingBottom: isMobile ? '4vw' : '1vw', 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: isMobile ? '4vw' : '1vw' 
+          }}>
             {products.map(product => (
               <UserPublicationBox
                 key={product.id}
@@ -289,6 +389,12 @@ const UserPublicationsMenu = () => {
           page={page}
           onChange={handlePageChange}
           color="primary"
+          sx={{
+            '& .MuiPaginationItem-root': {
+              fontSize: isMobile ? '4vw' : 'inherit',
+              padding: isMobile ? '2vw' : 'inherit'
+            }
+          }}
         />
         <Menu
           id={popperId}
@@ -303,9 +409,15 @@ const UserPublicationsMenu = () => {
             vertical: 'top',
             horizontal: 'left',
           }}
+          PaperProps={{
+            sx: {
+              width: isMobile ? '90vw' : 'auto',
+              maxHeight: isMobile ? '80vh' : 'auto'
+            }
+          }}
         >
-          <Box sx={{ padding: '1rem' }}>
-            <Typography>Sort by</Typography>
+          <Box sx={{ padding: isMobile ? '4vw' : '1rem' }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Sort by</Typography>
             <TextField
               select
               value={sortOption}
@@ -323,30 +435,48 @@ const UserPublicationsMenu = () => {
               }}
               fullWidth
               margin="normal"
+              sx={{
+                '& .MuiInputBase-input': {
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }
+              }}
             >
               <MenuItem 
-                sx={{ color: 'primary.contrastText' }} 
+                sx={{ 
+                  color: 'primary.contrastText',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }} 
                 value="createdAt"
                 onClick={(e) => e.stopPropagation()}
               >
                 Newest
               </MenuItem>
               <MenuItem 
-                sx={{ color: 'primary.contrastText' }} 
+                sx={{ 
+                  color: 'primary.contrastText',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }} 
                 value="updatedAt"
                 onClick={(e) => e.stopPropagation()}
               >
                 Recently updated
               </MenuItem>
               <MenuItem 
-                sx={{ color: 'primary.contrastText' }} 
+                sx={{ 
+                  color: 'primary.contrastText',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }} 
                 value="name"
                 onClick={(e) => e.stopPropagation()}
               >
                 Alphabetically
               </MenuItem>
             </TextField>
-            <Typography>Category</Typography>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Category</Typography>
             <TextField
               select
               value={selectedCategory}
@@ -364,9 +494,19 @@ const UserPublicationsMenu = () => {
               }}
               fullWidth
               margin="normal"
+              sx={{
+                '& .MuiInputBase-input': {
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }
+              }}
             >
               <MenuItem 
-                sx={{ color: 'primary.contrastText' }} 
+                sx={{ 
+                  color: 'primary.contrastText',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }} 
                 value=""
                 onClick={(e) => e.stopPropagation()}
               >
@@ -377,7 +517,11 @@ const UserPublicationsMenu = () => {
                 return category ? (
                   <MenuItem 
                     key={categoryId}
-                    sx={{ color: 'primary.contrastText' }} 
+                    sx={{ 
+                      color: 'primary.contrastText',
+                      fontSize: isMobile ? '4vw' : 'inherit',
+                      padding: isMobile ? '2vw' : 'inherit'
+                    }} 
                     value={categoryId}
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -386,23 +530,44 @@ const UserPublicationsMenu = () => {
                 ) : null;
               })}
             </TextField>
-            <Typography>Min Price</Typography>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Min Price</Typography>
             <TextField
               type="number"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value === '' ? '' : Number(e.target.value))}
               fullWidth
               margin="normal"
+              sx={{
+                '& .MuiInputBase-input': {
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }
+              }}
             />
-            <Typography>Max Price</Typography>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Max Price</Typography>
             <TextField
               type="number"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value === '' ? '' : Number(e.target.value))}
               fullWidth
               margin="normal"
+              sx={{
+                '& .MuiInputBase-input': {
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }
+              }}
             />
-            <Button sx={{ marginTop: '1rem' }} onClick={applyFilters} variant="contained" color="primary">
+            <Button 
+              sx={{ 
+                marginTop: isMobile ? '4vw' : '1rem',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : 'inherit'
+              }} 
+              onClick={applyFilters} 
+              variant="contained" 
+              color="primary"
+            >
               Apply filters
             </Button>
           </Box>

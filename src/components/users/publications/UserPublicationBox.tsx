@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import NormalBox from '../../reusable/NormalBox';
 import { IProductWithUserAndCategory } from '../../../interfaces/IProducts';
-import { Box, Button, Checkbox, Typography, CircularProgress, Snackbar } from '@mui/material';
+import { Box, Button, Checkbox, Typography, CircularProgress, Snackbar, useMediaQuery } from '@mui/material';
 import ThemedSwitch from '../../reusable/ThemedSwitch';
 import axios from 'axios';
 import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { theme } from '../../../config/ThemeConfig';
 
 const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChecked: boolean, onCheckboxChange: (productId: string) => void, onPauseStateChange: (productId: string, isPaused: boolean) => void }> = ({ product, isChecked, onCheckboxChange, onPauseStateChange }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [isPaused, setIsPaused] = useState<boolean>(product.isPaused);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useState<{ open: boolean, message: string, severity: 'success' | 'error' }>({ open: false, message: '', severity: 'success' });
@@ -62,56 +64,121 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
   }
 
   return (
-    <NormalBox sx={{ display: 'flex', padding: '0.5vw', gap: '1vw', justifyContent: 'space-between' }}>
-      <Box sx={{display: 'flex', gap: '0.5vw'}}>
-        <Box sx={{display: 'flex', gap: '0.5vw', width: '17vw'}}>
-          <Box sx={{display: 'flex', paddingTop: '0.25vw', alignItems: 'center'}}>
-            <Checkbox onChange={() => onCheckboxChange(product.id)} checked={isChecked} color="default" sx={{padding: 0, margin: 0}}/>
+    <NormalBox sx={{ 
+      display: 'flex', 
+      padding: isMobile ? '4vw' : '0.5vw', 
+      gap: isMobile ? '4vw' : '1vw', 
+      justifyContent: 'space-between',
+      flexDirection: isMobile ? 'column' : 'row'
+    }}>
+      <Box sx={{
+        display: 'flex', 
+        gap: isMobile ? '4vw' : '0.5vw',
+        flexDirection: isMobile ? 'column' : 'row',
+        width: isMobile ? '100%' : 'auto'
+      }}>
+        <Box sx={{
+          display: 'flex', 
+          gap: isMobile ? '4vw' : '0.5vw', 
+          width: isMobile ? '100%' : '17vw',
+          flexDirection: isMobile ? 'column' : 'row'
+        }}>
+          <Box sx={{
+            display: 'flex', 
+            paddingTop: isMobile ? '2vw' : '0.25vw', 
+            alignItems: 'center'
+          }}>
+            <Checkbox 
+              onChange={() => onCheckboxChange(product.id)} 
+              checked={isChecked} 
+              color="default" 
+              sx={{
+                padding: 0, 
+                margin: 0,
+                transform: isMobile ? 'scale(1.5)' : 'scale(1)'
+              }}
+            />
           </Box>
-          <NormalBox sx={{ padding: '0', width: 175, height: 175 }}>
+          <NormalBox sx={{ 
+            padding: '0', 
+            width: isMobile ? '100%' : 175, 
+            height: isMobile ? '60vw' : 175 
+          }}>
             <Box 
               component='img' 
               alt={product.name} 
               src={product.imageGallery[0]}   
-              sx={{ width: 175, height: 175, objectFit: 'cover', borderRadius: '10px', backgroundColor: 'white' }} 
+              sx={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover', 
+                borderRadius: '10px', 
+                backgroundColor: 'white' 
+              }} 
             />
           </NormalBox>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', gap: '0.2vw' }}>
-          <Typography sx={{ fontSize: '1.5vw' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          textAlign: 'left', 
+          gap: isMobile ? '2vw' : '0.2vw',
+          width: isMobile ? '100%' : 'auto'
+        }}>
+          <Typography sx={{ fontSize: isMobile ? '6vw' : '1.5vw' }}>
             {product.name}
           </Typography>
-          <Typography sx={{ fontSize: '1vw' }}>
+          <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
             ID: {product.id}
           </Typography>
-          <Box sx={{ display: 'flex', gap: '0.5vw' }}>
-            <Typography sx={{ fontSize: '1vw' }}>
+          <Box sx={{ display: 'flex', gap: isMobile ? '2vw' : '0.5vw', flexWrap: 'wrap' }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
               Sell price: ${product.price}
             </Typography>
-            <Button onClick={() => {
-              navigate(`/${product.userId}/publications/edit/${product.id}`);
-            }} sx={{ color: 'inherit', padding: '1px', fontSize: '1.2vw', height: '1.8vw' }}>
+            <Button 
+              onClick={() => {
+                navigate(`/${product.userId}/publications/edit/${product.id}`);
+              }} 
+              sx={{ 
+                color: 'inherit', 
+                padding: isMobile ? '2vw' : '1px', 
+                fontSize: isMobile ? '4vw' : '1.2vw', 
+                height: isMobile ? 'auto' : '1.8vw' 
+              }}
+            >
               Modify
             </Button>
           </Box>
-          <Box sx={{ display: 'flex', gap: '1vw' }}>
-            <Typography sx={{ fontSize: '1vw' }}>
+          <Box sx={{ display: 'flex', gap: isMobile ? '2vw' : '1vw', flexWrap: 'wrap' }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
               Stock: {product.stock} units
             </Typography>
-            <Typography sx={{ fontSize: '1vw' }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
               SKU: {product.sku}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
-            <Typography sx={{ fontSize: '1vw' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? '2vw' : '1vw' }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
               Category: {product.categories.name}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', bottom: '0.4vw' }}>
-            <Typography sx={{ fontSize: '1vw' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            position: isMobile ? 'static' : 'relative', 
+            bottom: isMobile ? 0 : '0.4vw',
+            gap: isMobile ? '2vw' : '1vw'
+          }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : '1vw' }}>
               Paused: {isPaused ? 'Yes' : 'No'}
             </Typography>
-            <ThemedSwitch checked={!isPaused} onClick={() => pausePublication()} />
+            <ThemedSwitch 
+              checked={!isPaused} 
+              onClick={() => pausePublication()} 
+              sx={{
+                transform: isMobile ? 'scale(1.5)' : 'scale(1)'
+              }}
+            />
           </Box>
         </Box>
 
@@ -134,13 +201,33 @@ const UserPublicationBox: React.FC<{ product: IProductWithUserAndCategory, isChe
           </Box>
         )}
       </Box>
-      <Box sx={{display: 'flex', alignItems: 'start '}}>
-        <Button sx={{color: 'inherit'}} onClick={() => {
-          navigate(`/${product.userId}/publications/edit/${product.id}`);
-        }}>
+      <Box sx={{
+        display: 'flex', 
+        alignItems: isMobile ? 'center' : 'start',
+        justifyContent: isMobile ? 'center' : 'flex-end',
+        gap: isMobile ? '4vw' : '1vw',
+        width: isMobile ? '100%' : 'auto'
+      }}>
+        <Button 
+          sx={{
+            color: 'inherit',
+            fontSize: isMobile ? '4vw' : 'inherit',
+            padding: isMobile ? '2vw' : 'inherit'
+          }} 
+          onClick={() => {
+            navigate(`/${product.userId}/publications/edit/${product.id}`);
+          }}
+        >
           Edit
         </Button>
-        <Button sx={{color: 'inherit'}} onClick={deleteProduct}>
+        <Button 
+          sx={{
+            color: 'inherit',
+            fontSize: isMobile ? '4vw' : 'inherit',
+            padding: isMobile ? '2vw' : 'inherit'
+          }} 
+          onClick={deleteProduct}
+        >
           Delete
         </Button>
       </Box>

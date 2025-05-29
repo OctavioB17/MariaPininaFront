@@ -1,20 +1,17 @@
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
-import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, TextField, Typography, useMediaQuery } from '@mui/material'
 import NormalBox from '../../reusable/NormalBox'
 import { JSX, useState } from 'react'
 import axios from 'axios'
 import { variables } from '../../../config/variables'
 import apiError from '../../interfaces/ApiError'
-
+import { theme } from '../../../config/ThemeConfig'
 
 const UserPasswordResetRequest: React.FC = (): JSX.Element => {
-
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [imageLoad, setImageLoad] = useState<boolean>(false)
-
   const [mail, setMail] = useState<string | null>(null)
-
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
   const [apiCall, setApiCall] = useState<boolean>(false)
 
   const sendPassRequest = async (): Promise<void> => {
@@ -36,40 +33,88 @@ const UserPasswordResetRequest: React.FC = (): JSX.Element => {
 
   return (
     <NBoxWithHeaderAndFooter>
-        <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '3vw', paddingBottom: '3vw'}}>
-            <NormalBox sx={{display: 'flex', width: '70vw', height: '80vh', justifyContent: 'space-evenly', padding: 0}}>
+        <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: isMobile ? '6vw' : '3vw', paddingBottom: isMobile ? '6vw' : '3vw'}}>
+            <NormalBox sx={{
+                display: 'flex', 
+                width: isMobile ? '90vw' : '70vw', 
+                height: isMobile ? 'auto' : '80vh', 
+                justifyContent: 'space-evenly', 
+                padding: 0,
+                flexDirection: isMobile ? 'column' : 'row',
+                border: isMobile ? 'none' : '2px solid #0d3e45'
+            }}>
               {
                 imageLoad ?
                     <>
-                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '5vw', width: '25vw', gap: '2vw'}}>
+                    <Box sx={{
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'center', 
+                        paddingLeft: isMobile ? '5vw' : '5vw', 
+                        width: isMobile ? '80vw' : '25vw', 
+                        gap: isMobile ? '4vw' : '2vw',
+                        paddingTop: isMobile ? '4vw' : 0,
+                        paddingBottom: isMobile ? '4vw' : 0
+                    }}>
                         <Box>
-                            <Typography sx={{ paddingBottom: '1vw', fontSize: '3vw', textAlign: 'left' }}>
+                            <Typography sx={{ paddingBottom: isMobile ? '2vw' : '1vw', fontSize: isMobile ? '6vw' : '3vw', textAlign: 'left' }}>
                             Reset password
                             </Typography>
-                            <Typography sx={{ fontSize: '1vw', textAlign: 'left' }}>
+                            <Typography sx={{ fontSize: isMobile ? '3.5vw' : '1vw', textAlign: 'left' }}>
                                 Enter your email to send a password recovery email.
                             </Typography>
                         </Box>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
-                          <Typography sx={{ textAlign: 'left' }}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw'}}>
+                          <Typography sx={{ textAlign: 'left', fontSize: isMobile ? '3.5vw' : 'inherit' }}>
                             E-mail
                           </Typography>
-                          <TextField type='email' onChange={(e) => setMail(e.target.value)} sx={{width: '100%'}}/>
+                          <TextField 
+                            type='email' 
+                            onChange={(e) => setMail(e.target.value)} 
+                            sx={{
+                                width: '100%',
+                                '& .MuiInputBase-input': {
+                                    fontSize: isMobile ? '3.5vw' : 'inherit'
+                                }
+                            }}
+                          />
                         </Box>
-                        <Button disabled={!mail} onClick={() => sendPassRequest()}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
-                            { apiCall ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Reset Password'  }
+                        <Button 
+                            disabled={!mail} 
+                            onClick={() => sendPassRequest()}  
+                            sx={{
+                                color: 'inherit', 
+                                border: '1px solid #0d3e45', 
+                                width: '100%', 
+                                padding: isMobile ? '1.6vw' : '0.8vw',
+                                fontSize: isMobile ? '3.5vw' : 'inherit'
+                            }}
+                        >
+                            { apiCall ? <CircularProgress size={isMobile ? 30 : 22} sx={{color: 'primary.contrastText'}}/> :  'Reset Password'  }
                         </Button>
                         {
                             successMessage ??
-                            <Typography>
+                            <Typography sx={{fontSize: isMobile ? '3.5vw' : 'inherit'}}>
                                 {successMessage}
                             </Typography>
                         }
                     </Box>
-                    <Box onLoad={() => setImageLoad(true) } component='img' alt='pinina' src='../src/assets/pinina.webp' sx={{width: '33.5vw'}}/>
+                    <Box 
+                        onLoad={() => setImageLoad(true)} 
+                        component='img' 
+                        alt='pinina' 
+                        src='../src/assets/pinina.webp' 
+                        sx={{
+                            width: isMobile ? '90vw' : '33.5vw',
+                            height: isMobile ? 'auto' : 'auto',
+                            marginTop: isMobile ? '4vw' : 0,
+                            marginBottom: isMobile ? '4vw' : 0,
+                            display: isMobile ? 'none' : 'block'
+                        }}
+                    />
                     </>
                 :
-                  <Box sx={{ width: '33.5vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Box sx={{ width: isMobile ? '90vw' : '33.5vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <CircularProgress sx={{color: 'primary.contrastText'}}/>
                     <Box
                       component='img'

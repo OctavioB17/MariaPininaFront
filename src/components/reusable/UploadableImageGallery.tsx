@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { Box, Typography, Snackbar, Alert, Button, IconButton } from '@mui/material';
+import { Box, Typography, Snackbar, Alert, Button, IconButton, useMediaQuery } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import CloseIcon from '@mui/icons-material/Close';
 import { ExtendedUploadableImageGalleryProps } from '../../interfaces/reusable/ImageGalleryProps';
+import { theme } from '../../config/ThemeConfig';
 
 const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({ 
   images, 
@@ -13,6 +14,7 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
   onImageDelete,
   maxImages = 10
 }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -68,8 +70,8 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
       thumbnail: imageUrl,
       renderItem: (item) => (
         <div style={{ 
-          width: '41vw', 
-          height: '31vw', 
+          width: isMobile ? '50vw' : '41vw', 
+          height: isMobile ? '60vw' : '31vw', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
@@ -79,9 +81,9 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
             src={item.original} 
             alt={item.originalAlt || ''} 
             style={{ 
-              width: '36vw', 
-              height: '29vw', 
-              objectFit: 'cover' 
+              width: isMobile ? '50vw' : '36vw', 
+              height: isMobile ? '55vw' : '29vw', 
+              objectFit: 'contain'
             }}
             key={item.original}
           />
@@ -96,13 +98,15 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
       onDragOver={handleDragOver} 
       sx={{ 
         position: 'relative', 
-        height: '600px', 
+        height: isMobile ? '80vw' : '600px', 
         border: images.length === 0 ? '2px dashed #0d3e45' : '2px solid #0d3e45', 
         borderRadius: images.length === 0 ? '0px' : '10px', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
-        padding: '1.5vw',
+        padding: isMobile ? '4vw' : '1.5vw',
+        paddingTop: isMobile ? '5vw' : '0',
+        paddingBottom: isMobile ? '12vw' : '0',
         cursor: images.length === 0 ? 'pointer' : 'default'
       }}
     >
@@ -122,9 +126,9 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
             }} 
             id="upload-button" 
           />
-          <Box sx={{ textAlign: 'center', width: '50vw', pointerEvents: 'none' }}>
-            <Typography variant="h6" color="textSecondary">No images</Typography>
-            <Typography variant="body1" color="textSecondary">Click or drag to upload</Typography>
+          <Box sx={{ textAlign: 'center', width: isMobile ? '80vw' : '50vw', pointerEvents: 'none' }}>
+            <Typography variant="h6" color="textSecondary" sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>No images</Typography>
+            <Typography variant="body1" color="textSecondary" sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Click or drag to upload</Typography>
           </Box>
         </>
       ) : (
@@ -140,45 +144,55 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
             width: '100%'
           },
           '& .image-gallery-slide-wrapper': {
-            height: 'calc(100% - 100px)',
+            height: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 100px)',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           },
           '& .image-gallery-slides': {
-            height: 'calc(100% - 100px)',
+            height: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 100px)',
             width: '100%'
           },
           '& .image-gallery-slide': {
-            height: 'calc(100% - 100px)',
+            height: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 100px)',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           },
           '& .image-gallery-thumbnail': {
-            height: '5.5vw',
-            width: '5.5vw',
+            height: isMobile ? '15vw' : '5.5vw',
+            width: isMobile ? '15vw' : '5.5vw',
             border: '2px solid #0d3e45',
           },
           '& .image-gallery-thumbnail .image-gallery-thumbnail-image': {
-            height: '5vw',
-            width: '5vw',
+            height: isMobile ? '14vw' : '5vw',
+            width: isMobile ? '14vw' : '5vw',
             objectFit: 'cover'
           }
         }}>
-          <Box sx={{ display: 'flex', gap: '1vw', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            gap: isMobile ? '4vw' : '1vw', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '100%', 
+            width: '100%',
+            paddingTop: isMobile ? '4vw' : '0',
+          }}>
             <Box sx={{ position: 'relative', width: '100%' }}>
               <IconButton
                 onClick={handleDeleteImage}
                 sx={{
                   position: 'absolute',
-                  top: 20,
-                  right: 25,
+                  top: isMobile ? '4vw' : 20,
+                  right: isMobile ? '4vw' : 25,
                   backgroundColor: '#0d3e45',
                   color: 'white',
                   zIndex: 1000,
+                  transform: isMobile ? 'scale(1.5)' : 'scale(1)',
                   '&:hover': {
                     backgroundColor: 'rgba(0, 0, 0, 0.8)'
                   }
@@ -214,7 +228,16 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
                 }} 
                 id="upload-button" 
               />
-              <Button variant="contained" sx={{ width: '100%', backgroundColor: '#0d3e45', color: 'white' }}>
+              <Button 
+                variant="contained" 
+                sx={{ 
+                  width: '100%', 
+                  backgroundColor: '#0d3e45', 
+                  color: 'white',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }}
+              >
                 Add photo
               </Button>
             </Box>
@@ -225,7 +248,13 @@ const UploadableImageGallery: React.FC<ExtendedUploadableImageGalleryProps> = ({
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert
           onClose={handleSnackbarClose}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
+          sx={{ 
+            width: '100%', 
+            backgroundColor: 'primary.main', 
+            color: 'primary.contrastText', 
+            border: '2px solid #0d3e45',
+            fontSize: isMobile ? '4vw' : 'inherit'
+          }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           {maxImages === 1 ? 'Only one image is allowed' : `You can only upload up to ${maxImages} images.`}

@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Typography, Slider, FormControl, Select, MenuItem, SelectChangeEvent, Button, TextField } from '@mui/material';
+import { Box, Typography, Slider, FormControl, Select, MenuItem, SelectChangeEvent, Button, TextField, SwipeableDrawer, useMediaQuery, useTheme, IconButton } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const FilterAndOrderProductGrid = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [priceRange, setPriceRange] = useState<number[]>([0, 999999]);
   const [priceOrder, setPriceOrder] = useState<string>('');
@@ -40,7 +44,6 @@ const FilterAndOrderProductGrid = () => {
     newParams.set('minPrice', priceRange[0].toString());
     newParams.set('maxPrice', priceRange[1].toString());
     
-    // Aplicar ordenamientos
     if (priceOrder) newParams.set('priceOrder', priceOrder);
     if (nameOrder) newParams.set('nameOrder', nameOrder);
     if (createdAt) newParams.set('createdAt', createdAt);
@@ -56,8 +59,14 @@ const FilterAndOrderProductGrid = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  return (
-    <Box sx={{ width: '15vw', padding: '1vw', textAlign: 'left' }}>
+  const FilterContent = () => (
+    <Box sx={{ 
+      width: isMobile ? '97vw' : '15vw', 
+      padding: '1vw', 
+      textAlign: 'left',
+      height: '100%',
+      overflowY: 'auto'
+    }}>
       <Typography variant="h5" sx={{ marginBottom: '1vw', fontWeight: 'bold' }}>Filters</Typography>
       <Box sx={{ marginBottom: '2vw', display: 'flex', flexDirection: 'column', gap: '1vw' }}>
         <Typography gutterBottom>Price</Typography>
@@ -67,9 +76,9 @@ const FilterAndOrderProductGrid = () => {
           valueLabelDisplay="auto"
           min={0}
           max={999999}
-          sx={{ width: '90%', color: 'primary.contrastText' }}
+          sx={{ width: '90%', color: 'primary.contrastText', marginLeft: isMobile ? '4vw' : '0vw' }}
         />
-        <Box sx={{ display: 'flex', gap: '1vw', marginBottom: '1vw', alignItems: 'center', justifyContent: 'space-evenly', width: '100%'}}>
+        <Box sx={{ display: 'flex', gap: '1vw', marginBottom: '1vw', alignItems: 'center', justifyContent: isMobile ? 'space-between' : 'space-evenly', width: '100%'}}>
           <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', width: '100%'}}>
             <Typography>Min</Typography>
             <TextField
@@ -228,6 +237,45 @@ const FilterAndOrderProductGrid = () => {
       </Box>
     </Box>
   );
+
+  if (isMobile) {
+    return (
+      <>
+        <IconButton 
+          onClick={() => setDrawerOpen(true)}
+          sx={{ 
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            bgcolor: 'primary.main',
+            color: 'primary.main',
+            '&:hover': {
+              bgcolor: 'primary.contrastText',
+              opacity: 0.9
+            },
+          }}
+        >
+          <FilterListIcon sx={{ fontSize: '10vw' }}/>
+        </IconButton>
+        <SwipeableDrawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          onOpen={() => setDrawerOpen(true)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+            },
+          }}
+        >
+          <FilterContent />
+        </SwipeableDrawer>
+      </>
+    );
+  }
+
+  return <FilterContent />;
 };
 
 export default FilterAndOrderProductGrid;

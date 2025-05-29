@@ -5,60 +5,70 @@ import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
 import { Order } from '../../../interfaces/IOrders';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
-import { Snackbar, Alert, Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, TablePagination, CircularProgress } from '@mui/material';
+import { Snackbar, Alert, Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, TablePagination, CircularProgress, useMediaQuery } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { theme } from '../../../config/ThemeConfig';
 
-const OrderRow = ({ order }: { order: Order }) => {
+const OrderRow = ({ order, isMobile }: { order: Order; isMobile: boolean }) => {
   const [open, setOpen] = useState(false);
-    console.log(order)
+
   return (
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
-            size="small"
+            size={isMobile ? "small" : "medium"}
             onClick={() => setOpen(!open)}
+            sx={{
+              '& .MuiSvgIcon-root': {
+                fontSize: isMobile ? '4vw' : 'inherit'
+              }
+            }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{order.id}</TableCell>
-        <TableCell>{order.status || 'Pending'}</TableCell>
-        <TableCell align="right">${order.totalPrice}</TableCell>
-        <TableCell>{order.paymentMethod}</TableCell>
-        <TableCell>{`${order.user?.name || ''} ${order.user?.surname || ''}`}</TableCell>
-        <TableCell>{order.taxes.map((tax) => `$${tax.number.toFixed(2)}`).join(' - ')}</TableCell>
-
+        <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{order.id}</TableCell>
+        <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{order.status || 'Pending'}</TableCell>
+        <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>${order.totalPrice}</TableCell>
+        <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{order.paymentMethod}</TableCell>
+        <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{`${order.user?.name || ''} ${order.user?.surname || ''}`}</TableCell>
+        <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{order.taxes.map((tax) => `$${tax.number.toFixed(2)}`).join(' - ')}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                component="div"
+                sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}
+              >
                 Products
               </Typography>
               <Table size="small" aria-label="products">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>SKU</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Total</TableCell>
+                    <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>ID</TableCell>
+                    <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>Name</TableCell>
+                    <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>SKU</TableCell>
+                    <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>Price</TableCell>
+                    <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>Quantity</TableCell>
+                    <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>Total</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {order.products.map((product) => (
                     <TableRow key={product.id}>
-                      <TableCell>{product.id}</TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell>{product.sku}</TableCell>
-                      <TableCell align="right">${product.price.toFixed(2)}</TableCell>
-                      <TableCell align="right">{product.quantity}</TableCell>
-                      <TableCell align="right">${(product.price * product.quantity).toFixed(2)}</TableCell>
+                      <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{product.id}</TableCell>
+                      <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{product.name}</TableCell>
+                      <TableCell sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{product.sku}</TableCell>
+                      <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>${product.price.toFixed(2)}</TableCell>
+                      <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>{product.quantity}</TableCell>
+                      <TableCell align="right" sx={{ fontSize: isMobile ? '3vw' : 'inherit' }}>${(product.price * product.quantity).toFixed(2)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -74,8 +84,9 @@ const OrderRow = ({ order }: { order: Order }) => {
 const AdminMenuOrders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: 10,
+    pageSize: isMobile ? 5 : 10,
     page: 0,
   });
   const [rowCount, setRowCount] = useState(0);
@@ -137,7 +148,20 @@ const AdminMenuOrders: React.FC = () => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ width: '76vw', marginBottom: '3.2vw', position: 'relative' }}>
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          width: isMobile ? '90vw' : '76vw', 
+          marginBottom: isMobile ? '15vw' : '3.2vw', 
+          position: 'relative',
+          '& .MuiTableCell-head': {
+            fontSize: isMobile ? '3.5vw' : 'inherit'
+          },
+          '& .MuiTablePagination-root': {
+            fontSize: isMobile ? '3vw' : 'inherit'
+          }
+        }}
+      >
         {loading && (
           <Box
             sx={{
@@ -153,7 +177,7 @@ const AdminMenuOrders: React.FC = () => {
               zIndex: 1
             }}
           >
-            <CircularProgress />
+            <CircularProgress size={isMobile ? '10vw' : 'inherit'} />
           </Box>
         )}
         <Table aria-label="collapsible table">
@@ -170,7 +194,7 @@ const AdminMenuOrders: React.FC = () => {
           </TableHead>
           <TableBody>
             {orders.map((order) => (
-              <OrderRow key={order.id} order={order} />
+              <OrderRow key={order.id} order={order} isMobile={isMobile} />
             ))}
           </TableBody>
         </Table>
@@ -201,7 +225,8 @@ const AdminMenuOrders: React.FC = () => {
             borderColor: 'primary.contrastText',
             '& .MuiAlert-icon': {
               color: 'primary.contrastText'
-            }
+            },
+            fontSize: isMobile ? '3vw' : 'inherit'
           }}
         >
           {snackbar.message}

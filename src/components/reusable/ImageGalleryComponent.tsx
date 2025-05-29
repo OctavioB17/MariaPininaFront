@@ -3,39 +3,45 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import React from 'react'
 import { JSX } from "@emotion/react/jsx-runtime";
 import { imageGalleryProps } from "../../interfaces/reusable/ImageGalleryProps";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { theme } from "../../config/ThemeConfig";
 
 const ImageGalleryComponent: React.FC<imageGalleryProps> = ({ imageLinks }): JSX.Element => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const galleryImages: ReactImageGalleryItem[] = imageLinks.map((link: string) => ({
     original: link,
     thumbnail: link,
-    originalWidth: 500,
-    originalHeight: 500,
-    thumbnailWidth: 100,
-    thumbnailHeight: 100
+    originalWidth: isMobile ? 300 : 500,
+    originalHeight: isMobile ? 300 : 500,
+    thumbnailWidth: isMobile ? 60 : 100,
+    thumbnailHeight: isMobile ? 60 : 100
   }))
 
   return (
     <Box sx={{ 
       '& .image-gallery-slide': {
-        height: '29.3vw',
+        height: isMobile ? '60vw' : '29.3vw',
         backgroundColor: 'white',
         borderRadius: '10px',
         '& img': {
-          width: '29vw !important',
-          height: '29vw',
+          width: isMobile ? '60vw !important' : '29vw !important',
+          height: isMobile ? '60vw' : '29vw',
         }
       },
       '& .image-gallery-thumbnails-container': {
-        width: '100px'
+        width: isMobile ? '60px' : '100px'
       },
       '& .image-gallery-thumbnail': {
-        width: '100px',
-        height: '100px',
+        width: isMobile ? '60px' : '100px',
+        height: isMobile ? '60px' : '100px',
         '& img': {
-          width: '95px',
-          height: '95px',
+          width: isMobile ? '55px' : '95px',
+          height: isMobile ? '55px' : '95px',
         }
+      },
+      '& .image-gallery-thumbnails': {
+        padding: isMobile ? '10px 0' : '20px 0'
       }
     }}>
       <ImageGallery
@@ -43,7 +49,7 @@ const ImageGalleryComponent: React.FC<imageGalleryProps> = ({ imageLinks }): JSX
         showThumbnails={true}
         showFullscreenButton={false}
         showPlayButton={false}
-        thumbnailPosition="left"
+        thumbnailPosition={isMobile ? "bottom" : "left"}
         showNav={false}
         slideDuration={500}
       />

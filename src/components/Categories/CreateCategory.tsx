@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Divider, Snackbar, Alert, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Typography, TextField, Button, Divider, Snackbar, Alert, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery } from '@mui/material';
 import NormalBox from '../reusable/NormalBox';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import UploadableImageGallery from '../reusable/UploadableImageGallery';
 import WarningIcon from '@mui/icons-material/Warning';
 import SuccessCheckmark from '../reusable/SuccessCheckmark';
+import { theme } from '../../config/ThemeConfig';
 
 const CreateCategory = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const CreateCategory = () => {
     message: '', 
     severity: 'error' as 'error' | 'success' 
   });
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const validateName = (value: string) => {
     if (value.length < 3) {
@@ -145,42 +147,79 @@ const CreateCategory = () => {
   return (
     <>
       <Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
-          <Typography variant='h4'>Create Category</Typography>
-          <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: '1vw' }} />
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '3vw' : '1vw', textAlign: 'left' }}>
+          <Typography variant='h4' sx={{ fontSize: isMobile ? '6vw' : 'inherit' }}>Create Category</Typography>
+          <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: isMobile ? '3vw' : '1vw' }} />
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2vw', textAlign: 'left', width: '50%' }}>
-            <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-              <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left', width: '100%' }}>
-                <Typography variant='h5'>Name</Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row', 
+          gap: isMobile ? '3vw' : '1vw', 
+          justifyContent: 'space-between' 
+        }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: isMobile ? '4vw' : '2vw', 
+            textAlign: 'left', 
+            width: isMobile ? '100%' : '50%' 
+          }}>
+            <NormalBox sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? '3vw' : '1.5vw', 
+              textAlign: 'left' 
+            }}>
+              <Box sx={{
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: isMobile ? '1vw' : '0.5vw', 
+                textAlign: 'left', 
+                width: '100%' 
+              }}>
+                <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Name</Typography>
                 <TextField 
-                  sx={{ width: '100%' }}
+                  sx={{ 
+                    width: '100%',
+                    '& .MuiInputBase-root': {
+                      fontSize: isMobile ? '4vw' : 'inherit'
+                    }
+                  }}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   error={name.length > 50}
                 />
               </Box>
               <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
-              <Typography>
+              <Typography sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}>
                 Choose a clear and descriptive name for your category.
                 The name should be between 3 and 50 characters.
                 Use simple and understandable terms.
               </Typography>
             </NormalBox>
 
-            <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-              <Typography variant='h5'>Description</Typography>
+            <NormalBox sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? '3vw' : '1.5vw', 
+              textAlign: 'left' 
+            }}>
+              <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Description</Typography>
               <TextField 
-                sx={{ width: '100%' }}
+                sx={{ 
+                  width: '100%',
+                  '& .MuiInputBase-root': {
+                    fontSize: isMobile ? '4vw' : 'inherit'
+                  }
+                }}
                 multiline
-                rows={5}
+                rows={isMobile ? 8 : 5}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 error={description.length > 500 || description.length < 100}
               />
-              <Typography>
+              <Typography sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}>
                 Provide a detailed description of the category.
                 The description should be between 100 and 500 characters.
                 Explain what kind of products belong to this category.
@@ -188,7 +227,13 @@ const CreateCategory = () => {
             </NormalBox>
           </Box>
 
-          <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', width: '50%' }}>
+          <Box sx={{
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: isMobile ? '3vw' : '1.5vw', 
+            textAlign: 'left', 
+            width: isMobile ? '100%' : '50%' 
+          }}>
             <UploadableImageGallery 
               images={images} 
               setImages={setImages} 
@@ -198,11 +243,21 @@ const CreateCategory = () => {
           </Box>
         </Box>
 
-        <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'flex-end', padding: '1vw'}}>
+        <Box sx={{
+          display: 'flex', 
+          flexDirection: 'row', 
+          gap: isMobile ? '3vw' : '1vw', 
+          justifyContent: 'flex-end', 
+          padding: isMobile ? '3vw' : '1vw'
+        }}>
           <Button 
             variant='contained' 
             color='primary' 
-            sx={{border: '1px solid #0d3e45', width: '10vw'}}
+            sx={{
+              border: '1px solid #0d3e45', 
+              width: isMobile ? '30vw' : '10vw',
+              fontSize: isMobile ? '4vw' : 'inherit'
+            }}
             onClick={handleSubmit}
             disabled={isLoading}
           >
@@ -219,7 +274,15 @@ const CreateCategory = () => {
       >
         <Alert
           onClose={handleCloseSnackbar}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
+          sx={{ 
+            width: '100%', 
+            backgroundColor: 'primary.main', 
+            color: 'primary.contrastText', 
+            border: '2px solid #0d3e45',
+            '& .MuiAlert-message': {
+              fontSize: isMobile ? '3.5vw' : 'inherit'
+            }
+          }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           {snackbar.message}
@@ -230,30 +293,42 @@ const CreateCategory = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isLoading}
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress color="inherit" size={isMobile ? '15vw' : 'inherit'} />
       </Backdrop>
 
       <Dialog 
         open={showSuccessDialog} 
         onClose={() => handleDialogClose(false)}
-        slotProps={{
-          paper: {
-            sx: {
-              backgroundColor: 'primary.main',
-              border: '2px solid #0d3e45',
-              '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root': {
-                color: 'primary.contrastText'
-              },
+        sx={{
+          '& .MuiDialog-paper': {
+            backgroundColor: 'primary.main',
+            border: '2px solid #0d3e45',
+            width: isMobile ? '90vw' : 'auto',
+            '& .MuiDialogTitle-root': {
+              color: 'primary.contrastText',
+              fontSize: isMobile ? '5vw' : 'inherit'
+            },
+            '& .MuiDialogContent-root': {
+              color: 'primary.contrastText',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               gap: 2
+            },
+            '& .MuiDialogActions-root': {
+              color: 'primary.contrastText'
+            },
+            '& .MuiTypography-root': {
+              fontSize: isMobile ? '4vw' : 'inherit'
+            },
+            '& .MuiButton-root': {
+              fontSize: isMobile ? '3.5vw' : 'inherit'
             }
           }
         }}
       >
         <DialogTitle>Category created successfully!</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <DialogContent>
           <SuccessCheckmark />
           <Typography>Create another category?</Typography>
         </DialogContent>

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, TextField, Typography, Snackbar, Alert } from '@mui/material'
+import { Box, Button, Divider, TextField, Typography, Snackbar, Alert, useMediaQuery } from '@mui/material'
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import NormalBox from '../../reusable/NormalBox'
 import { useEffect, useState } from 'react'
@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { AxiosResponse } from 'axios'
 import { IProductWithUserAndCategory } from '../../../interfaces/IProducts'
+import { theme } from '../../../config/ThemeConfig'
 
 type ImageType = File | string;
 
@@ -30,6 +31,8 @@ const [height, setHeight] = useState('')
 const [weight, setWeight] = useState('')
 const [description, setDescription] = useState('')
 const [material, setMaterial] = useState('')
+
+const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 const validateTitle = (value: string) => {
     if (value.length > 35) {
@@ -252,31 +255,82 @@ const handleImageDelete = async (index: number) => {
 };
 
 return (
-    <NBoxWithHeaderAndFooter >
-      <NormalBox sx={{ padding: '1vw', marginTop: '1vw', marginBottom: '1vw', display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left' }}>
-            <Typography variant='h4'>Edit Publication</Typography>
-            <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: '1vw' }} />
+    <NBoxWithHeaderAndFooter>
+      <NormalBox sx={{ 
+        padding: isMobile ? '4vw' : '1vw', 
+        marginTop: isMobile ? '4vw' : '1vw', 
+        marginBottom: isMobile ? '4vw' : '1vw', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: isMobile ? '4vw' : '1vw', 
+        textAlign: 'left' 
+      }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '4vw' : '1vw', textAlign: 'left' }}>
+            <Typography variant='h4' sx={{ fontSize: isMobile ? '6vw' : 'inherit' }}>Edit Publication</Typography>
+            <Divider sx={{ border: '1px solid #0d3e45', width: '100%', marginBottom: isMobile ? '4vw' : '1vw' }} />
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2vw', textAlign: 'left', width: '50%' }}>
-                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
-                        <Typography variant='h5'>Title</Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row', 
+          gap: isMobile ? '4vw' : '1vw', 
+          justifyContent: 'space-between' 
+        }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? '4vw' : '2vw', 
+              textAlign: 'left', 
+              width: isMobile ? '100%' : '50%' 
+            }}>
+                <NormalBox sx={{
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: isMobile ? '4vw' : '1.5vw', 
+                  textAlign: 'left' 
+                }}>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '2vw' : '0.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Title</Typography>
                         <TextField 
-                            sx={{ width: '100%' }}
+                            sx={{ 
+                              width: '100%',
+                              '& .MuiInputBase-input': {
+                                fontSize: isMobile ? '4vw' : 'inherit',
+                                padding: isMobile ? '2vw' : 'inherit'
+                              }
+                            }}
                             value={title}
                             disabled
                         />
                     </Box>
                     <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                 </NormalBox>
-                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-                    <Typography variant='h5'>Commercial Information</Typography>
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
-                        <Typography>Price</Typography>
+                <NormalBox sx={{
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: isMobile ? '4vw' : '1.5vw', 
+                  textAlign: 'left' 
+                }}>
+                    <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Commercial Information</Typography>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '2vw' : '0.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Price</Typography>
                         <TextField 
-                            sx={{ width: '100%' }}
+                            sx={{ 
+                              width: '100%',
+                              '& .MuiInputBase-input': {
+                                fontSize: isMobile ? '4vw' : 'inherit',
+                                padding: isMobile ? '2vw' : 'inherit'
+                              }
+                            }}
                             value={price}
                             onChange={(e) => {
                                 setPrice(e.target.value)
@@ -286,10 +340,21 @@ return (
                         />
                     </Box>
                     <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
-                        <Typography>Stock</Typography>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '2vw' : '0.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Stock</Typography>
                         <TextField 
-                            sx={{ width: '100%' }}
+                            sx={{ 
+                              width: '100%',
+                              '& .MuiInputBase-input': {
+                                fontSize: isMobile ? '4vw' : 'inherit',
+                                padding: isMobile ? '2vw' : 'inherit'
+                              }
+                            }}
                             value={stock}
                             onChange={(e) => {
                                 setStock(e.target.value)
@@ -299,27 +364,61 @@ return (
                         />
                     </Box>
                     <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5vw', textAlign: 'left' }}>
-                        <Typography>Sku</Typography>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '2vw' : '0.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Sku</Typography>
                         <TextField 
-                            sx={{ width: '100%' }}
+                            sx={{ 
+                              width: '100%',
+                              '& .MuiInputBase-input': {
+                                fontSize: isMobile ? '4vw' : 'inherit',
+                                padding: isMobile ? '2vw' : 'inherit'
+                              }
+                            }}
                             value={sku}
                             onChange={(e) => setSku(e.target.value)}
                         />
                     </Box>
-                    <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
-                    <Typography>
+                    <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>
                         The SKU (Stock Keeping Unit) is a unique identifier for each product.
                         It helps track inventory and ensure accurate stock levels.
                         Use a format that makes sense for your business, such as a number or a combination of letters and numbers.
                     </Typography>
                 </NormalBox>
-                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', height: '100%', justifyContent: 'center' }}>
-                    <Typography variant='h5'>Category</Typography>
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-                        <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', textAlign: 'left', padding: '0.2vw' }}>
+                <NormalBox sx={{
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: isMobile ? '4vw' : '1.5vw', 
+                  textAlign: 'left', 
+                  height: '100%', 
+                  justifyContent: 'center' 
+                }}>
+                    <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Category</Typography>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '4vw' : '1.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Box sx={{
+                          display: 'flex', 
+                          flexDirection: 'row', 
+                          gap: isMobile ? '2vw' : '1vw', 
+                          textAlign: 'left', 
+                          padding: isMobile ? '2vw' : '0.2vw' 
+                        }}>
                             <TextField
-                                sx={{ width: '100%' }}
+                                sx={{ 
+                                  width: '100%',
+                                  '& .MuiInputBase-input': {
+                                    fontSize: isMobile ? '4vw' : 'inherit',
+                                    padding: isMobile ? '2vw' : 'inherit'
+                                  }
+                                }}
                                 value={categoryName}
                                 disabled
                             />
@@ -327,7 +426,13 @@ return (
                     </Box>
                 </NormalBox>
             </Box>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left', width: '50%' }}>
+            <Box sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? '4vw' : '1.5vw', 
+              textAlign: 'left', 
+              width: isMobile ? '100%' : '50%' 
+            }}>
                 <UploadableImageGallery 
                     images={images} 
                     setImages={setImages} 
@@ -335,14 +440,42 @@ return (
                     isEditMode={true}
                     onImageDelete={handleImageDelete}
                 />
-                <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1vw', textAlign: 'left'}}>
-                    <Typography variant='h5'>Product Characteristics</Typography>
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-                        <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', textAlign: 'left', padding: '0.2vw' }}>
-                            <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'left', width: '50%', gap: '0.9vw'}}>
-                                <Typography>Length (in cm)</Typography>
+                <NormalBox sx={{
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: isMobile ? '4vw' : '1vw', 
+                  textAlign: 'left'
+                }}>
+                    <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Product Characteristics</Typography>
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: isMobile ? '4vw' : '1.5vw', 
+                      textAlign: 'left' 
+                    }}>
+                        <Box sx={{
+                          display: 'flex', 
+                          flexDirection: isMobile ? 'column' : 'row', 
+                          gap: isMobile ? '4vw' : '1vw', 
+                          textAlign: 'left', 
+                          padding: isMobile ? '2vw' : '0.2vw' 
+                        }}>
+                            <Box sx={{
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              textAlign: 'left', 
+                              width: isMobile ? '100%' : '50%', 
+                              gap: isMobile ? '2vw' : '0.9vw'
+                            }}>
+                                <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Length (in cm)</Typography>
                                 <TextField 
-                                    sx={{ width: '100%' }}
+                                    sx={{ 
+                                      width: '100%',
+                                      '& .MuiInputBase-input': {
+                                        fontSize: isMobile ? '4vw' : 'inherit',
+                                        padding: isMobile ? '2vw' : 'inherit'
+                                      }
+                                    }}
                                     value={length}
                                     onChange={(e) => {
                                         setLength(e.target.value)
@@ -350,9 +483,15 @@ return (
                                     }}
                                     error={length !== '' && (isNaN(Number(length)) || Number(length) < 0)}
                                 />
-                                <Typography>Width (in cm)</Typography>
+                                <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Width (in cm)</Typography>
                                 <TextField 
-                                    sx={{ width: '100%' }}
+                                    sx={{ 
+                                      width: '100%',
+                                      '& .MuiInputBase-input': {
+                                        fontSize: isMobile ? '4vw' : 'inherit',
+                                        padding: isMobile ? '2vw' : 'inherit'
+                                      }
+                                    }}
                                     value={width}
                                     onChange={(e) => {
                                         setWidth(e.target.value)
@@ -361,10 +500,22 @@ return (
                                     error={width !== '' && (isNaN(Number(width)) || Number(width) < 0)}
                                 />
                             </Box>
-                            <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'left', width: '50%', gap: '0.9vw'}}>
-                                <Typography>Height (in cm)</Typography>
+                            <Box sx={{
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              textAlign: 'left', 
+                              width: isMobile ? '100%' : '50%', 
+                              gap: isMobile ? '2vw' : '0.9vw'
+                            }}>
+                                <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Height (in cm)</Typography>
                                 <TextField 
-                                    sx={{ width: '100%' }}
+                                    sx={{ 
+                                      width: '100%',
+                                      '& .MuiInputBase-input': {
+                                        fontSize: isMobile ? '4vw' : 'inherit',
+                                        padding: isMobile ? '2vw' : 'inherit'
+                                      }
+                                    }}
                                     value={height}
                                     onChange={(e) => {
                                         setHeight(e.target.value)
@@ -372,9 +523,15 @@ return (
                                     }}
                                     error={height !== '' && (isNaN(Number(height)) || Number(height) < 0)}
                                 />
-                                <Typography>Weight (in g)</Typography>
+                                <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Weight (in g)</Typography>
                                 <TextField 
-                                    sx={{ width: '100%' }}
+                                    sx={{ 
+                                      width: '100%',
+                                      '& .MuiInputBase-input': {
+                                        fontSize: isMobile ? '4vw' : 'inherit',
+                                        padding: isMobile ? '2vw' : 'inherit'
+                                      }
+                                    }}
                                     value={weight}
                                     onChange={(e) => {
                                         setWeight(e.target.value)
@@ -385,9 +542,15 @@ return (
                             </Box>
                         </Box>
                         <Box>
-                            <Typography>Material</Typography>
+                            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>Material</Typography>
                             <TextField 
-                                sx={{ width: '100%' }}
+                                sx={{ 
+                                  width: '100%',
+                                  '& .MuiInputBase-input': {
+                                    fontSize: isMobile ? '4vw' : 'inherit',
+                                    padding: isMobile ? '2vw' : 'inherit'
+                                  }
+                                }}
                                 value={material}
                                 onChange={(e) => setMaterial(e.target.value)}
                                 placeholder="Example: cotton, polyester, spandex"
@@ -395,7 +558,10 @@ return (
                         </Box>
                         <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
                         <Box>
-                        <Typography sx={{overflow: 'hidden'}}>
+                        <Typography sx={{
+                          overflow: 'hidden',
+                          fontSize: isMobile ? '4vw' : 'inherit'
+                        }}>
                             Please specify the main materials used in your product.
                             You can list multiple materials separated by commas (e.g., "cotton, polyester, spandex").
                         </Typography>
@@ -406,8 +572,13 @@ return (
             </Box>
         </Box>
         <Box>
-            <NormalBox sx={{display: 'flex', flexDirection: 'column', gap: '1.5vw', textAlign: 'left' }}>
-                <Typography variant='h5'>Product Description</Typography>
+            <NormalBox sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? '4vw' : '1.5vw', 
+              textAlign: 'left' 
+            }}>
+                <Typography variant='h5' sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}>Product Description</Typography>
                 <TextField 
                     sx={{ 
                         width: '100%',
@@ -415,12 +586,16 @@ return (
                             outline: '0 !important',
                             borderRadius: 0
                         },
+                        '& .MuiInputBase-input': {
+                            fontSize: isMobile ? '4vw' : 'inherit',
+                            padding: isMobile ? '2vw' : 'inherit'
+                        },
                         border: '1px solid #0d3e45',
                         borderRadius: '4px',
                         cursor: 'pointer'
                     }} 
                     multiline 
-                    rows={20}
+                    rows={isMobile ? 10 : 20}
                     value={description}
                     onChange={(e) => {
                         setDescription(e.target.value)
@@ -428,7 +603,7 @@ return (
                     }}
                     error={description.length > 3000}
                 />
-                <Typography>
+                <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>
                     Provide a detailed description of the product.
                     Include information about the product's features, benefits, and any other relevant details.
                     Use clear and concise language to make the description easy to understand.
@@ -438,11 +613,22 @@ return (
             </NormalBox>
         </Box>
         <Divider sx={{ border: '1px solid #0d3e45', width: '100%'}} />
-        <Box sx={{display: 'flex', flexDirection: 'row', gap: '1vw', justifyContent: 'flex-end', padding: '1vw'}}>
+        <Box sx={{
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row', 
+          gap: isMobile ? '4vw' : '1vw', 
+          justifyContent: 'flex-end', 
+          padding: isMobile ? '4vw' : '1vw'
+        }}>
             <Button 
                 variant='contained' 
                 color='primary' 
-                sx={{border: '1px solid #0d3e45', width: '10vw'}}
+                sx={{
+                  border: '1px solid #0d3e45', 
+                  width: isMobile ? '100%' : '10vw',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }}
                 onClick={handleEdit}
             >
                 Save Changes
@@ -450,7 +636,12 @@ return (
             <Button 
                 variant='contained' 
                 color='secondary' 
-                sx={{border: '1px solid #0d3e45', width: '10vw'}}
+                sx={{
+                  border: '1px solid #0d3e45', 
+                  width: isMobile ? '100%' : '10vw',
+                  fontSize: isMobile ? '4vw' : 'inherit',
+                  padding: isMobile ? '2vw' : 'inherit'
+                }}
                 onClick={() => navigate(-1)}
             >
                 Cancel
@@ -465,7 +656,13 @@ return (
       >
         <Alert
           onClose={handleCloseSnackbar}
-          sx={{ width: '100%', backgroundColor: 'primary.main', color: 'primary.contrastText', border: '2px solid #0d3e45' }}
+          sx={{ 
+            width: '100%', 
+            backgroundColor: 'primary.main', 
+            color: 'primary.contrastText', 
+            border: '2px solid #0d3e45',
+            fontSize: isMobile ? '4vw' : 'inherit'
+          }}
           icon={<WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >
           {snackbar.message}

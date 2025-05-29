@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Divider, IconButton, CircularProgress, Snackbar, Alert } from '@mui/material'
+import { Box, Typography, Button, Divider, IconButton, CircularProgress, Snackbar, Alert, useMediaQuery } from '@mui/material'
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
 import { useCart } from '../../../hooks/useCart'
 import { useOrders } from '../../../hooks/useOrders'
@@ -12,8 +12,10 @@ import { IOrder } from '../../../interfaces/ICart'
 import { IOrderItem } from '../../../interfaces/IOrders'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import WarningIcon from '@mui/icons-material/Warning'
+import { theme } from '../../../config/ThemeConfig'
 
 const CartDetail = () => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { orders, removeItem, updateItemQuantity, getTotalAmount, clearCart, clearOrder } = useCart()
   const { createOrder, loading } = useOrders()
   const navigate = useNavigate()
@@ -93,60 +95,164 @@ const CartDetail = () => {
 
   return (
     <NBoxWithHeaderAndFooter>
-      <Box sx={{ padding: '2vw', display: 'flex', flexDirection: 'column', gap: '2vw' }}>
-        <Typography variant="h4" sx={{ textAlign: 'left' }}>Shopping Cart</Typography>
+      <Box sx={{ 
+        padding: isMobile ? '4vw' : '2vw', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: isMobile ? '4vw' : '2vw' 
+      }}>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            textAlign: 'left',
+            fontSize: isMobile ? '6vw' : '3vw'
+          }}
+        >
+          Shopping Cart
+        </Typography>
         
         {orders.length === 0 ? (
-          <Box sx={{border: '1px dotted #0d3e45', borderRadius: '8px', padding: '20vw'}}>
-            <Typography>Your cart is empty</Typography>
-            <Button onClick={() => navigate('/products')} sx={{ color: 'primary.contrastText', textDecoration: 'underline', fontSize: '1.5vw' }}>Go shopping!</Button>
+          <Box sx={{
+            border: '1px dotted #0d3e45', 
+            borderRadius: '8px', 
+            padding: isMobile ? '30vw' : '20vw',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: isMobile ? '4vw' : '2vw',
+            alignItems: 'center'
+          }}>
+            <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>
+              Your cart is empty
+            </Typography>
+            <Button 
+              onClick={() => navigate('/products')} 
+              sx={{ 
+                color: 'primary.contrastText', 
+                textDecoration: 'underline', 
+                fontSize: isMobile ? '4vw' : '1.5vw' 
+              }}
+            >
+              Go shopping!
+            </Button>
           </Box>
         ) : (
           orders.map((order) => (
-            <NormalBox key={order.sellerId} sx={{ borderRadius: '8px', padding: '1vw' }}>
-              <Typography variant="h6" sx={{ marginBottom: '1vw', textAlign: 'left' }}>
+            <NormalBox key={order.sellerId} sx={{ 
+              borderRadius: '8px', 
+              padding: isMobile ? '4vw' : '1vw' 
+            }}>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  marginBottom: isMobile ? '4vw' : '1vw', 
+                  textAlign: 'left',
+                  fontSize: isMobile ? '5vw' : 'inherit'
+                }}
+              >
                 Order from {order.sellerName}
               </Typography>
-              <Divider sx={{ margin: '1vw 0', borderColor: 'primary.contrastText', border: '1px solid' }} />
+              <Divider sx={{ 
+                margin: isMobile ? '4vw 0' : '1vw 0', 
+                borderColor: 'primary.contrastText', 
+                border: '1px solid' 
+              }} />
               {order.items.map((item) => (
-                <Box key={item.product.id} sx={{ display: 'flex', alignItems: 'center', gap: '1vw', marginBottom: '1vw', justifyContent: 'space-between', textAlign: 'left' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
+                <Box key={item.product.id} sx={{ 
+                  display: 'flex', 
+                  flexDirection: isMobile ? 'column' : 'row',
+                  alignItems: isMobile ? 'flex-start' : 'center', 
+                  gap: isMobile ? '4vw' : '1vw', 
+                  marginBottom: isMobile ? '4vw' : '1vw', 
+                  justifyContent: 'space-between', 
+                  textAlign: 'left' 
+                }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: 'center', 
+                    gap: isMobile ? '4vw' : '1vw',
+                    width: isMobile ? '100%' : 'auto'
+                  }}>
                     <Box 
                       component="img"
                       src={item.product.imageGallery[0]}
-                      sx={{ width: '100px', height: '100px', objectFit: 'cover', border: '1px solid #0d3e45' }}
+                      sx={{ 
+                        width: isMobile ? '60vw' : '100px', 
+                        height: isMobile ? '60vw' : '100px', 
+                        objectFit: 'cover', 
+                        border: '1px solid #0d3e45' 
+                      }}
                     />
                   
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle1">{item.product.name}</Typography>
-                      <Typography>${item.product.price}</Typography>
+                    <Box sx={{ 
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: isMobile ? '2vw' : '0.5vw'
+                    }}>
+                      <Typography 
+                        variant="subtitle1"
+                        sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}
+                      >
+                        {item.product.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: isMobile ? '3.5vw' : 'inherit' }}>
+                        ${item.product.price}
+                      </Typography>
                     </Box>
                   </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5vw' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5vw' }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: isMobile ? 'row' : 'row',
+                    alignItems: 'center', 
+                    gap: isMobile ? '4vw' : '0.5vw',
+                    width: isMobile ? '100%' : 'auto',
+                    justifyContent: isMobile ? 'space-between' : 'flex-end'
+                  }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: isMobile ? '4vw' : '0.5vw' 
+                    }}>
                       <IconButton 
                         onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, -1)}
-                        size="small"
+                        size={isMobile ? "large" : "small"}
+                        sx={{ 
+                          transform: isMobile ? 'scale(1.5)' : 'none'
+                        }}
                       >
                         <RemoveIcon />
                       </IconButton>
-                      <Typography>{item.quantity}</Typography>
+                      <Typography sx={{ fontSize: isMobile ? '4vw' : 'inherit' }}>
+                        {item.quantity}
+                      </Typography>
                       <IconButton 
                         onClick={() => handleQuantityChange(order.sellerId, item.product.id, item.quantity, 1)}
-                        size="small"
+                        size={isMobile ? "large" : "small"}
+                        sx={{ 
+                          transform: isMobile ? 'scale(1.5)' : 'none'
+                        }}
                       >
                         <AddIcon />
                       </IconButton>
                     </Box>
 
-                    <Typography sx={{ minWidth: '100px', textAlign: 'right' }}>
+                    <Typography sx={{ 
+                      minWidth: isMobile ? 'auto' : '100px', 
+                      textAlign: 'right',
+                      fontSize: isMobile ? '4vw' : 'inherit'
+                    }}>
                       ${(item.product.price * item.quantity).toFixed(2)}
                     </Typography>
 
                     <IconButton 
                       onClick={() => removeItem(order.sellerId, item.product.id)}
                       color="error"
+                      size={isMobile ? "large" : "medium"}
+                      sx={{ 
+                        transform: isMobile ? 'scale(1.5)' : 'none'
+                      }}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -154,10 +260,25 @@ const CartDetail = () => {
                 </Box>
               ))}
 
-              <Divider sx={{ margin: '1vw 0', borderColor: 'primary.contrastText', border: '1px solid' }} />
+              <Divider sx={{ 
+                margin: isMobile ? '4vw 0' : '1vw 0', 
+                borderColor: 'primary.contrastText', 
+                border: '1px solid' 
+              }} />
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6">Order Total: ${order.total.toFixed(2)}</Typography>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'space-between', 
+                alignItems: isMobile ? 'flex-start' : 'center',
+                gap: isMobile ? '4vw' : 0
+              }}>
+                <Typography 
+                  variant="h6"
+                  sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}
+                >
+                  Order Total: ${order.total.toFixed(2)}
+                </Typography>
                 <Button 
                   variant="contained" 
                   onClick={() => handleCheckout(order)}
@@ -165,13 +286,16 @@ const CartDetail = () => {
                   sx={{ 
                     backgroundColor: 'primary.contrastText', 
                     color: 'primary.main',
+                    width: isMobile ? '100%' : '10vw',
+                    fontSize: isMobile ? '4vw' : 'inherit',
+                    padding: isMobile ? '2vw' : '0.5vw',
                     '&:hover': {
                       backgroundColor: 'primary.contrastText',
                       opacity: 0.9
                     }
                   }}
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Checkout'}
+                  {loading ? <CircularProgress size={isMobile ? 32 : 24} /> : 'Checkout'}
                 </Button>
               </Box>
             </NormalBox>
@@ -179,8 +303,20 @@ const CartDetail = () => {
         )}
 
         {orders.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2vw' }}>
-            <Typography variant="h5">Total: ${getTotalAmount().toFixed(2)}</Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between', 
+            alignItems: isMobile ? 'flex-start' : 'center', 
+            marginTop: isMobile ? '4vw' : '2vw',
+            gap: isMobile ? '4vw' : 0
+          }}>
+            <Typography 
+              variant="h5"
+              sx={{ fontSize: isMobile ? '5vw' : 'inherit' }}
+            >
+              Total: ${getTotalAmount().toFixed(2)}
+            </Typography>
             <Button 
               variant="contained" 
               onClick={() => handleCheckout()}
@@ -188,13 +324,16 @@ const CartDetail = () => {
               sx={{ 
                 backgroundColor: 'primary.contrastText', 
                 color: 'primary.main',
+                width: isMobile ? '100%' : '10vw',
+                fontSize: isMobile ? '4vw' : 'inherit',
+                padding: isMobile ? '2vw' : '0.5vw',
                 '&:hover': {
                   backgroundColor: 'primary.contrastText',
                   opacity: 0.9
                 }
               }}
             >
-              {loading ? <CircularProgress size={24} /> : 'Checkout All'}
+              {loading ? <CircularProgress size={isMobile ? 32 : 24} /> : 'Checkout All'}
             </Button>
           </Box>
         )}
@@ -212,7 +351,8 @@ const CartDetail = () => {
             width: '100%', 
             backgroundColor: 'primary.main',
             color: 'primary.contrastText',
-            border: '1px solid #0d3e45'
+            border: '1px solid #0d3e45',
+            fontSize: isMobile ? '4vw' : 'inherit'
           }}
           icon={snackbarSeverity === 'success' ? <CheckCircleIcon/> : <WarningIcon sx={{ color: 'primary.contrastText' }} />}
         >

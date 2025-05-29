@@ -1,5 +1,5 @@
 import NBoxWithHeaderAndFooter from '../../reusable/NBoxWithHeaderAndFooter'
-import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import NormalBox from '../../reusable/NormalBox'
 import { Link } from 'react-router-dom'
 import { JSX, useMemo, useState } from 'react'
@@ -8,8 +8,9 @@ import { variables } from '../../../config/variables'
 import apiError from '../../interfaces/ApiError'
 import { IUserRegister } from '../../../interfaces/IUser'
 
-
 const UserRegister: React.FC = (): JSX.Element => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [registerData, setRegisterData] = useState<IUserRegister>({
     name: "",
@@ -100,20 +101,67 @@ const UserRegister: React.FC = (): JSX.Element => {
 
   return (
     <NBoxWithHeaderAndFooter>
-        <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '3vw', paddingBottom: '3vw'}}>
-            <NormalBox sx={{display: 'flex', width: '80vw', justifyContent: 'space-evenly', padding: 0}}>
+        <Box sx={{
+          width: '100%', 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          paddingTop: isMobile ? '8vw' : '3vw', 
+          paddingBottom: isMobile ? '8vw' : '3vw'
+        }}>
+            <NormalBox sx={{
+              display: 'flex', 
+              width: isMobile ? '90vw' : '80vw', 
+              justifyContent: 'space-evenly', 
+              padding: isMobile ? '4vw' : 0,
+              flexDirection: isMobile ? 'column' : 'row',
+              border: isMobile ? 'none' : '2px solid #0d3e45'
+            }}>
               {
-                imageLoad ?
+                imageLoad || isMobile ?
                   <>
-                  <Box onLoad={() => setImageLoad(true) } alt='pinina' component='img' src='../src/assets/pinina2.webp' sx={{width: '40vw'}}/>
-                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '30vw', gap: '2vw', paddingTop: '2vw', paddingBottom: '2vw'}}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
-                        <Typography sx={{ paddingBottom: '1vw', fontSize: '3vw', textAlign: 'left' }}>
+                    {!isMobile && (
+                      <Box 
+                        onLoad={() => setImageLoad(true)} 
+                        alt='pinina' 
+                        component='img' 
+                        src='../src/assets/pinina2.webp' 
+                        sx={{width: '40vw'}}
+                      />
+                    )}
+                    <Box sx={{
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      justifyContent: 'center', 
+                      width: isMobile ? '100%' : '30vw', 
+                      gap: isMobile ? '4vw' : '2vw', 
+                      paddingTop: isMobile ? '2vw' : '2vw', 
+                      paddingBottom: isMobile ? '2vw' : '2vw'
+                    }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw' }}>
+                        <Typography sx={{ 
+                          paddingBottom: isMobile ? '2vw' : '1vw', 
+                          fontSize: isMobile ? '10vw' : '3vw', 
+                          textAlign: 'left' 
+                        }}>
                           Register
                         </Typography>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', gap: '1vw'}}>
-                            <Box sx={{display: 'flex', gap: '1vw', flexDirection: 'column', width: '15vw'}}>
-                                <Typography sx={{ textAlign: 'left' }}>
+                        <Box sx={{
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          gap: isMobile ? '2vw' : '1vw',
+                          flexDirection: isMobile ? 'column' : 'row'
+                        }}>
+                            <Box sx={{
+                              display: 'flex', 
+                              gap: isMobile ? '2vw' : '1vw', 
+                              flexDirection: 'column', 
+                              width: isMobile ? '100%' : '15vw'
+                            }}>
+                                <Typography sx={{ 
+                                  textAlign: 'left',
+                                  fontSize: isMobile ? '1rem' : 'inherit'
+                                }}>
                                     Name
                                 </Typography>
                                 <TextField 
@@ -129,10 +177,19 @@ const UserRegister: React.FC = (): JSX.Element => {
                                         setFieldErrors(prev => ({ ...prev, name: error ? [error] : [] }))
                                     }} 
                                     sx={{width: '100%'}}
+                                    size={isMobile ? 'small' : 'medium'}
                                 />
                             </Box>
-                            <Box sx={{display: 'flex', gap: '1vw', flexDirection: 'column', width: '15vw'}}>
-                                <Typography sx={{ textAlign: 'left' }}>
+                            <Box sx={{
+                              display: 'flex', 
+                              gap: isMobile ? '2vw' : '1vw', 
+                              flexDirection: 'column', 
+                              width: isMobile ? '100%' : '15vw'
+                            }}>
+                                <Typography sx={{ 
+                                  textAlign: 'left',
+                                  fontSize: isMobile ? '1rem' : 'inherit'
+                                }}>
                                     Surname
                                 </Typography>
                                 <TextField 
@@ -148,11 +205,15 @@ const UserRegister: React.FC = (): JSX.Element => {
                                         setFieldErrors(prev => ({ ...prev, surname: error ? [error] : [] }))
                                     }} 
                                     sx={{width: '100%'}}
+                                    size={isMobile ? 'small' : 'medium'}
                                 />
                             </Box>
                         </Box>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
-                          <Typography sx={{ textAlign: 'left' }}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw'}}>
+                          <Typography sx={{ 
+                            textAlign: 'left',
+                            fontSize: isMobile ? '1rem' : 'inherit'
+                          }}>
                             E-mail
                           </Typography>
                           <TextField 
@@ -168,10 +229,14 @@ const UserRegister: React.FC = (): JSX.Element => {
                                 setFieldErrors(prev => ({ ...prev, email: error ? [error] : [] }))
                             }}  
                             sx={{width: '100%'}}
+                            size={isMobile ? 'small' : 'medium'}
                           />
                         </Box>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
-                          <Typography sx={{ textAlign: 'left' }}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw'}}>
+                          <Typography sx={{ 
+                            textAlign: 'left',
+                            fontSize: isMobile ? '1rem' : 'inherit'
+                          }}>
                             Password
                           </Typography>
                           <TextField 
@@ -187,10 +252,14 @@ const UserRegister: React.FC = (): JSX.Element => {
                                 setFieldErrors(prev => ({ ...prev, password: error ? [error] : [] }))
                             }}  
                             sx={{width: '100%'}}
+                            size={isMobile ? 'small' : 'medium'}
                           />
                         </Box>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
-                          <Typography sx={{ textAlign: 'left' }}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw'}}>
+                          <Typography sx={{ 
+                            textAlign: 'left',
+                            fontSize: isMobile ? '1rem' : 'inherit'
+                          }}>
                             Confirm password
                           </Typography>
                           <TextField 
@@ -204,27 +273,54 @@ const UserRegister: React.FC = (): JSX.Element => {
                             }} 
                             type='password' 
                             sx={{width: '100%'}}
+                            size={isMobile ? 'small' : 'medium'}
                            />
                         </Box>
                       </Box>
-                      <Box sx={{display: 'flex', flexDirection: 'column', gap: '1vw'}}>
+                      <Box sx={{display: 'flex', flexDirection: 'column', gap: isMobile ? '2vw' : '1vw'}}>
                       {registerError && (
-                        <Typography sx={{ color: 'red', fontWeight: 'bold' }}>
+                        <Typography sx={{ 
+                          color: 'red', 
+                          fontWeight: 'bold',
+                          fontSize: isMobile ? '0.9rem' : 'inherit'
+                        }}>
                           {registerError}
                         </Typography>
                         )
                       }
                         {
                           registerSuccessMessage ?
-                          <Typography sx={{textDecoration: 'underline'}}>{registerSuccessMessage}</Typography>
+                          <Typography sx={{
+                            textDecoration: 'underline',
+                            fontSize: isMobile ? '0.9rem' : 'inherit'
+                          }}>
+                            {registerSuccessMessage}
+                          </Typography>
                           :
-                          <Button disabled={isDisabled} onClick={() => (register(registerData))}  sx={{color: 'inherit', border: '1px solid #0d3e45', width: '100%', padding: '0.8vw'}}>
-                            { registerSuccessful ? <CircularProgress size={22} sx={{color: 'primary.contrastText'}}/> :  'Register'  }
+                          <Button 
+                            disabled={isDisabled} 
+                            onClick={() => (register(registerData))}  
+                            sx={{
+                              color: 'inherit', 
+                              border: '1px solid #0d3e45', 
+                              width: '100%', 
+                              padding: isMobile ? '3vw' : '0.8vw',
+                              fontSize: isMobile ? '1rem' : 'inherit'
+                            }}
+                          >
+                            { registerSuccessful ? 
+                              <CircularProgress size={isMobile ? 20 : 22} sx={{color: 'primary.contrastText'}}/> 
+                              : 'Register' 
+                            }
                           </Button>
                         }
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: isMobile ? '0.9rem' : 'inherit'
+                        }}>
                           <Link to={'/login'} style={{ color: 'inherit'}}>
-                            <Typography>
+                            <Typography sx={{ fontSize: isMobile ? '0.9rem' : 'inherit' }}>
                               Already have account
                             </Typography>
                           </Link>

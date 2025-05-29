@@ -6,15 +6,17 @@ import { variables } from '../../../config/variables';
 import Cookies from 'js-cookie';
 import IPaginationResponse from '../../interfaces/IPaginationResponse';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, Snackbar, Alert, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Backdrop, CircularProgress } from '@mui/material';
+import { IconButton, Snackbar, Alert, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Backdrop, CircularProgress, useMediaQuery } from '@mui/material';
 import ICategory from '../../../interfaces/ICategories';
+import { theme } from '../../../config/ThemeConfig';
 
 const AdminMenuCategories: React.FC = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: 10,
+    pageSize: isMobile ? 5 : 10,
     page: 0,
   });
   const [rowCount, setRowCount] = useState(0);
@@ -108,12 +110,20 @@ const AdminMenuCategories: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { 
+      field: 'id', 
+      headerName: 'ID', 
+      width: isMobile ? 50 : 70,
+      headerAlign: 'center',
+      align: 'center'
+    },
     { 
       field: 'name', 
       headerName: 'Name', 
-      width: 200,
+      width: isMobile ? 120 : 200,
       editable: true,
+      headerAlign: 'center',
+      align: 'center',
       preProcessEditCellProps: (params) => {
         const hasError = !params.props.value || params.props.value.length < 3;
         return { ...params.props, error: hasError };
@@ -122,8 +132,10 @@ const AdminMenuCategories: React.FC = () => {
     { 
       field: 'description', 
       headerName: 'Description', 
-      width: 300,
+      width: isMobile ? 150 : 300,
       editable: true,
+      headerAlign: 'center',
+      align: 'center',
       preProcessEditCellProps: (params) => {
         const hasError = !params.props.value || params.props.value.length < 3;
         return { ...params.props, error: hasError };
@@ -132,7 +144,9 @@ const AdminMenuCategories: React.FC = () => {
     { 
       field: 'createdAt', 
       headerName: 'Date created', 
-      width: 200,
+      width: isMobile ? 150 : 200,
+      headerAlign: 'center',
+      align: 'center',
       valueGetter: (params: Date) => {
         return new Date(params).toLocaleDateString('en-US', {
           year: 'numeric',
@@ -146,14 +160,21 @@ const AdminMenuCategories: React.FC = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: isMobile ? 80 : 100,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: (params) => (
         <IconButton 
           onClick={(e) => {
             e.stopPropagation();
             handleDeleteClick(params.row.id, params.row.name);
           }}
-          size="small"
+          size={isMobile ? "small" : "medium"}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '4vw' : 'inherit'
+            }
+          }}
         >
           <DeleteIcon />
         </IconButton>
@@ -227,7 +248,19 @@ const AdminMenuCategories: React.FC = () => {
         title="Categories management"
         loading={loading}
         onRowClick={handleRowClick}
-        sx={{ paddingBottom: '3.2vw', width: '76vw' }}
+        sx={{ 
+          paddingBottom: isMobile ? '15vw' : '3.2vw', 
+          width: isMobile ? '90vw' : '76vw',
+          '& .MuiDataGrid-cell': {
+            fontSize: isMobile ? '3vw' : 'inherit'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            fontSize: isMobile ? '3.5vw' : 'inherit'
+          },
+          '& .MuiTablePagination-root': {
+            fontSize: isMobile ? '3vw' : 'inherit'
+          }
+        }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         rowCount={rowCount}
@@ -237,6 +270,20 @@ const AdminMenuCategories: React.FC = () => {
       <Dialog
         open={deleteDialog.open}
         onClose={handleDeleteCancel}
+        PaperProps={{
+          sx: {
+            width: isMobile ? '90vw' : 'auto',
+            '& .MuiDialogTitle-root': {
+              fontSize: isMobile ? '4vw' : 'inherit'
+            },
+            '& .MuiDialogContentText-root': {
+              fontSize: isMobile ? '3vw' : 'inherit'
+            },
+            '& .MuiButton-root': {
+              fontSize: isMobile ? '3vw' : 'inherit'
+            }
+          }
+        }}
       >
         <DialogTitle>Delete Category</DialogTitle>
         <DialogContent>
@@ -271,7 +318,8 @@ const AdminMenuCategories: React.FC = () => {
             borderColor: 'primary.contrastText',
             '& .MuiAlert-icon': {
               color: 'primary.contrastText'
-            }
+            },
+            fontSize: isMobile ? '3vw' : 'inherit'
           }}
         >
           {snackbar.message}
@@ -282,7 +330,7 @@ const AdminMenuCategories: React.FC = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isDeleting || isUpdating}
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress size={isMobile ? '10vw' : 'inherit'} color="inherit" />
       </Backdrop>
     </>
   );

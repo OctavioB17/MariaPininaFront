@@ -1,77 +1,78 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { theme } from '../../config/ThemeConfig';
 
-const SuccessCheckmarkContainer = styled(Box)({
-    width: '80px',
-    height: '115px',
+const SuccessCheckmarkContainer = styled(Box)(({ isMobile }: { isMobile: boolean }) => ({
+    width: isMobile ? '60vw' : '80px',
+    height: isMobile ? '86vw' : '115px',
     margin: '0 auto',
     '& .check-icon': {
-        width: '80px',
-        height: '80px',
+        width: isMobile ? '60vw' : '80px',
+        height: isMobile ? '60vw' : '80px',
         position: 'relative',
         borderRadius: '50%',
         boxSizing: 'content-box',
-        border: '4px solid #4CAF50',
+        border: isMobile ? '3vw solid #4CAF50' : '4px solid #4CAF50',
         '&::before': {
-            top: '3px',
-            left: '-2px',
-            width: '30px',
+            top: isMobile ? '2vw' : '3px',
+            left: isMobile ? '-1.5vw' : '-2px',
+            width: isMobile ? '22.5vw' : '30px',
             transformOrigin: '100% 50%',
             borderRadius: '100px 0 0 100px',
         },
         '&::after': {
             top: '0',
-            left: '30px',
-            width: '60px',
+            left: isMobile ? '22.5vw' : '30px',
+            width: isMobile ? '45vw' : '60px',
             transformOrigin: '0 50%',
             borderRadius: '0 100px 100px 0',
             animation: 'rotate-circle 4.25s ease-in',
         },
         '&::before, &::after': {
             content: '""',
-            height: '100px',
+            height: isMobile ? '75vw' : '100px',
             position: 'absolute',
             transform: 'rotate(-45deg)',
         },
         '& .icon-line': {
-            height: '5px',
+            height: isMobile ? '3.75vw' : '5px',
             backgroundColor: '#4CAF50',
             display: 'block',
-            borderRadius: '2px',
+            borderRadius: isMobile ? '1.5vw' : '2px',
             position: 'absolute',
             zIndex: 10,
             '&.line-tip': {
-                top: '46px',
-                left: '14px',
-                width: '25px',
+                top: isMobile ? '34.5vw' : '46px',
+                left: isMobile ? '10.5vw' : '14px',
+                width: isMobile ? '18.75vw' : '25px',
                 transform: 'rotate(45deg)',
                 animation: 'icon-line-tip 0.75s',
             },
             '&.line-long': {
-                top: '38px',
-                right: '8px',
-                width: '47px',
+                top: isMobile ? '28.5vw' : '38px',
+                right: isMobile ? '6vw' : '8px',
+                width: isMobile ? '35.25vw' : '47px',
                 transform: 'rotate(-45deg)',
                 animation: 'icon-line-long 0.75s',
             },
         },
         '& .icon-circle': {
-            top: '-4px',
-            left: '-4px',
+            top: isMobile ? '-3vw' : '-4px',
+            left: isMobile ? '-3vw' : '-4px',
             zIndex: 10,
-            width: '80px',
-            height: '80px',
+            width: isMobile ? '60vw' : '80px',
+            height: isMobile ? '60vw' : '80px',
             borderRadius: '50%',
             position: 'absolute',
             boxSizing: 'content-box',
-            border: '4px solid rgba(76, 175, 80, .5)',
+            border: isMobile ? '3vw solid rgba(76, 175, 80, .5)' : '4px solid rgba(76, 175, 80, .5)',
         },
         '& .icon-fix': {
-            top: '8px',
-            width: '5px',
-            left: '26px',
+            top: isMobile ? '6vw' : '8px',
+            width: isMobile ? '3.75vw' : '5px',
+            left: isMobile ? '19.5vw' : '26px',
             zIndex: 1,
-            height: '85px',
+            height: isMobile ? '63.75vw' : '85px',
             position: 'absolute',
             transform: 'rotate(-45deg)',
         },
@@ -93,57 +94,59 @@ const SuccessCheckmarkContainer = styled(Box)({
     '@keyframes icon-line-tip': {
         '0%': {
             width: '0',
-            left: '1px',
-            top: '19px',
+            left: isMobile ? '0.75vw' : '1px',
+            top: isMobile ? '14.25vw' : '19px',
         },
         '54%': {
             width: '0',
-            left: '1px',
-            top: '19px',
+            left: isMobile ? '0.75vw' : '1px',
+            top: isMobile ? '14.25vw' : '19px',
         },
         '70%': {
-            width: '50px',
-            left: '-8px',
-            top: '37px',
+            width: isMobile ? '37.5vw' : '50px',
+            left: isMobile ? '-6vw' : '-8px',
+            top: isMobile ? '27.75vw' : '37px',
         },
         '84%': {
-            width: '17px',
-            left: '21px',
-            top: '48px',
+            width: isMobile ? '12.75vw' : '17px',
+            left: isMobile ? '15.75vw' : '21px',
+            top: isMobile ? '36vw' : '48px',
         },
         '100%': {
-            width: '25px',
-            left: '14px',
-            top: '45px',
+            width: isMobile ? '18.75vw' : '25px',
+            left: isMobile ? '10.5vw' : '14px',
+            top: isMobile ? '33.75vw' : '45px',
         },
     },
     '@keyframes icon-line-long': {
         '0%': {
             width: '0',
-            right: '46px',
-            top: '54px',
+            right: isMobile ? '34.5vw' : '46px',
+            top: isMobile ? '40.5vw' : '54px',
         },
         '65%': {
             width: '0',
-            right: '46px',
-            top: '54px',
+            right: isMobile ? '34.5vw' : '46px',
+            top: isMobile ? '40.5vw' : '54px',
         },
         '84%': {
-            width: '55px',
-            right: '0px',
-            top: '35px',
+            width: isMobile ? '41.25vw' : '55px',
+            right: '0',
+            top: isMobile ? '26.25vw' : '35px',
         },
         '100%': {
-            width: '47px',
-            right: '8px',
-            top: '38px',
+            width: isMobile ? '35.25vw' : '47px',
+            right: isMobile ? '6vw' : '8px',
+            top: isMobile ? '28.5vw' : '38px',
         },
     },
-});
+}));
 
 const SuccessCheckmark = () => {
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    
     return (
-        <SuccessCheckmarkContainer>
+        <SuccessCheckmarkContainer isMobile={isMobile}>
             <div className="check-icon">
                 <span className="icon-line line-tip"></span>
                 <span className="icon-line line-long"></span>

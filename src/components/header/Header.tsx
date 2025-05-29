@@ -158,10 +158,10 @@ const Header: React.FC<HeaderProps> = ({ sx, products, categories }): JSX.Elemen
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '0.5rem',
-                color: 'primary.contrastText',
+                color: 'inherit',
                 textDecoration: 'none'
               }}>
-                <Typography variant="h6">Sign-in</Typography>
+                <Typography variant="h6" sx={{ color: 'inherit' }}>Sign-in</Typography>
                 <Face6Icon />
               </Link>
             </ListItem>
